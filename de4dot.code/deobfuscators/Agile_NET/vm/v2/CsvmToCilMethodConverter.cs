@@ -38,18 +38,18 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			var gpContext = GenericParamContext.Create(cilMethod);
 			var handlerInfoReader = new OpCodeHandlerInfoReader(module, gpContext);
 
-			int numVmInstrs = reader.ReadInt32();
+			var numVmInstrs = reader.ReadInt32();
 			var vmInstrs = new ushort[numVmInstrs];
-			for (int i = 0; i < numVmInstrs; i++)
+			for (var i = 0; i < numVmInstrs; i++)
 				vmInstrs[i] = reader.ReadUInt16();
 
 			uint offset = 0;
-			for (int vmInstrIndex = 0; vmInstrIndex < numVmInstrs; vmInstrIndex++) {
+			for (var vmInstrIndex = 0; vmInstrIndex < numVmInstrs; vmInstrIndex++) {
 				var composite = opCodeDetector.Handlers[vmInstrs[vmInstrIndex]];
 				IList<HandlerTypeCode> handlerInfos = composite.HandlerTypeCodes;
 				if (handlerInfos.Count == 0)
 					handlerInfos = new HandlerTypeCode[] { HandlerTypeCode.Nop };
-				for (int hi = 0; hi < handlerInfos.Count; hi++) {
+				for (var hi = 0; hi < handlerInfos.Count; hi++) {
 					var instr = handlerInfoReader.Read(handlerInfos[hi], reader);
 					instr.Offset = offset;
 					offset += (uint)GetInstructionSize(instr);

@@ -61,7 +61,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			protected static bool FindKey0(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					if (!instrs[i].IsLdloc())
 						continue;
 					if (instrs[i + 1].OpCode.Code != Code.Or)
@@ -85,8 +85,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static bool FindKey1(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
-					int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.Reflection.MemberInfo::get_MetadataToken()");
+				for (var i = 0; i < instrs.Count; i++) {
+					var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.Reflection.MemberInfo::get_MetadataToken()");
 					if (index < 0)
 						break;
 					if (index + 2 > instrs.Count)
@@ -106,7 +106,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			protected static bool FindKey2Key3(MethodDef method, out uint key2, out uint key3) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 3; i++) {
+				for (var i = 0; i < instrs.Count - 3; i++) {
 					var ldci4_1 = instrs[i];
 					if (!ldci4_1.IsLdcI4())
 						continue;
@@ -147,7 +147,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				foreach (var block in allBlocks) {
 					if (block.Sources.Count != 1)
 						continue;
-					int index = ConfuserUtils.FindCallMethod(block.Instructions, 0, callCode, bitConverterMethod);
+					var index = ConfuserUtils.FindCallMethod(block.Instructions, 0, callCode, bitConverterMethod);
 					if (index < 0)
 						continue;
 
@@ -178,8 +178,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 				block = FixBlock(block);
 
 				var instrs = block.Instructions;
-				int numCeq = 0;
-				for (int i = instrs.Count - 1; i >= 0; i--) {
+				var numCeq = 0;
+				for (var i = instrs.Count - 1; i >= 0; i--) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code == Code.Ceq) {
 						numCeq++;
@@ -198,12 +198,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 			}
 
 			public uint CalcHash(uint x) {
-				uint h0 = key1 ^ x;
-				uint h1 = key2;
-				uint h2 = key3;
+				var h0 = key1 ^ x;
+				var h1 = key2;
+				var h2 = key3;
 				for (uint i = 1; i <= 64; i++) {
 					h0 = (h0 << 8) | (h0 >> 24);
-					uint n = h0 & 0x3F;
+					var n = h0 & 0x3F;
 					if (n >= 0 && n < 16) {
 						h1 |= ((byte)(h0 >> 8) & (h0 >> 16)) ^ (byte)~h0;
 						h2 ^= (h0 * i + 1) & 0xF;
@@ -288,7 +288,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static MethodDef FindNativeMethod(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var call = instrs[i];
 				if (call.OpCode.Code != Code.Call)
 					continue;
@@ -305,7 +305,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static Local GetDynamicLocal_v17_r73740(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte System.IO.BinaryReader::ReadByte()");
 				if (i < 0 || i + 5 >= instrs.Count)
 					break;
@@ -329,8 +329,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static int GetDynamicEndIndex_v17_r73740(MethodDef method, Local local) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 5; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 5; i++) {
+				var index = i;
 				var stloc = instrs[index++];
 				if (!stloc.IsStloc() || stloc.GetLocal(method.Body.Variables) != local)
 					continue;
@@ -360,7 +360,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static int GetDynamicEndIndex_v17_r74788(MethodDef method, Local local) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 11; i++) {
+			for (var i = 0; i < instrs.Count - 11; i++) {
 				var stloc = instrs[i];
 				if (!stloc.IsStloc() || stloc.GetLocal(method.Body.Variables) != local)
 					continue;
@@ -397,7 +397,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if (endIndex < 0)
 				return -1;
 			var instrs = method.Body.Instructions;
-			for (int i = endIndex; i >= 0; i--) {
+			for (var i = endIndex; i >= 0; i--) {
 				if (i == 0)
 					return i == endIndex ? -1 : i + 1;
 				if (instrs[i].OpCode.FlowControl == FlowControl.Next)
@@ -418,10 +418,10 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if (local == null)
 				throw new ApplicationException("Could not find local");
 
-			int endIndex = GetDynamicEndIndex_v17_r73740(info.decryptMethod, local);
+			var endIndex = GetDynamicEndIndex_v17_r73740(info.decryptMethod, local);
 			if (endIndex < 0)
 				endIndex = GetDynamicEndIndex_v17_r74788(info.decryptMethod, local);
-			int startIndex = GetDynamicStartIndex_v17_r73740(info.decryptMethod, endIndex);
+			var startIndex = GetDynamicStartIndex_v17_r73740(info.decryptMethod, endIndex);
 			if (startIndex < 0)
 				throw new ApplicationException("Could not find start/end index");
 
@@ -447,8 +447,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 		static byte[] Decrypt(byte[] encrypted, uint key, Func<uint, int, byte> decryptFunc) {
 			var reader = MemoryImageStream.Create(encrypted);
 			var decrypted = new byte[reader.ReadInt32() ^ key];
-			for (int i = 0; i < decrypted.Length; i++) {
-				uint magic = reader.Read7BitEncodedUInt32();
+			for (var i = 0; i < decrypted.Length; i++) {
+				var magic = reader.Read7BitEncodedUInt32();
 				decrypted[i] = decryptFunc(magic, i);
 			}
 

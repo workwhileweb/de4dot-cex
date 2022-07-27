@@ -80,11 +80,11 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(stringDecrypter.Detected) +
-					ToInt32(assemblyResolver.Detected) +
-					ToInt32(resourceResolver.Detected);
+			var sum = ToInt32(stringDecrypter.Detected) +
+                      ToInt32(assemblyResolver.Detected) +
+                      ToInt32(resourceResolver.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (detectedVersion)

@@ -90,10 +90,10 @@ namespace de4dot.code.deobfuscators.CodeWall {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(methodsDecrypter.Detected) +
-					ToInt32(stringDecrypter.Detected);
+			var sum = ToInt32(methodsDecrypter.Detected) +
+                      ToInt32(stringDecrypter.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 
@@ -162,7 +162,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 			if (!methodsDecrypter.Detected)
 				return false;
 
-			byte[] fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
+			var fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
 			using (var peImage = new MyPEImage(fileData)) {
 				if (!methodsDecrypter.Decrypt(peImage, ref dumpedMethods))
 					return false;

@@ -90,7 +90,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 
 		public string Decrypt(string s) {
 			var bytes = new byte[s.Length];
-			for (int i = 0; i < s.Length; i++)
+			for (var i = 0; i < s.Length; i++)
 				bytes[i] = (byte)(s[i] ^ 0x3F);
 			return Encoding.UTF8.GetString(bytes);
 		}

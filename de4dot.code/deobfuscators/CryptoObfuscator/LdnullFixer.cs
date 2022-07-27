@@ -99,7 +99,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		int Restore(Dictionary<FieldDef, bool> nullFields) {
-			int numRestored = 0;
+			var numRestored = 0;
 			foreach (var type in module.GetTypes()) {
 				foreach (var method in type.Methods) {
 					var body = method.Body;

@@ -87,7 +87,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
 			if (mainType.Detected)
 				val = 150;
@@ -175,7 +175,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			public override int GetHashCode() {
-				int hash = 0;
+				var hash = 0;
 				if (resource.Offset != null)
 					hash ^= resource.Offset.GetHashCode();
 				hash ^= (int)resource.Data.Position;

@@ -131,10 +131,10 @@ namespace de4dot.code {
 		}
 
 		public static string RandomName(int min, int max) {
-			int numChars = random.Next(min, max + 1);
+			var numChars = random.Next(min, max + 1);
 			var sb = new StringBuilder(numChars);
-			int numLower = 0;
-			for (int i = 0; i < numChars; i++) {
+			var numLower = 0;
+			for (var i = 0; i < numChars; i++) {
 				if (numLower == 0)
 					sb.Append((char)((int)'A' + random.Next(26)));
 				else
@@ -151,7 +151,7 @@ namespace de4dot.code {
 		}
 
 		public static string GetBaseName(string name) {
-			int index = name.LastIndexOf(Path.DirectorySeparatorChar);
+			var index = name.LastIndexOf(Path.DirectorySeparatorChar);
 			if (index < 0)
 				return name;
 			return name.Substring(index + 1);
@@ -181,7 +181,7 @@ namespace de4dot.code {
 		}
 
 		public static string GetAssemblySimpleName(string name) {
-			int i = name.IndexOf(',');
+			var i = name.IndexOf(',');
 			if (i < 0)
 				return name;
 			return name.Substring(0, i);
@@ -208,7 +208,7 @@ namespace de4dot.code {
 		public static bool Compare(byte[] a, byte[] b) {
 			if (a.Length != b.Length)
 				return false;
-			for (int i = 0; i < a.Length; i++) {
+			for (var i = 0; i < a.Length; i++) {
 				if (a[i] != b[i])
 					return false;
 			}

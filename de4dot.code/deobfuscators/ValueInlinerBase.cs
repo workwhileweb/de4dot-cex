@@ -95,7 +95,7 @@ namespace de4dot.code.deobfuscators {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				block.Replace(callResult.callStartIndex, num, Instruction.CreateLdcI4((bool)callResult.returnValue ? 1 : 0));
 				RemoveUnboxInstruction(block, callResult.callStartIndex + 1, "System.Boolean");
@@ -108,7 +108,7 @@ namespace de4dot.code.deobfuscators {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				block.Replace(callResult.callStartIndex, num, Instruction.CreateLdcI4((int)callResult.returnValue));
 				RemoveUnboxInstruction(block, callResult.callStartIndex + 1, "System.Int32");
@@ -121,7 +121,7 @@ namespace de4dot.code.deobfuscators {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				block.Replace(callResult.callStartIndex, num, OpCodes.Ldc_I8.ToInstruction((long)callResult.returnValue));
 				RemoveUnboxInstruction(block, callResult.callStartIndex + 1, "System.Int64");
@@ -134,7 +134,7 @@ namespace de4dot.code.deobfuscators {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				block.Replace(callResult.callStartIndex, num, OpCodes.Ldc_R4.ToInstruction((float)callResult.returnValue));
 				RemoveUnboxInstruction(block, callResult.callStartIndex + 1, "System.Single");
@@ -147,7 +147,7 @@ namespace de4dot.code.deobfuscators {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				block.Replace(callResult.callStartIndex, num, OpCodes.Ldc_R8.ToInstruction((double)callResult.returnValue));
 				RemoveUnboxInstruction(block, callResult.callStartIndex + 1, "System.Double");

@@ -69,7 +69,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 		public bool Decrypt(MyPEImage peImage, ref DumpedMethods dumpedMethods) {
 			dumpedMethods = new DumpedMethods();
 
-			bool decrypted = false;
+			var decrypted = false;
 
 			var methodDef = peImage.MetaData.TablesStream.MethodTable;
 			for (uint rid = 1; rid <= methodDef.Rows; rid++) {
@@ -78,7 +78,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 				if (dm.mdRVA == 0)
 					continue;
-				uint bodyOffset = peImage.RvaToOffset(dm.mdRVA);
+				var bodyOffset = peImage.RvaToOffset(dm.mdRVA);
 
 				peImage.Reader.Position = bodyOffset;
 				var mbHeader = MethodBodyParser.ParseMethodBody(peImage.Reader, out dm.code, out dm.extraSections);
@@ -87,7 +87,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 				if (dm.code.Length < 6 || dm.code[0] != 0x2A || dm.code[1] != 0x2A)
 					continue;
 
-				int seed = BitConverter.ToInt32(dm.code, 2);
+				var seed = BitConverter.ToInt32(dm.code, 2);
 				Array.Copy(newCodeHeader, dm.code, newCodeHeader.Length);
 				if (seed == 0)
 					Decrypt(dm.code);
@@ -102,13 +102,13 @@ namespace de4dot.code.deobfuscators.CodeWall {
 		}
 
 		void Decrypt(byte[] data) {
-			for (int i = 6; i < data.Length; i++)
+			for (var i = 6; i < data.Length; i++)
 				data[i] ^= decryptKey[i % decryptKey.Length];
 		}
 
 		void Decrypt(byte[] data, int seed) {
 			var key = new KeyGenerator(seed).Generate(data.Length);
-			for (int i = 6; i < data.Length; i++)
+			for (var i = 6; i < data.Length; i++)
 				data[i] ^= key[i];
 		}
 
@@ -120,7 +120,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code != Code.Call)
 						continue;

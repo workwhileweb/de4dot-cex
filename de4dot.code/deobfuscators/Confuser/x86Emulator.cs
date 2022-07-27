@@ -156,14 +156,14 @@ namespace de4dot.code.deobfuscators.Confuser {
 		void Initialize(uint[] args) {
 			this.args = args;
 			nextArgIndex = 0;
-			for (int i = 0; i < regs.Length; i++)
+			for (var i = 0; i < regs.Length; i++)
 				regs[i] = 0;
 		}
 
 		bool IsBytes(IList<byte> bytes) {
-			long oldPos = reader.Position;
-			bool result = true;
-			for (int i = 0; i < bytes.Count; i++) {
+			var oldPos = reader.Position;
+			var result = true;
+			for (var i = 0; i < bytes.Count; i++) {
 				if (bytes[i] != reader.ReadByte()) {
 					result = false;
 					break;
@@ -236,7 +236,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		Instruction Decode() {
-			byte opc = reader.ReadByte();
+			var opc = reader.ReadByte();
 			switch (opc) {
 			case 0x01:	// ADD Ed,Gd
 				ParseModRM();

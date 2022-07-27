@@ -68,7 +68,7 @@ namespace de4dot.code.deobfuscators {
 			var mbHeader = new MethodBodyHeader();
 
 			uint codeOffset;
-			byte b = Peek(reader);
+			var b = Peek(reader);
 			if ((b & 3) == 2) {
 				mbHeader.flags = 2;
 				mbHeader.maxStack = 8;
@@ -119,9 +119,9 @@ namespace de4dot.code.deobfuscators {
 
 		static byte[] ReadExtraSections2(IBinaryReader reader) {
 			Align(reader, 4);
-			int startPos = (int)reader.Position;
+			var startPos = (int)reader.Position;
 			ParseSection(reader);
-			int size = (int)reader.Position - startPos;
+			var size = (int)reader.Position - startPos;
 			reader.Position = startPos;
 			return reader.ReadBytes(size);
 		}
@@ -139,18 +139,18 @@ namespace de4dot.code.deobfuscators {
 
 				if ((flags & 0x40) != 0) {
 					reader.Position--;
-					int num = (int)(reader.ReadUInt32() >> 8) / 24;
+					var num = (int)(reader.ReadUInt32() >> 8) / 24;
 					reader.Position += num * 24;
 				}
 				else {
-					int num = reader.ReadByte() / 12;
+					var num = reader.ReadByte() / 12;
 					reader.Position += 2 + num * 12;
 				}
 			} while ((flags & 0x80) != 0);
 		}
 
 		static byte Peek(IBinaryReader reader) {
-			byte b = reader.ReadByte();
+			var b = reader.ReadByte();
 			reader.Position--;
 			return b;
 		}

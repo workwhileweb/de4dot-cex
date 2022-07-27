@@ -120,8 +120,8 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		ResolverVersion CheckSetupMethod(MethodDef setupMethod) {
 			var instructions = setupMethod.Body.Instructions;
-			int foundCount = 0;
-			for (int i = 0; i < instructions.Count; i++) {
+			var foundCount = 0;
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Ldnull, OpCodes.Ldftn, OpCodes.Newobj);
 				if (instrs == null)
 					continue;

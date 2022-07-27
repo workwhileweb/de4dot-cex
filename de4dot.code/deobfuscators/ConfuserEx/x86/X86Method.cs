@@ -40,7 +40,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx.x86
 
             while (true)
             { 
-                byte[] bytes = ReadChunk(method, _module);
+                var bytes = ReadChunk(method, _module);
 
                 var disasm = new Disasm();
                 var buff = new UnmanagedBuffer(bytes);
@@ -111,7 +111,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx.x86
             var stream = module.MetaData.PEImage.CreateFullStream();
             var offset = module.MetaData.PEImage.ToFileOffset(method.RVA);
 
-            byte[] buffer = new byte[8];
+            var buffer = new byte[8];
 
             if (_readOffset == 0) //TODO: Don't use hardcoded offset
                 _readOffset = (int) offset + 20; // skip to actual calculation code

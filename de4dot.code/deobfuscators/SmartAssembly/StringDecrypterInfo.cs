@@ -129,7 +129,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 					if (CallsGetPublicKeyToken(initMethod)) {
 						var pkt = PublicKeyBase.ToPublicKeyToken(module.Assembly.PublicKeyToken);
 						if (!PublicKeyBase.IsNullOrEmpty2(pkt)) {
-							for (int i = 0; i < pkt.Data.Length - 1; i += 2)
+							for (var i = 0; i < pkt.Data.Length - 1; i += 2)
 								stringOffset ^= ((int)pkt.Data[i] << 8) + pkt.Data[i + 1];
 						}
 					}
@@ -230,7 +230,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		IField FindOffsetField(MethodDef method) {
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i <= instructions.Count - 2; i++) {
+			for (var i = 0; i <= instructions.Count - 2; i++) {
 				var ldsfld = instructions[i];
 				if (ldsfld.OpCode.Code != Code.Ldsfld)
 					continue;
@@ -255,7 +255,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		int? FindOffsetValue(MethodDef method, FieldDef offsetField, FieldDefAndDeclaringTypeDict<IField> fields) {
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i <= instructions.Count - 2; i++) {
+			for (var i = 0; i <= instructions.Count - 2; i++) {
 				var ldstr = instructions[i];
 				if (ldstr.OpCode.Code != Code.Ldstr)
 					continue;
@@ -296,7 +296,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (method == null || method.Body == null)
 				return null;
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i <= instructions.Count - 2; i++) {
+			for (var i = 0; i <= instructions.Count - 2; i++) {
 				var call = instructions[i];
 				if (call.OpCode.Code != Code.Call)
 					continue;
@@ -345,7 +345,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		void RemoveInitCode_v1(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instructions = block.Instructions;
-				for (int i = 0; i < instructions.Count; i++) {
+				for (var i = 0; i < instructions.Count; i++) {
 					var call = instructions[i];
 					if (call.OpCode != OpCodes.Call)
 						continue;
@@ -362,7 +362,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		void RemoveInitCode_v2(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instructions = block.Instructions;
-				for (int i = 0; i <= instructions.Count - 3; i++) {
+				for (var i = 0; i <= instructions.Count - 3; i++) {
 					var ldtoken = instructions[i];
 					if (ldtoken.OpCode != OpCodes.Ldtoken)
 						continue;

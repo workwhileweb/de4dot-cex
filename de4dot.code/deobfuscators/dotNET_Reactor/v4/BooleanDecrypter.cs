@@ -89,7 +89,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 		}
 
 		public bool Decrypt(int offset) {
-			uint byteOffset = BitConverter.ToUInt32(decryptedData, offset);
+			var byteOffset = BitConverter.ToUInt32(decryptedData, offset);
 			return fileData[byteOffset] == 0x80;
 		}
 	}

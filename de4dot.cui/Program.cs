@@ -40,7 +40,7 @@ namespace de4dot.cui {
 		static IList<IDeobfuscatorInfo> LoadPlugin(string assembly) {
 			var plugins = new List<IDeobfuscatorInfo>();
 			try {
-				foreach (Type item in Assembly.LoadFile(assembly).GetTypes()) {
+				foreach (var item in Assembly.LoadFile(assembly).GetTypes()) {
 					var interfaces = new List<Type>(item.GetInterfaces());
 					if (item.IsClass && interfaces.Contains(typeof(IDeobfuscatorInfo)))
 						plugins.Add((IDeobfuscatorInfo)Activator.CreateInstance(item));
@@ -93,13 +93,13 @@ namespace de4dot.cui {
 			var dict = new Dictionary<string, IDeobfuscatorInfo>();
 			foreach (var d in local)
 				dict[d.Type] = d;
-			string pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
+			var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
 			GetPlugins(pluginDir, ref dict);
 			return new List<IDeobfuscatorInfo>(dict.Values);
 		}
 
 		public static int Main(string[] args) {
-			int exitCode = 0;
+			var exitCode = 0;
 
 			const string showAllMessagesEnvName = "SHOWALLMESSAGES";
 			try {

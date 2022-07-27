@@ -101,7 +101,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 			sb.Append(GetTypeName());
 			if (genericArgs != null && genericArgs.Length > 0) {
 				sb.Append('<');
-				for (int i = 0; i < genericArgs.Length; i++) {
+				for (var i = 0; i < genericArgs.Length; i++) {
 					if (i != 0)
 						sb.Append(',');
 					sb.Append(genericArgs[i].ToString());
@@ -113,7 +113,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 
 		string GetTypeName() {
 			var typeName = type.ToString();
-			int index = typeName.LastIndexOf('`');
+			var index = typeName.LastIndexOf('`');
 			if (index < 0)
 				return typeName;
 			return typeName.Substring(0, index);

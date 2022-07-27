@@ -56,7 +56,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return false;
 
 			foreach (var method in DotNetUtils.GetCalledMethods(module, methodToCheck)) {
-				bool result = false;
+				var result = false;
 				switch (frameworkType) {
 				case FrameworkType.Desktop:
 					result = FindDesktop(method);

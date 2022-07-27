@@ -107,7 +107,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 			if (ary2 == null || ary1.Length != ary2.Length)
 				return null;
 
-			for (int i = 0; i < ary1.Length; i++)
+			for (var i = 0; i < ary1.Length; i++)
 				ary1[i] = -ary1[i];
 
 			return new PatchInfo(ary1, ary2);
@@ -128,7 +128,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 			if (decrypted.Length / 4 * 4 != decrypted.Length)
 				return null;
 			var newData = new int[decrypted.Length / 4];
-			for (int i = 0; i < newData.Length; i++)
+			for (var i = 0; i < newData.Length; i++)
 				newData[i] = BitConverter.ToInt32(decrypted, i * 4);
 			return newData;
 		}
@@ -136,7 +136,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 		public void Patch(byte[] peImageData) {
 			using (var peImage = new MyPEImage(peImageData)) {
 				foreach (var info in patchInfos) {
-					for (int i = 0; i < info.offsets.Length; i++)
+					for (var i = 0; i < info.offsets.Length; i++)
 						peImage.DotNetSafeWriteOffset((uint)info.offsets[i], BitConverter.GetBytes(info.values[i]));
 				}
 			}

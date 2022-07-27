@@ -92,11 +92,11 @@ namespace de4dot.blocks {
 			allExceptionHandlers = new List<ExceptionHandler>();
 
 			var blockInfos = new List<BlockInfo>();
-			for (int i = 0; i < blocks.Count; i++) {
+			for (var i = 0; i < blocks.Count; i++) {
 				var block = blocks[i];
 
-				int startIndex = allInstructions.Count;
-				for (int j = 0; j < block.Instructions.Count - 1; j++)
+				var startIndex = allInstructions.Count;
+				for (var j = 0; j < block.Instructions.Count - 1; j++)
 					allInstructions.Add(block.Instructions[j].Instruction);
 
 				if (block.Targets != null) {
@@ -120,7 +120,7 @@ namespace de4dot.blocks {
 					allInstructions.Add(instr.Instruction);
 				}
 
-				int endIndex = allInstructions.Count - 1;
+				var endIndex = allInstructions.Count - 1;
 
 				blockInfos.Add(new BlockInfo(startIndex, endIndex));
 			}
@@ -168,8 +168,8 @@ namespace de4dot.blocks {
 				if (a.tryEnd > b.tryEnd) return 1;		// b is nested
 				// same tryEnd (they share try block)
 
-				int ai = a.filterStart == -1 ? a.handlerStart : a.filterStart;
-				int bi = b.filterStart == -1 ? b.handlerStart : b.filterStart;
+				var ai = a.filterStart == -1 ? a.handlerStart : a.filterStart;
+				var bi = b.filterStart == -1 ? b.handlerStart : b.filterStart;
 				if (ai < bi) return -1;
 				if (ai > bi) return 1;
 				// same start
@@ -214,8 +214,8 @@ namespace de4dot.blocks {
 
 		void ProcessBaseBlocks(List<BaseBlock> lb, Func<Block, bool> placeLast) {
 			var bbs = new List<BaseBlock>();
-			int lastIndex = -1;
-			for (int i = 0; i < lb.Count; i++) {
+			var lastIndex = -1;
+			for (var i = 0; i < lb.Count; i++) {
 				var bb = lb[i];
 				var block = bb as Block;
 				if (block != null && placeLast(block))
@@ -234,7 +234,7 @@ namespace de4dot.blocks {
 		// Returns the BaseBlock's ScopeBlock. The return value is either current ScopeBlock,
 		// the ScopeBlock one step below current (current one's child), or null.
 		ScopeBlock GetScopeBlock(BaseBlock bb) {
-			BlockState current = stateStack.Peek();
+			var current = stateStack.Peek();
 
 			if (current.scopeBlock.IsOurBaseBlock(bb))
 				return current.scopeBlock;
@@ -242,8 +242,8 @@ namespace de4dot.blocks {
 		}
 
 		void DoBaseBlock(BaseBlock bb) {
-			BlockState current = stateStack.Peek();
-			ScopeBlock newOne = GetScopeBlock(bb);
+			var current = stateStack.Peek();
+			var newOne = GetScopeBlock(bb);
 			if (newOne == null)
 				return;		// Not a BaseBlock somewhere inside this ScopeBlock
 			if (newOne != current.scopeBlock)

@@ -71,8 +71,8 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (eh.HandlerStart == null)
 				return false;
 
-			int handlerStart = instrs.IndexOf(eh.HandlerStart);
-			int handlerEnd = eh.HandlerEnd == null ? instrs.Count : instrs.IndexOf(eh.HandlerEnd);
+			var handlerStart = instrs.IndexOf(eh.HandlerStart);
+			var handlerEnd = eh.HandlerEnd == null ? instrs.Count : instrs.IndexOf(eh.HandlerEnd);
 			exceptionMethod = DotNetUtils.GetMethod(module, CheckHandler(instrs, handlerStart, handlerEnd));
 			if (exceptionMethod == null || !exceptionMethod.IsStatic || exceptionMethod.Body == null)
 				return false;
@@ -82,7 +82,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		IMethod CheckHandler(IList<Instruction> instrs, int start, int end) {
 			IMethod calledMethod = null;
-			for (int i = start; i < end; i++) {
+			for (var i = start; i < end; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.Code == Code.Call || instr.OpCode.Code == Code.Callvirt) {
 					if (calledMethod != null)
@@ -139,7 +139,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (index + 1 == sig.Params.Count && sig.Params[index].GetFullName() == "System.Object[]")
 				return true;
 
-			for (int i = index; i < sig.Params.Count; i++) {
+			for (var i = index; i < sig.Params.Count; i++) {
 				if (sig.Params[i].GetElementType() != ElementType.Object)
 					return false;
 			}

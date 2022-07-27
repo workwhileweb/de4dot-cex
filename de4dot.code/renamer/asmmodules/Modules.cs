@@ -164,7 +164,7 @@ namespace de4dot.code.renamer.asmmodules {
 
 		void FindAllMemberRefs() {
 			Logger.v("Finding all MemberRefs");
-			int index = 0;
+			var index = 0;
 			foreach (var module in modules) {
 				if (modules.Count > 1)
 					Logger.v("Finding all MemberRefs ({0})", module.Filename);

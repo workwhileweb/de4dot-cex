@@ -123,7 +123,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		static int GetNumberOfTypeofs(MethodDef method) {
 			if (method == null)
 				return 0;
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == Code.Ldtoken)
 					count++;
@@ -177,7 +177,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 
 		bool FindInt64(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci8 = instrs[i];
 				if (ldci8.OpCode.Code != Code.Ldc_I8)
 					continue;
@@ -283,7 +283,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		}
 
 		static int CountInstructions(MethodDef method, Code code) {
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == code)
 					count++;
@@ -297,7 +297,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 			if (method == null)
 				return list;
 
-			int index = 0;
+			var index = 0;
 			var instrs = method.Body.Instructions;
 			var constantsReader = new EfConstantsReader(method);
 			while (true) {
@@ -359,8 +359,8 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 				bytes.AddRange(Encoding.Unicode.GetBytes(module.Assembly.Name.String));
 			}
 
-			int num3 = ConstMethod1();
-			int num2 = type.MDToken.ToInt32();
+			var num3 = ConstMethod1();
+			var num2 = type.MDToken.ToInt32();
 
 			bytes.Add((byte)(num2 >> shiftConsts[0]));
 			bytes.Add((byte)(num3 >> shiftConsts[1]));

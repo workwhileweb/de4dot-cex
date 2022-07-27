@@ -35,7 +35,7 @@ namespace de4dot.code.deobfuscators.CodeWall.randomc {
 		// this function initializes the random number generator:
 		public void RandomInit(int seed) {
 			int i;
-			uint s = (uint)seed;
+			var s = (uint)seed;
 			// make random numbers and put them into the buffer
 			for (i = 0; i < 5; i++) {
 				s = s * 29943829 - 1;

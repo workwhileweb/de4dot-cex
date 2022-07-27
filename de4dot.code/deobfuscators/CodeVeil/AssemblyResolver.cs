@@ -145,7 +145,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 					continue;
 				}
 
-				int offset = GetAttributeValueInt32(assemblyElem, "offset");
+				var offset = GetAttributeValueInt32(assemblyElem, "offset");
 				if (offset < 0) {
 					Logger.w("Could not find offset attribute");
 					continue;

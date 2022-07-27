@@ -101,7 +101,7 @@ namespace AssemblyData.methodsrewriter {
 			InitLabels();
 
 			exceptionHandlersStack = new Stack<ExceptionHandler>();
-			for (int i = 0; i < allInstructions.Count; i++) {
+			for (var i = 0; i < allInstructions.Count; i++) {
 				UpdateExceptionHandlers(i);
 				var instr = allInstructions[i];
 				ilg.MarkLabel(labels[i]);
@@ -172,7 +172,7 @@ namespace AssemblyData.methodsrewriter {
 
 		void InitInstrToIndex() {
 			instrToIndex = new Dictionary<Instruction, int>(allInstructions.Count);
-			for (int i = 0; i < allInstructions.Count; i++)
+			for (var i = 0; i < allInstructions.Count; i++)
 				instrToIndex[allInstructions[i]] = i;
 		}
 
@@ -186,7 +186,7 @@ namespace AssemblyData.methodsrewriter {
 
 		void InitLabels() {
 			labels = new List<Label>(allInstructions.Count);
-			for (int i = 0; i < allInstructions.Count; i++)
+			for (var i = 0; i < allInstructions.Count; i++)
 				labels.Add(ilg.DefineLabel());
 		}
 
@@ -251,7 +251,7 @@ namespace AssemblyData.methodsrewriter {
 
 		Label[] GetLabels(Instruction[] targets) {
 			var labels = new Label[targets.Length];
-			for (int i = 0; i < labels.Length; i++)
+			for (var i = 0; i < labels.Length; i++)
 				labels[i] = GetLabel(targets[i]);
 			return labels;
 		}

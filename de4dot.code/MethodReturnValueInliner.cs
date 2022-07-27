@@ -68,7 +68,7 @@ namespace de4dot.code {
 				variableToValue[variable] = new Variable();
 
 			foreach (var block in allBlocks) {
-				for (int i = 0; i < block.Instructions.Count; i++) {
+				for (var i = 0; i < block.Instructions.Count; i++) {
 					var instr = block.Instructions[i];
 
 					switch (instr.OpCode.Code) {
@@ -234,7 +234,7 @@ namespace de4dot.code {
 		}
 
 		void FindCallResults(Block block) {
-			for (int i = 0; i < block.Instructions.Count; i++) {
+			for (var i = 0; i < block.Instructions.Count; i++) {
 				var instr = block.Instructions[i];
 				if (instr.OpCode != OpCodes.Call)
 					continue;
@@ -242,7 +242,7 @@ namespace de4dot.code {
 				if (method == null)
 					continue;
 
-				IMethod elementMethod = method;
+				var elementMethod = method;
 				var gim = method as MethodSpec;
 				if (gim != null)
 					elementMethod = gim.Method;
@@ -259,11 +259,11 @@ namespace de4dot.code {
 			var block = callResult.block;
 			var method = callResult.GetMethodRef();
 			var methodArgs = DotNetUtils.GetArgs(method);
-			int numArgs = methodArgs.Count;
+			var numArgs = methodArgs.Count;
 			var args = new object[numArgs];
 
-			int instrIndex = callResult.callEndIndex - 1;
-			for (int i = numArgs - 1; i >= 0; i--) {
+			var instrIndex = callResult.callEndIndex - 1;
+			for (var i = numArgs - 1; i >= 0; i--) {
 				object arg = null;
 				if (!GetArg(method, block, ref arg, ref instrIndex))
 					return false;
@@ -362,7 +362,7 @@ namespace de4dot.code {
 						return false;
 					}
 
-					for (int i = 0; i < pops; i++) {
+					for (var i = 0; i < pops; i++) {
 						if (!GetArg(method, block, ref arg, ref instrIndex))
 							return false;
 					}
@@ -378,8 +378,8 @@ namespace de4dot.code {
 		void InlineReturnValues() {
 			callResults = RemoveNulls(callResults);
 			callResults.Sort((a, b) => {
-				int i1 = allBlocks.FindIndex((x) => a.block == x);
-				int i2 = allBlocks.FindIndex((x) => b.block == x);
+				var i1 = allBlocks.FindIndex((x) => a.block == x);
+				var i2 = allBlocks.FindIndex((x) => b.block == x);
 				if (i1 != i2)
 					return i1.CompareTo(i2);
 

@@ -37,8 +37,8 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 				decompressedLength = data[2];
 			}
 
-			bool isCompressed = (data[0] & 1) != 0;
-			byte[] decompressed = new byte[decompressedLength];
+			var isCompressed = (data[0] & 1) != 0;
+			var decompressed = new byte[decompressedLength];
 			if (isCompressed)
 				Decompress(data, headerLength, decompressed);
 			else

@@ -117,7 +117,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return false;
 			if (!DotNetUtils.CallsMethod(initMethod, "System.IntPtr System.Runtime.InteropServices.Marshal::GetHINSTANCE(System.Reflection.Module)"))
 				return false;
-			int virtualProtectCalls = ConfuserUtils.CountCalls(initMethod, virtualProtect);
+			var virtualProtectCalls = ConfuserUtils.CountCalls(initMethod, virtualProtect);
 			if (virtualProtectCalls != 14 && virtualProtectCalls != 16)
 				return false;
 			if (!DeobUtils.HasInteger(initMethod, 0x3C))
@@ -130,7 +130,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return false;
 			if (!DeobUtils.HasInteger(initMethod, 0x6e69746e))
 				return false;
-			int locallocs = ConfuserUtils.CountOpCode(initMethod, Code.Localloc);
+			var locallocs = ConfuserUtils.CountOpCode(initMethod, Code.Localloc);
 
 			if (DeobUtils.HasInteger(initMethod, 0x18))
 				version = ConfuserVersion.v14_r58852;
@@ -158,7 +158,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool IsRev75725(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 9; i++) {
+			for (var i = 0; i < instrs.Count - 9; i++) {
 				if (!instrs[i].IsLdcI4() || instrs[i].GetLdcI4Value() != 8)
 					continue;
 				if (!instrs[i + 1].IsLdcI4() || instrs[i + 1].GetLdcI4Value() != 64)

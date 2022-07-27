@@ -150,8 +150,8 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		public void decrypt() {
-			int numNonDecryptedMethods = 0;
-			int totalEncryptedMethods = 0;
+			var numNonDecryptedMethods = 0;
+			var totalEncryptedMethods = 0;
 			foreach (var info in GetEncryptedMethods()) {
 				totalEncryptedMethods++;
 				var imageReader = GetImageReader(info.feature);
@@ -226,9 +226,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (strings.Count != 1)
 				throw new ApplicationException(string.Format("Could not find name of encrypted method"));
 
-			string feature = "";
-			string name = strings[0];
-			int index = name.IndexOf(':');
+			var feature = "";
+			var name = strings[0];
+			var index = name.IndexOf(':');
 			if (index >= 0) {
 				feature = name.Substring(0, index);
 				name = name.Substring(index + 1);

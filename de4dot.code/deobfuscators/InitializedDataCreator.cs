@@ -54,7 +54,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public void AddInitializeArrayCode(Block block, int start, int numToRemove, ITypeDefOrRef elementType, byte[] data) {
-			int index = start;
+			var index = start;
 			block.Replace(index++, numToRemove, Instruction.CreateLdcI4(data.Length / elementType.ToTypeSig().ElementType.GetPrimitiveSize()));
 			block.Insert(index++, OpCodes.Newarr.ToInstruction(elementType));
 			block.Insert(index++, OpCodes.Dup.ToInstruction());

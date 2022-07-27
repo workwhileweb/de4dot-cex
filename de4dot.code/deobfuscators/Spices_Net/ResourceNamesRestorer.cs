@@ -119,7 +119,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 
 			public bool Add(Resource resource) {
 				var name = resource.Name.String;
-				int index = name.LastIndexOf('.');
+				var index = name.LastIndexOf('.');
 				string ext;
 				if (index < 0)
 					ext = name;
@@ -180,7 +180,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 		}
 
 		static bool IsWinFormType(TypeDef type) {
-			for (int i = 0; i < 100; i++) {
+			for (var i = 0; i < 100; i++) {
 				var baseType = type.BaseType;
 				if (baseType == null)
 					break;
@@ -208,12 +208,12 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 
 		static bool Rename(ResourceDictionary rsrcDict, string ns, string name) {
 			var resourceName = name + ".resources";
-			uint hash = GetResourceHash(resourceName);
+			var hash = GetResourceHash(resourceName);
 			var resource = rsrcDict.GetAndRemove(hash, ns);
 			if (resource == null)
 				return false;
 
-			int index = resource.Name.String.LastIndexOf('.');
+			var index = resource.Name.String.LastIndexOf('.');
 			string resourceNamespace, newName;
 			if (index < 0) {
 				resourceNamespace = "";
@@ -250,7 +250,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code != Code.Newobj)
 						continue;

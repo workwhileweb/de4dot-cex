@@ -66,11 +66,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if ((decryptMethod = FindDecryptMethod(type)) == null)
 				return false;
 
-			bool callsFileStreamCtor = DotNetUtils.CallsMethod(initMethod, "System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)");
+			var callsFileStreamCtor = DotNetUtils.CallsMethod(initMethod, "System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)");
 			if (!DotNetUtils.HasString(initMethod, "Module error"))
 				version = ConfuserVersion.v14_r57884;
 			else if (virtProtect.IsPrivate && callsFileStreamCtor) {
-				int calls = ConfuserUtils.CountCalls(initMethod, "System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)");
+				var calls = ConfuserUtils.CountCalls(initMethod, "System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)");
 				if (calls <= 1)
 					version = ConfuserVersion.v14_r58564;
 				else if (calls == 2)
@@ -195,7 +195,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey4(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = FindCallvirtReadUInt32(instrs, i);
 				if (i < 0)
 					break;
@@ -230,11 +230,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey5(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = FindCallvirtReadUInt32(instrs, i);
 				if (i < 0)
 					break;
-				int index2 = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.BinaryReader::ReadInt32()");
+				var index2 = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.BinaryReader::ReadInt32()");
 				if (index2 < 0)
 					break;
 				if (index2 - i != 6)
@@ -289,9 +289,9 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var reader = new BinaryReader(new MemoryStream(methodsData));
 			reader.ReadInt16();	// sig
 			var writer = new BinaryWriter(new MemoryStream(fileData));
-			int numInfos = reader.ReadInt32();
-			for (int i = 0; i < numInfos; i++) {
-				uint rva = reader.ReadUInt32();
+			var numInfos = reader.ReadInt32();
+			for (var i = 0; i < numInfos; i++) {
+				var rva = reader.ReadUInt32();
 				if (rva == 0)
 					continue;
 				writer.BaseStream.Position = peImage.RvaToOffset(rva);
@@ -306,13 +306,13 @@ namespace de4dot.code.deobfuscators.Confuser {
 			reader.Position = 0;
 			var md5SumData = reader.ReadBytes((int)peImage.OptionalHeader.CheckSum ^ (int)key0);
 
-			int csOffs = (int)peImage.OptionalHeader.StartOffset + 0x40;
+			var csOffs = (int)peImage.OptionalHeader.StartOffset + 0x40;
 			Array.Clear(md5SumData, csOffs, 4);
 			/*var md5Sum =*/ DeobUtils.Md5Sum(md5SumData);
-			ulong checkSum = reader.ReadUInt64() ^ lkey0;
+			var checkSum = reader.ReadUInt64() ^ lkey0;
 			if (hasStrongNameInfo) {
-				int sn = reader.ReadInt32();
-				int snLen = reader.ReadInt32();
+				var sn = reader.ReadInt32();
+				var snLen = reader.ReadInt32();
 				if (sn != 0) {
 					if (peImage.RvaToOffset((uint)peImage.Cor20Header.StrongNameSignature.VirtualAddress) != sn ||
 						peImage.Cor20Header.StrongNameSignature.Size != snLen)
@@ -339,12 +339,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var reader = new BinaryReader(new MemoryStream(methodsData));
 			reader.ReadInt16();	// sig
 			var writer = new BinaryWriter(new MemoryStream(fileData));
-			int numInfos = reader.ReadInt32();
-			for (int i = 0; i < numInfos; i++) {
-				uint offs = reader.ReadUInt32() ^ key4;
+			var numInfos = reader.ReadInt32();
+			for (var i = 0; i < numInfos; i++) {
+				var offs = reader.ReadUInt32() ^ key4;
 				if (offs == 0)
 					continue;
-				uint rva = reader.ReadUInt32() ^ key4;
+				var rva = reader.ReadUInt32() ^ key4;
 				if (peImage.RvaToOffset(rva) != offs)
 					throw new ApplicationException("Invalid offs & rva");
 				writer.BaseStream.Position = peImage.RvaToOffset(rva);
@@ -375,16 +375,16 @@ namespace de4dot.code.deobfuscators.Confuser {
 		bool DecryptImage_v16_r71742(MyPEImage peImage, byte[] fileData) {
 			var reader = new BinaryReader(new MemoryStream(methodsData));
 			reader.ReadInt16();	// sig
-			int numInfos = reader.ReadInt32();
-			for (int i = 0; i < numInfos; i++) {
-				uint offs = reader.ReadUInt32() ^ key4;
+			var numInfos = reader.ReadInt32();
+			for (var i = 0; i < numInfos; i++) {
+				var offs = reader.ReadUInt32() ^ key4;
 				if (offs == 0)
 					continue;
-				uint rva = reader.ReadUInt32() ^ key5;
+				var rva = reader.ReadUInt32() ^ key5;
 				if (peImage.RvaToOffset(rva) != offs)
 					throw new ApplicationException("Invalid offs & rva");
-				int len = reader.ReadInt32();
-				for (int j = 0; j < len; j++)
+				var len = reader.ReadInt32();
+				for (var j = 0; j < len; j++)
 					fileData[offs + j] = reader.ReadByte();
 			}
 			return true;

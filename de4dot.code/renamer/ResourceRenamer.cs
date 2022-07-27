@@ -48,7 +48,7 @@ namespace de4dot.code.renamer {
 				nameToResource[name] = resource;
 				if (name.EndsWith(".g.resources"))
 					nameToResource[name.Substring(0, name.Length - 12)] = resource;
-				int index = name.LastIndexOf('.');
+				var index = name.LastIndexOf('.');
 				if (index > 0)
 					nameToResource[name.Substring(0, index)] = resource;
 			}
@@ -66,7 +66,7 @@ namespace de4dot.code.renamer {
 				if (!method.HasBody)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode != OpCodes.Ldstr)
 						continue;
@@ -83,8 +83,8 @@ namespace de4dot.code.renamer {
 						continue;
 					var newName = typeInfo.type.TypeDef.FullName;
 
-					bool renameCodeString = module.ObfuscatedFile.RenameResourcesInCode ||
-											IsCallingResourceManagerCtor(instrs, i, typeInfo);
+					var renameCodeString = module.ObfuscatedFile.RenameResourcesInCode ||
+                                           IsCallingResourceManagerCtor(instrs, i, typeInfo);
 					if (!renameCodeString)
 						Logger.v("Possible resource name in code: '{0}' => '{1}' in method {2}", Utils.RemoveNewlines(codeString), newName, Utils.RemoveNewlines(method));
 					else {
@@ -97,7 +97,7 @@ namespace de4dot.code.renamer {
 
 		static bool IsCallingResourceManagerCtor(IList<Instruction> instrs, int ldstrIndex, TypeInfo typeInfo) {
 			try {
-				int index = ldstrIndex + 1;
+				var index = ldstrIndex + 1;
 
 				var ldtoken = instrs[index++];
 				if (ldtoken.OpCode.Code != Code.Ldtoken)

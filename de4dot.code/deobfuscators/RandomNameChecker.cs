@@ -34,7 +34,7 @@ namespace de4dot.code.deobfuscators {
 			if (allUpper.IsMatch(name))
 				return true;
 
-			for (int i = 0; i < name.Length - 1; i++) {
+			for (var i = 0; i < name.Length - 1; i++) {
 				if (IsDigit(name[i]))
 					return false;
 				if (i > 0 && IsUpper(name[i]) && IsUpper(name[i - 1]))
@@ -42,7 +42,7 @@ namespace de4dot.code.deobfuscators {
 			}
 
 			var words = GetCamelWords(name);
-			int vowels = 0;
+			var vowels = 0;
 			foreach (var word in words) {
 				if (word.Length > 1 && HasVowel(word))
 					vowels++;
@@ -90,8 +90,8 @@ namespace de4dot.code.deobfuscators {
 			var words = new List<string>();
 			var sb = new StringBuilder();
 
-			for (int i = 0; i < name.Length; i++) {
-				char c = name[i];
+			for (var i = 0; i < name.Length; i++) {
+				var c = name[i];
 				if (IsUpper(c)) {
 					if (sb.Length > 0)
 						words.Add(sb.ToString());
@@ -107,7 +107,7 @@ namespace de4dot.code.deobfuscators {
 
 		// Returns true if random, false if unknown
 		public static bool IsRandom(string name) {
-			int len = name.Length;
+			var len = name.Length;
 			if (len < 5)
 				return false;
 
@@ -120,7 +120,7 @@ namespace de4dot.code.deobfuscators {
 			CountTypeWords(typeWords, out lower, out upper, out digits);
 			if (upper >= 3)
 				return true;
-			bool hasTwoUpperWords = upper == 2;
+			var hasTwoUpperWords = upper == 2;
 
 			foreach (var word in typeWords) {
 				if (word.Length > 1 && IsDigit(word[0]))
@@ -128,7 +128,7 @@ namespace de4dot.code.deobfuscators {
 			}
 
 			// Check for: lower, digit, lower
-			for (int i = 2; i < typeWords.Count; i++) {
+			for (var i = 2; i < typeWords.Count; i++) {
 				if (IsDigit(typeWords[i - 1][0]) && IsLower(typeWords[i - 2][0]) && IsLower(typeWords[i][0]))
 					return true;
 			}
@@ -155,7 +155,7 @@ namespace de4dot.code.deobfuscators {
 			var words = new List<string>();
 			var sb = new StringBuilder();
 
-			for (int i = 0; i < s.Length; ) {
+			for (var i = 0; i < s.Length; ) {
 				if (IsDigit(s[i])) {
 					sb.Length = 0;
 					while (i < s.Length && IsDigit(s[i]))
@@ -189,7 +189,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		static bool CountNumbers(List<string> words, int numbers) {
-			int num = 0;
+			var num = 0;
 			foreach (var word in words) {
 				if (string.IsNullOrEmpty(word))
 					continue;
@@ -208,7 +208,7 @@ namespace de4dot.code.deobfuscators {
 			foreach (var word in words) {
 				if (word.Length <= 1)
 					continue;
-				char c = word[0];
+				var c = word[0];
 				if (IsDigit(c))
 					digits++;
 				else if (IsLower(c))

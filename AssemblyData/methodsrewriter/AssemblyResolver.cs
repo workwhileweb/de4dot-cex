@@ -40,7 +40,7 @@ namespace AssemblyData.methodsrewriter {
 
 		void InitTypes() {
 			foreach (var type in assembly.GetTypes()) {
-				string key = (type.Namespace ?? "") + "." + type.Name;
+				var key = (type.Namespace ?? "") + "." + type.Name;
 				List<TypeResolver> list;
 				if (!types.TryGetValue(key, out list))
 					types[key] = list = new List<TypeResolver>();

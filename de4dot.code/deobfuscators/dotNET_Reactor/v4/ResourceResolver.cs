@@ -98,7 +98,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			if (fields.Count != 3 && fields.Count != 4)
 				return false;
 
-			int numBools = fields.Count == 3 ? 1 : 2;
+			var numBools = fields.Count == 3 ? 1 : 2;
 			var fieldTypes = new FieldTypes(fields);
 			if (fieldTypes.Count("System.Boolean") != numBools)
 				return false;

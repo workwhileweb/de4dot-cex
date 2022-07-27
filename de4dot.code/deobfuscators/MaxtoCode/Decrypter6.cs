@@ -52,11 +52,11 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 				throw new ArgumentException("Invalid data length", "encrypted");
 			var decrypted = new byte[encrypted.Length];
 
-			int count = decrypted.Length / 8;
-			for (int i = 0; i < count; i++) {
+			var count = decrypted.Length / 8;
+			for (var i = 0; i < count; i++) {
 				uint x, y;
 				Decrypt(BitConverter.ToUInt32(encrypted, i * 8), BitConverter.ToUInt32(encrypted, i * 8 + 4), out x, out y);
-				for (int j = 1; j < 100; j++)
+				for (var j = 1; j < 100; j++)
 					Decrypt(x, y, out x, out y);
 				WriteUInt32(decrypted, i * 8, x);
 				WriteUInt32(decrypted, i * 8 + 4, y);
@@ -73,7 +73,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		void Initialize() {
-			for (int i = 0; i < 0x100; i++) {
+			for (var i = 0; i < 0x100; i++) {
 				gen1[i] = (byte)((d1h[i / 16] << 4) | d1l[i & 0x0F]);
 				gen2[i] = (byte)((d2h[i / 16] << 4) | d2l[i & 0x0F]);
 				gen3[i] = (byte)((d3h[i / 16] << 4) | d3l[i & 0x0F]);
@@ -82,8 +82,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		void Decrypt(uint i0, uint i1, out uint o0, out uint o1) {
-			uint x = i0;
-			uint y = Decrypt(x + key[0]);
+			var x = i0;
+			var y = Decrypt(x + key[0]);
 			y ^= i1;
 			x ^= Decrypt(y + key[1]);
 			y ^= Decrypt(x + key[2]);
@@ -93,7 +93,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			y ^= Decrypt(x + key[6]);
 			x ^= Decrypt(y + key[7]);
 
-			for (int i = 0; i < 3; i++) {
+			for (var i = 0; i < 3; i++) {
 				y ^= Decrypt(x + key[7]);
 				x ^= Decrypt(y + key[6]);
 				y ^= Decrypt(x + key[5]);
@@ -109,10 +109,10 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		uint Decrypt(uint val) {
-			uint x = (uint)((gen1[(byte)(val >> 24)] << 24) |
-				(gen2[(byte)(val >> 16)] << 16) |
-				(gen3[(byte)(val >> 8)] << 8) |
-				gen4[(byte)val]);
+			var x = (uint)((gen1[(byte)(val >> 24)] << 24) |
+                           (gen2[(byte)(val >> 16)] << 16) |
+                           (gen3[(byte)(val >> 8)] << 8) |
+                           gen4[(byte)val]);
 			return Ror(x, 21);
 		}
 

@@ -29,13 +29,13 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 
 		public bool Restore(MethodDef method) {
 			this.method = method;
-			bool atLeastOneFailed = false;
+			var atLeastOneFailed = false;
 
 			if (method == null || method.Body == null)
 				return !atLeastOneFailed;
 
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.Operand != null)
 					continue;

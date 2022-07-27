@@ -214,8 +214,8 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
 				infos.Clear();
-				for (int i = 0; i < instrs.Count - 6; i++) {
-					int index = i;
+				for (var i = 0; i < instrs.Count - 6; i++) {
+					var index = i;
 
 					var ldci4 = instrs[index++];
 					if (!ldci4.IsLdcI4())

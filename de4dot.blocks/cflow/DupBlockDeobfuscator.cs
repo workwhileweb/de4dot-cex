@@ -33,7 +33,7 @@ namespace de4dot.blocks.cflow {
 			if (!block.LastInstr.IsConditionalBranch() && block.LastInstr.OpCode.Code != Code.Switch)
 				return false;
 
-			bool modified = false;
+			var modified = false;
 			foreach (var source in new List<Block>(block.Sources)) {
 				if (source.GetOnlyTarget() != block)
 					continue;

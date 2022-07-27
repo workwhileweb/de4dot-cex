@@ -83,7 +83,7 @@ namespace de4dot.mdecrypt {
 				memStream.Position = kv.Key;
 				// kv.Value (func/label) = destAddr + kv.Key + 4 + displ
 				var displ = (ulong)((byte*)kv.Value - (byte*)destAddr - kv.Key - 4);
-				uint high = (uint)(displ >> 32);
+				var high = (uint)(displ >> 32);
 				if (high != 0 && high != 0xFFFFFFFF)
 					throw new ApplicationException("Invalid displ");
 				writer.Write((uint)displ);

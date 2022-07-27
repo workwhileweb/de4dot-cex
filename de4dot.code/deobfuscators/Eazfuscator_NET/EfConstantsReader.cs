@@ -32,7 +32,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		}
 
 		void FindConstants() {
-			for (int index = 0; index < instructions.Count; ) {
+			for (var index = 0; index < instructions.Count; ) {
 				int value;
 				if (!GetInt32(ref index, out value))
 					break;

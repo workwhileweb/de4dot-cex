@@ -85,8 +85,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 			if (type.Fields.Count != 2)
 				return false;
 
-			int enumTypes = 0;
-			int objectTypes = 0;
+			var enumTypes = 0;
+			var objectTypes = 0;
 			foreach (var field in type.Fields) {
 				var fieldType = field.FieldSig.GetFieldType().TryGetTypeDef();
 				if (fieldType != null && fieldType.IsEnum)
@@ -118,9 +118,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 			if (type.NestedTypes.Count == 0)
 				return false;
 
-			int stackValueTypes = 0;
-			int int32Types = 0;
-			int objectTypes = 0;
+			var stackValueTypes = 0;
+			var int32Types = 0;
+			var objectTypes = 0;
 			foreach (var field in type.Fields) {
 				if (field.IsLiteral)
 					continue;

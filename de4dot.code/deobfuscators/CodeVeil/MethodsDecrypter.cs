@@ -76,8 +76,8 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 			protected override bool DecryptCode(DumpedMethod dm) {
 				var code = dm.code;
-				for (int i = 0; i < code.Length; i++) {
-					for (int j = 0; j < 4 && i + j < code.Length; j++)
+				for (var i = 0; i < code.Length; i++) {
+					for (var j = 0; j < 4 && i + j < code.Length; j++)
 						code[i + j] ^= decryptKey[j];
 				}
 
@@ -155,9 +155,9 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 				peImage.ReadMethodTableRowTo(dm, rid);
 				if (dm.mdRVA == 0)
 					continue;
-				uint bodyOffset = peImage.RvaToOffset(dm.mdRVA);
+				var bodyOffset = peImage.RvaToOffset(dm.mdRVA);
 
-				byte b = peImage.OffsetReadByte(bodyOffset);
+				var b = peImage.OffsetReadByte(bodyOffset);
 				uint codeOffset;
 				if ((b & 3) == 2) {
 					if (b != 2)
@@ -199,14 +199,14 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 			const int RVA_EXECUTIVE_OFFSET = 1 * 4;
 			const int ENC_CODE_OFFSET = 6 * 4;
-			int lastOffset = Math.Min(fileData.Length, (int)(section.PointerToRawData + section.SizeOfRawData));
-			for (int offset = GetStartOffset(peImage); offset < lastOffset; ) {
+			var lastOffset = Math.Min(fileData.Length, (int)(section.PointerToRawData + section.SizeOfRawData));
+			for (var offset = GetStartOffset(peImage); offset < lastOffset; ) {
 				offset = FindSig(fileData, offset, lastOffset, initializeMethodEnd);
 				if (offset < 0)
 					return null;
 				offset += initializeMethodEnd.Length;
 
-				short retImm16 = BitConverter.ToInt16(fileData, offset);
+				var retImm16 = BitConverter.ToInt16(fileData, offset);
 				if (retImm16 != 0x0C && retImm16 != 0x10)
 					continue;
 				offset += 2;
@@ -214,17 +214,17 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 					return null;
 
 				// rva is 0 when the assembly has been embedded
-				uint rva = BitConverter.ToUInt32(fileData, offset + RVA_EXECUTIVE_OFFSET);
+				var rva = BitConverter.ToUInt32(fileData, offset + RVA_EXECUTIVE_OFFSET);
 				if (rva != 0 && mainType.Rvas.IndexOf(rva) < 0)
 					continue;
 
-				int relOffs = BitConverter.ToInt32(fileData, offset + ENC_CODE_OFFSET);
+				var relOffs = BitConverter.ToInt32(fileData, offset + ENC_CODE_OFFSET);
 				if (relOffs <= 0 || relOffs >= section.SizeOfRawData)
 					continue;
 				reader.Position = section.PointerToRawData + relOffs;
 
-				int size = (int)reader.ReadCompressedUInt32();
-				int endOffset = relOffs + size;
+				var size = (int)reader.ReadCompressedUInt32();
+				var endOffset = relOffs + size;
 				if (endOffset < relOffs || endOffset > section.SizeOfRawData)
 					continue;
 
@@ -235,9 +235,9 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		int GetStartOffset(MyPEImage peImage) {
-			int minOffset = int.MaxValue;
+			var minOffset = int.MaxValue;
 			foreach (var rva in mainType.Rvas) {
-				int rvaOffs = (int)peImage.RvaToOffset((uint)rva);
+				var rvaOffs = (int)peImage.RvaToOffset((uint)rva);
 				if (rvaOffs < minOffset)
 					minOffset = rvaOffs;
 			}
@@ -245,7 +245,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		static int FindSig(byte[] fileData, int offset, int lastOffset, byte[] sig) {
-			for (int i = offset; i < lastOffset - sig.Length + 1; i++) {
+			for (var i = offset; i < lastOffset - sig.Length + 1; i++) {
 				if (fileData[i] != sig[0])
 					continue;
 				if (Compare(fileData, i + 1, sig, 1, sig.Length - 1))
@@ -255,7 +255,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		static bool Compare(byte[] a1, int i1, byte[] a2, int i2, int len) {
-			for (int i = 0; i < len; i++) {
+			for (var i = 0; i < len; i++) {
 				if (a1[i1++] != a2[i2++])
 					return false;
 			}

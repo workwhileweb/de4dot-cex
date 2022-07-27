@@ -117,10 +117,10 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 			var decrypted = resourceDecrypter.Decrypt(encryptedResource.Data.ReadAllBytes());
 			var reader = new BinaryReader(new MemoryStream(decrypted));
-			int numAssemblies = reader.ReadInt32();
+			var numAssemblies = reader.ReadInt32();
 			embeddedAssemblyInfos = new EmbeddedAssemblyInfo[numAssemblies];
-			for (int i = 0; i < numAssemblies; i++) {
-				string name = reader.ReadString();
+			for (var i = 0; i < numAssemblies; i++) {
+				var name = reader.ReadString();
 				var data = reader.ReadBytes(reader.ReadInt32());
 				var mod = ModuleDefMD.Load(data);
 				embeddedAssemblyInfos[i] = new EmbeddedAssemblyInfo(name, DeobUtils.GetExtension(mod.Kind), data);

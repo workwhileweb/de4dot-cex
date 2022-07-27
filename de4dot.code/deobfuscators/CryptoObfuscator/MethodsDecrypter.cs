@@ -121,12 +121,12 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return;
 			var decrypted = resourceDecrypter.Decrypt(resource.GetResourceStream());
 			var reader = MemoryImageStream.Create(decrypted);
-			int numEncrypted = reader.ReadInt32();
+			var numEncrypted = reader.ReadInt32();
 			Logger.v("Restoring {0} encrypted methods", numEncrypted);
 			Logger.Instance.Indent();
-			for (int i = 0; i < numEncrypted; i++) {
-				int delegateTypeToken = reader.ReadInt32();
-				uint codeOffset = reader.ReadUInt32();
+			for (var i = 0; i < numEncrypted; i++) {
+				var delegateTypeToken = reader.ReadInt32();
+				var codeOffset = reader.ReadUInt32();
 				var origOffset = reader.Position;
 				reader.Position = codeOffset;
 				Decrypt(reader, delegateTypeToken, simpleDeobfuscator);
@@ -175,7 +175,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return false;
 
 			var instrs = cctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4())
 					continue;

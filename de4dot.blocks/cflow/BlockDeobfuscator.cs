@@ -34,7 +34,7 @@ namespace de4dot.blocks.cflow {
 		public bool Deobfuscate(List<Block> allBlocks) {
 			Initialize(allBlocks);
 
-			bool modified = false;
+			var modified = false;
 			foreach (var block in allBlocks) {
 				try {
 					modified |= Deobfuscate(block);

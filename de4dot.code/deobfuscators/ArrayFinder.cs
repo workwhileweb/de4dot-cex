@@ -32,7 +32,7 @@ namespace de4dot.code.deobfuscators {
 		public static List<byte[]> GetArrays(MethodDef method, IType arrayElementType) {
 			var arrays = new List<byte[]>();
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				IType type;
 				var ary = GetArray(instrs, ref i, out type);
 				if (ary == null)
@@ -46,7 +46,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public static byte[] GetArray(IList<Instruction> instrs, ref int index, out IType type) {
-			for (int i = index; i < instrs.Count - 2; i++) {
+			for (var i = index; i < instrs.Count - 2; i++) {
 				var newarr = instrs[i++];
 				if (newarr.OpCode.Code != Code.Newarr)
 					continue;
@@ -72,7 +72,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public static byte[] GetInitializedByteArray(MethodDef method, int arraySize) {
-			int newarrIndex = FindNewarr(method, arraySize);
+			var newarrIndex = FindNewarr(method, arraySize);
 			if (newarrIndex < 0)
 				return null;
 			return GetInitializedByteArray(arraySize, method, ref newarrIndex);
@@ -82,7 +82,7 @@ namespace de4dot.code.deobfuscators {
 			var resultValueArray = GetInitializedArray(arraySize, method, ref newarrIndex, Code.Stelem_I1);
 
 			var resultArray = new byte[resultValueArray.Length];
-			for (int i = 0; i < resultArray.Length; i++) {
+			for (var i = 0; i < resultArray.Length; i++) {
 				var intValue = resultValueArray[i] as Int32Value;
 				if (intValue == null || !intValue.AllBitsValid())
 					return null;
@@ -95,7 +95,7 @@ namespace de4dot.code.deobfuscators {
 			var resultValueArray = GetInitializedArray(arraySize, method, ref newarrIndex, Code.Stelem_I2);
 
 			var resultArray = new short[resultValueArray.Length];
-			for (int i = 0; i < resultArray.Length; i++) {
+			for (var i = 0; i < resultArray.Length; i++) {
 				var intValue = resultValueArray[i] as Int32Value;
 				if (intValue == null || !intValue.AllBitsValid())
 					return null;
@@ -108,7 +108,7 @@ namespace de4dot.code.deobfuscators {
 			var resultValueArray = GetInitializedArray(arraySize, method, ref newarrIndex, Code.Stelem_I4);
 
 			var resultArray = new int[resultValueArray.Length];
-			for (int i = 0; i < resultArray.Length; i++) {
+			for (var i = 0; i < resultArray.Length; i++) {
 				var intValue = resultValueArray[i] as Int32Value;
 				if (intValue == null || !intValue.AllBitsValid())
 					return null;
@@ -123,7 +123,7 @@ namespace de4dot.code.deobfuscators {
 				return null;
 
 			var ary = new uint[resultArray.Length];
-			for (int i = 0; i < ary.Length; i++)
+			for (var i = 0; i < ary.Length; i++)
 				ary[i] = (uint)resultArray[i];
 			return ary;
 		}
@@ -184,7 +184,7 @@ done:
 		}
 
 		static int FindNewarr(MethodDef method, int arraySize) {
-			for (int i = 0; ; i++) {
+			for (var i = 0; ; i++) {
 				int size;
 				if (!FindNewarr(method, ref i, out size))
 					return -1;

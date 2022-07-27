@@ -79,7 +79,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				if (!DotNetUtils.IsMethod(method, "System.Object", "(System.UInt32)"))
 					continue;
 
-				DecrypterInfo info = new DecrypterInfo();
+				var info = new DecrypterInfo();
 				var localTypes = new LocalTypes(method);
 				if (localTypes.All(requiredLocals1)) {
 					if (localTypes.Exists("System.Collections.BitArray"))	// or System.Random
@@ -165,7 +165,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		protected override byte[] DecryptData(DecrypterInfo info, MethodDef caller, object[] args, out byte typeCode) {
-			uint offs = info.CalcHash(caller.MDToken.ToUInt32()) ^ (uint)args[0];
+			var offs = info.CalcHash(caller.MDToken.ToUInt32()) ^ (uint)args[0];
 			reader.Position = offs;
 			typeCode = reader.ReadByte();
 			if (typeCode != info.int32Type && typeCode != info.int64Type &&
@@ -199,15 +199,15 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var rand = new Random((int)(info.key0 ^ offs));
 			var decrypted = new byte[encrypted.Length];
 			rand.NextBytes(decrypted);
-			for (int i = 0; i < decrypted.Length; i++)
+			for (var i = 0; i < decrypted.Length; i++)
 				decrypted[i] ^= encrypted[i];
 			return decrypted;
 		}
 
 		byte[] DecryptConstant_v15_r60785_dynamic(DecrypterInfo info, byte[] encrypted, uint offs) {
 			var instrs = info.decryptMethod.Body.Instructions;
-			int startIndex = GetDynamicStartIndex_v15_r60785(instrs);
-			int endIndex = GetDynamicEndIndex_v15_r60785(instrs, startIndex);
+			var startIndex = GetDynamicStartIndex_v15_r60785(instrs);
+			var endIndex = GetDynamicEndIndex_v15_r60785(instrs, startIndex);
 			if (endIndex < 0)
 				throw new ApplicationException("Could not find start/endIndex");
 
@@ -219,7 +219,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static int GetDynamicStartIndex_v15_r60785(IList<Instruction> instrs) {
-			int index = FindInstruction(instrs, 0, Code.Conv_I8);
+			var index = FindInstruction(instrs, 0, Code.Conv_I8);
 			if (index < 0)
 				return -1;
 			if (FindInstruction(instrs, index + 1, Code.Conv_I8) >= 0)
@@ -230,7 +230,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		static int GetDynamicEndIndex_v15_r60785(IList<Instruction> instrs, int index) {
 			if (index < 0)
 				return -1;
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.FlowControl != FlowControl.Next)
 					break;
@@ -241,7 +241,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static int FindInstruction(IList<Instruction> instrs, int index, Code code) {
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				if (instrs[i].OpCode.Code == code)
 					return i;
 			}

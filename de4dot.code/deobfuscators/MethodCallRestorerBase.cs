@@ -113,7 +113,7 @@ namespace de4dot.code.deobfuscators {
 				return;
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var call = instrs[i];
 					if (call.OpCode.Code != Code.Call)
 						continue;

@@ -133,7 +133,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 		bool CheckCctor(MethodDef cctor, out FieldDef compressedDataField, out StringDataFlags flags) {
 			flags = 0;
 			var instructions = cctor.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var ldci4 = instructions[i];
 				if (!ldci4.IsLdcI4())
 					continue;
@@ -150,7 +150,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 				if (field == null || field.InitialValue == null || field.InitialValue.Length == 0)
 					continue;
 
-				int index = i + 1 + instrs.Count;
+				var index = i + 1 + instrs.Count;
 				if (index < instructions.Count && instructions[index].OpCode.Code == Code.Call)
 					flags = GetStringDataFlags(instructions[index].Operand as MethodDef);
 
@@ -295,14 +295,14 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 
 		DecrypterInfo CreateInfo(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci4_1 = instrs[i];
 				var ldci4_2 = instrs[i + 1];
 				if (!ldci4_1.IsLdcI4() || !ldci4_2.IsLdcI4())
 					continue;
 
-				int offset = ldci4_1.GetLdcI4Value();
-				int length = ldci4_2.GetLdcI4Value();
+				var offset = ldci4_1.GetLdcI4Value();
+				var length = ldci4_2.GetLdcI4Value();
 				return new DecrypterInfo(method, offset, length);
 			}
 
@@ -317,14 +317,14 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 			Array.Copy(encryptedDataField.InitialValue, 0, decryptedData, 0, decryptedData.Length);
 
 			if ((stringDataFlags & StringDataFlags.Encrypted1) != 0) {
-				for (int i = 0; i < decryptedData.Length; i++)
+				for (var i = 0; i < decryptedData.Length; i++)
 					decryptedData[i] ^= (byte)i;
 			}
 
 			if ((stringDataFlags & StringDataFlags.Encrypted2) != 0) {
 				var k = module.Assembly.PublicKey.Data;
 				int mask = (byte)(~k.Length);
-				for (int i = 0; i < decryptedData.Length; i++)
+				for (var i = 0; i < decryptedData.Length; i++)
 					decryptedData[i] ^= k[i & mask];
 			}
 

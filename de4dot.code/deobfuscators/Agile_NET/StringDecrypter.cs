@@ -123,7 +123,7 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 			if (method == null || method.Body == null)
 				return null;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				if (instrs[i].OpCode.Code != Code.Ldtoken)
 					continue;
 
@@ -153,7 +153,7 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 				if (!method.HasBody)
 					continue;
 
-				bool accessedArrayField = false;
+				var accessedArrayField = false;
 				foreach (var instr in method.Body.Instructions) {
 					var f = instr.Operand as FieldDef;
 					accessedArrayField |= f == keyArrayField;
@@ -190,7 +190,7 @@ exit: ;
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = instrs.Count - 2; i >= 0; i--) {
+				for (var i = instrs.Count - 2; i >= 0; i--) {
 					var newobj = instrs[i];
 					if (newobj.OpCode.Code != Code.Newobj)
 						continue;
@@ -212,8 +212,8 @@ exit: ;
 		public string Decrypt(string es) {
 			if (stringDecrypterKey == null)
 				throw new ApplicationException("Trying to decrypt strings when stringDecrypterKey is null (could not find it!)");
-			char[] buf = new char[es.Length];
-			for (int i = 0; i < es.Length; i++)
+			var buf = new char[es.Length];
+			for (var i = 0; i < es.Length; i++)
 				buf[i] = (char)(es[i] ^ stringDecrypterKey[i % stringDecrypterKey.Length]);
 			return new string(buf);
 		}

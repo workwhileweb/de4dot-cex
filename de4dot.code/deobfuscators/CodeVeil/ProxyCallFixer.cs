@@ -91,7 +91,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 		protected override object CheckCctor(ref TypeDef type, MethodDef cctor) {
 			var instrs = cctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4())
 					continue;
@@ -102,9 +102,9 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 				if (call.Operand != info.initMethod)
 					continue;
 
-				int offset = ldci4.GetLdcI4Value();
+				var offset = ldci4.GetLdcI4Value();
 				reader.Position = offset;
-				uint rid = reader.ReadCompressedUInt32();
+				var rid = reader.ReadCompressedUInt32();
 				if (rid != type.Rid)
 					throw new ApplicationException("Invalid RID");
 				return string.Empty;	// It's non-null
@@ -113,10 +113,10 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		protected override void GetCallInfo(object context, FieldDef field, out IMethod calledMethod, out OpCode callOpcode) {
-			byte flags = reader.ReadByte();
+			var flags = reader.ReadByte();
 
-			int methodToken = 0x06000000 + ((flags & 0x3F) << 24) + (int)reader.ReadCompressedUInt32();
-			int genericTypeToken = (flags & 0x40) == 0 ? -1 : 0x1B000000 + (int)reader.ReadCompressedUInt32();
+			var methodToken = 0x06000000 + ((flags & 0x3F) << 24) + (int)reader.ReadCompressedUInt32();
+			var genericTypeToken = (flags & 0x40) == 0 ? -1 : 0x1B000000 + (int)reader.ReadCompressedUInt32();
 			callOpcode = (flags & 0x80) != 0 ? OpCodes.Callvirt : OpCodes.Call;
 
 			calledMethod = module.ResolveToken(methodToken) as IMethod;

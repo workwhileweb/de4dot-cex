@@ -132,8 +132,8 @@ namespace de4dot.code.deobfuscators {
 			if (blocks.Method.DeclaringType != null && delegateTypesDict.ContainsKey(blocks.Method.DeclaringType))
 				return;
 			var allBlocks = blocks.MethodBlocks.GetAllBlocks();
-			int loops = ProxyCallIsObfuscated ? 50 : 1;
-			for (int i = 0; i < loops; i++) {
+			var loops = ProxyCallIsObfuscated ? 50 : 1;
+			for (var i = 0; i < loops; i++) {
 				if (!Deobfuscate(blocks, allBlocks))
 					break;
 			}
@@ -223,7 +223,7 @@ namespace de4dot.code.deobfuscators {
 				if (!type.HasFields)
 					continue;
 
-				object context = CheckCctor(ref type, cctor);
+				var context = CheckCctor(ref type, cctor);
 				if (context == null)
 					continue;
 
@@ -261,7 +261,7 @@ namespace de4dot.code.deobfuscators {
 
 			foreach (var block in allBlocks) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode != OpCodes.Ldsfld)
 						continue;
@@ -300,7 +300,7 @@ namespace de4dot.code.deobfuscators {
 				visited[block] = true;
 
 			var instrs = block.Instructions;
-			for (int i = index + 1; i < instrs.Count; i++) {
+			for (var i = index + 1; i < instrs.Count; i++) {
 				if (stack <= 0)
 					return null;
 				var instr = instrs[i];
@@ -347,14 +347,14 @@ namespace de4dot.code.deobfuscators {
 		void FixBrokenCalls(MethodDef obfuscatedMethod, IList<Block> allBlocks) {
 			foreach (var block in allBlocks) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var call = instrs[i];
 					if (call.OpCode != OpCodes.Call && call.OpCode != OpCodes.Callvirt)
 						continue;
 					var methodRef = call.Operand as IMethod;
 					if (methodRef == null || methodRef.Name != "Invoke")
 						continue;
-					MethodDef method = DotNetUtils.GetMethod2(module, methodRef);
+					var method = DotNetUtils.GetMethod2(module, methodRef);
 					if (method == null || method.DeclaringType == null)
 						continue;
 					if (!delegateTypesDict.ContainsKey(method.DeclaringType))
@@ -407,7 +407,7 @@ namespace de4dot.code.deobfuscators {
 				if (!type.HasFields)
 					continue;
 
-				object context = CheckCctor(type, cctor);
+				var context = CheckCctor(type, cctor);
 				if (context == null)
 					continue;
 
@@ -453,7 +453,7 @@ namespace de4dot.code.deobfuscators {
 					continue;
 
 				var instructions = method.Body.Instructions;
-				for (int i = 0; i < instructions.Count; i++) {
+				for (var i = 0; i < instructions.Count; i++) {
 					var instr = instructions[i];
 					if (instr.OpCode.Code != Code.Ldsfld)
 						continue;
@@ -473,7 +473,7 @@ namespace de4dot.code.deobfuscators {
 
 			foreach (var block in allBlocks) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode != OpCodes.Call)
 						continue;
@@ -579,7 +579,7 @@ namespace de4dot.code.deobfuscators {
                 if (!type.HasFields)
                     continue;
 
-                object context = CheckCctor(type, cctor);
+                var context = CheckCctor(type, cctor);
                 if (context == null)
                     continue;
 
@@ -591,8 +591,8 @@ namespace de4dot.code.deobfuscators {
                 foreach (var field in type.Fields)
                 {
                     MethodDef proxyMethod;
-                    bool supportType1 = fieldToMethod.TryGetValue(field, out proxyMethod);
-                    bool supportType2 = field.IsStatic;
+                    var supportType1 = fieldToMethod.TryGetValue(field, out proxyMethod);
+                    var supportType2 = field.IsStatic;
 
                     if (!supportType1 && !supportType2)
                         continue;
@@ -641,7 +641,7 @@ namespace de4dot.code.deobfuscators {
                     continue;
 
                 var instructions = method.Body.Instructions;
-                for (int i = 0; i < instructions.Count; i++)
+                for (var i = 0; i < instructions.Count; i++)
                 {
                     var instr = instructions[i];
                     if (instr.OpCode.Code != Code.Ldsfld)
@@ -664,7 +664,7 @@ namespace de4dot.code.deobfuscators {
             foreach (var block in allBlocks)
             {
                 var instrs = block.Instructions;
-                for (int i = 0; i < instrs.Count; i++)
+                for (var i = 0; i < instrs.Count; i++)
                 {
                     var instr = instrs[i];
 
@@ -721,7 +721,7 @@ namespace de4dot.code.deobfuscators {
                 visited[block] = true;
 
             var instrs = block.Instructions;
-            for (int i = index + 1; i < instrs.Count; i++)
+            for (var i = index + 1; i < instrs.Count; i++)
             {
                 if (stack <= 0)
                     return null;

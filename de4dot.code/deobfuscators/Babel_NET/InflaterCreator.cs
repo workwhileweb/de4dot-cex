@@ -96,7 +96,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (method == null || method.Body == null)
 				return null;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4() || ldci4_1.GetLdcI4Value() != 16)
 					continue;

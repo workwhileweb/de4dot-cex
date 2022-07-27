@@ -65,7 +65,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			public byte[] Decrypt(byte[] encryptedData) {
 				byte[] key, iv;
 				var reader = new BinaryReader(new MemoryStream(encryptedData));
-				bool isCompressed = GetHeaderData(reader, out key, out iv);
+				var isCompressed = GetHeaderData(reader, out key, out iv);
 				var data = DeobUtils.DesDecrypt(encryptedData,
 										(int)reader.BaseStream.Position,
 										(int)(reader.BaseStream.Length - reader.BaseStream.Position),
@@ -77,7 +77,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 			bool GetHeaderData(BinaryReader reader, out byte[] key, out byte[] iv) {
 				iv = reader.ReadBytes(reader.ReadByte());
-				bool hasEmbeddedKey = reader.ReadBoolean();
+				var hasEmbeddedKey = reader.ReadBoolean();
 				if (hasEmbeddedKey)
 					key = reader.ReadBytes(reader.ReadByte());
 				else {
@@ -99,9 +99,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			}
 
 			public byte[] Decrypt(byte[] encryptedData) {
-				int index = 0;
+				var index = 0;
 				byte[] key, iv;
-				bool isCompressed = GetKeyIv(GetHeaderData(encryptedData, ref index), out key, out iv);
+				var isCompressed = GetKeyIv(GetHeaderData(encryptedData, ref index), out key, out iv);
 				var data = DeobUtils.DesDecrypt(encryptedData, index, encryptedData.Length - index, key, iv);
 				if (isCompressed)
 					data = DeobUtils.Inflate(data, true);
@@ -109,7 +109,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			}
 
 			byte[] GetHeaderData(byte[] encryptedData, ref int index) {
-				bool xorDecrypt = encryptedData[index++] != 0;
+				var xorDecrypt = encryptedData[index++] != 0;
 				var headerData = new byte[BitConverter.ToUInt16(encryptedData, index)];
 				Array.Copy(encryptedData, index + 2, headerData, 0, headerData.Length);
 				index += headerData.Length + 2;
@@ -119,7 +119,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				var key = new byte[8];
 				Array.Copy(encryptedData, index, key, 0, key.Length);
 				index += key.Length;
-				for (int i = 0; i < headerData.Length; i++)
+				for (var i = 0; i < headerData.Length; i++)
 					headerData[i] ^= key[i % key.Length];
 				return headerData;
 			}
@@ -133,12 +133,12 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				}
 
 				// 4.2 (and earlier?) always compress the data
-				bool isCompressed = true;
+				var isCompressed = true;
 				if (headerData[(int)reader.BaseStream.Position] != 8)
 					isCompressed = reader.ReadBoolean();
 
 				iv = reader.ReadBytes(reader.ReadByte());
-				bool hasEmbeddedKey = reader.ReadBoolean();
+				var hasEmbeddedKey = reader.ReadBoolean();
 				if (hasEmbeddedKey)
 					key = reader.ReadBytes(reader.ReadByte());
 				else {
@@ -161,9 +161,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			}
 
 			public byte[] Decrypt(byte[] encryptedData) {
-				int index = 0;
+				var index = 0;
 				byte[] key, iv;
-				bool isCompressed = GetKeyIv(GetHeaderData(encryptedData, ref index), out key, out iv);
+				var isCompressed = GetKeyIv(GetHeaderData(encryptedData, ref index), out key, out iv);
 				var data = DeobUtils.DesDecrypt(encryptedData, index, encryptedData.Length - index, key, iv);
 				if (isCompressed)
 					data = DeobUtils.Inflate(data, inflater);
@@ -171,7 +171,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			}
 
 			byte[] GetHeaderData(byte[] encryptedData, ref int index) {
-				bool xorDecrypt = encryptedData[index++] != 0;
+				var xorDecrypt = encryptedData[index++] != 0;
 				var headerData = new byte[BitConverter.ToUInt16(encryptedData, index)];
 				Array.Copy(encryptedData, index + 2, headerData, 0, headerData.Length);
 				index += headerData.Length + 2;
@@ -181,7 +181,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				var key = new byte[6];
 				Array.Copy(encryptedData, index, key, 0, key.Length);
 				index += key.Length;
-				for (int i = 0; i < headerData.Length; i++)
+				for (var i = 0; i < headerData.Length; i++)
 					headerData[i] ^= key[i % key.Length];
 				return headerData;
 			}
@@ -190,11 +190,11 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				var reader = new BinaryReader(new MemoryStream(headerData));
 
 				/*var license =*/ reader.ReadString();
-				bool isCompressed = reader.ReadBoolean();
+				var isCompressed = reader.ReadBoolean();
 
 				/*var unkData =*/ reader.ReadBytes(reader.ReadInt32());
 
-				bool hasEmbeddedKey = reader.ReadBoolean();
+				var hasEmbeddedKey = reader.ReadBoolean();
 
 				iv = reader.ReadBytes(reader.ReadByte());
 				if (hasEmbeddedKey)

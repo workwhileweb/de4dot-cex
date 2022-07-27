@@ -116,18 +116,18 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 
 		byte[] Unpack2(MyPEImage peImage) {
 			shouldUnpack = false;
-			uint headerOffset = (uint)peImage.Length - 12;
-			uint offsetEncryptedAssembly = CheckOffset(peImage, peImage.OffsetReadUInt32(headerOffset));
-			uint ezencryptionLibLength = peImage.OffsetReadUInt32(headerOffset + 4);
-			uint iniFileLength = peImage.OffsetReadUInt32(headerOffset + 8);
+			var headerOffset = (uint)peImage.Length - 12;
+			var offsetEncryptedAssembly = CheckOffset(peImage, peImage.OffsetReadUInt32(headerOffset));
+			var ezencryptionLibLength = peImage.OffsetReadUInt32(headerOffset + 4);
+			var iniFileLength = peImage.OffsetReadUInt32(headerOffset + 8);
 
-			uint offsetClrVersionNumber = checked(offsetEncryptedAssembly - 12);
-			uint iniFileOffset = checked(headerOffset - iniFileLength);
-			uint ezencryptionLibOffset = checked(iniFileOffset - ezencryptionLibLength);
+			var offsetClrVersionNumber = checked(offsetEncryptedAssembly - 12);
+			var iniFileOffset = checked(headerOffset - iniFileLength);
+			var ezencryptionLibOffset = checked(iniFileOffset - ezencryptionLibLength);
 
-			uint clrVerMajor = peImage.OffsetReadUInt32(offsetClrVersionNumber);
-			uint clrVerMinor = peImage.OffsetReadUInt32(offsetClrVersionNumber + 4);
-			uint clrVerBuild = peImage.OffsetReadUInt32(offsetClrVersionNumber + 8);
+			var clrVerMajor = peImage.OffsetReadUInt32(offsetClrVersionNumber);
+			var clrVerMinor = peImage.OffsetReadUInt32(offsetClrVersionNumber + 4);
+			var clrVerBuild = peImage.OffsetReadUInt32(offsetClrVersionNumber + 8);
 			if (clrVerMajor <= 0 || clrVerMajor >= 20 || clrVerMinor >= 20 || clrVerBuild >= 1000000)
 				return null;
 
@@ -142,7 +142,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 			if (sizes.Length - 1 != filenames.Length)
 				return null;
 
-			byte[] ezencryptionLibData = Decompress1(peImage.OffsetReadBytes(ezencryptionLibOffset, (int)ezencryptionLibLength));
+			var ezencryptionLibData = Decompress1(peImage.OffsetReadBytes(ezencryptionLibOffset, (int)ezencryptionLibLength));
 			var ezencryptionLibModule = ModuleDefMD.Load(ezencryptionLibData);
 			var decrypter = new ApplicationModeDecrypter(ezencryptionLibModule);
 			if (!decrypter.Detected)
@@ -150,7 +150,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 
 			var mainAssembly = UnpackEmbeddedFile(peImage, 0, decrypter);
 			decrypter.MemoryPatcher.Patch(mainAssembly.data);
-			for (int i = 1; i < filenames.Length; i++)
+			for (var i = 1; i < filenames.Length; i++)
 				satelliteAssemblies.Add(UnpackEmbeddedFile(peImage, i, decrypter));
 
 			ClearDllBit(mainAssembly.data);
@@ -159,8 +159,8 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 
 		static void ClearDllBit(byte[] peImageData) {
 			using (var mainPeImage = new MyPEImage(peImageData)) {
-				uint characteristicsOffset = (uint)mainPeImage.PEImage.ImageNTHeaders.FileHeader.StartOffset + 18;
-				ushort characteristics = mainPeImage.OffsetReadUInt16(characteristicsOffset);
+				var characteristicsOffset = (uint)mainPeImage.PEImage.ImageNTHeaders.FileHeader.StartOffset + 18;
+				var characteristics = mainPeImage.OffsetReadUInt16(characteristicsOffset);
 				characteristics &= 0xDFFF;
 				characteristics |= 2;
 				mainPeImage.OffsetWriteUInt16(characteristicsOffset, characteristics);
@@ -169,9 +169,9 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 
 		UnpackedFile UnpackEmbeddedFile(MyPEImage peImage, int index, ApplicationModeDecrypter decrypter) {
 			uint offset = 0;
-			for (int i = 0; i < index + 1; i++)
+			for (var i = 0; i < index + 1; i++)
 				offset += sizes[i];
-			string filename = Win32Path.GetFileName(filenames[index]);
+			var filename = Win32Path.GetFileName(filenames[index]);
 			var data = peImage.OffsetReadBytes(offset, (int)sizes[index + 1]);
 			data = DeobUtils.AesDecrypt(data, decrypter.AssemblyKey, decrypter.AssemblyIv);
 			data = Decompress(data);

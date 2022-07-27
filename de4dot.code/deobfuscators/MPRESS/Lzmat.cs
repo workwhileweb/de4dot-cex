@@ -72,10 +72,10 @@ namespace de4dot.code.deobfuscators.MPRESS {
 
 		public static LzmatStatus Decompress(byte[] pbOut, out uint pcbOut, byte[] pbIn) {
 			pcbOut = 0;
-			uint cbIn = (uint)pbIn.Length;
+			var cbIn = (uint)pbIn.Length;
 
 	uint  inPos, outPos;
-	uint  cbOutBuf = (uint)pbOut.Length;
+	var  cbOutBuf = (uint)pbOut.Length;
 	byte  cur_nib;
 	pbOut[0] = pbIn[0];
 	for(inPos=1, outPos=1, cur_nib=0; inPos<(cbIn-cur_nib);)
@@ -203,12 +203,12 @@ namespace de4dot.code.deobfuscators.MPRESS {
 		}
 
 		public static byte[] DecompressOld(byte[] compressed) {
-			int srcIndex = 3;
-			int dstIndex = 0;
-			int decompressedLen = compressed[0] + (compressed[1] << 8) + (compressed[2] << 16);
-			byte[] decompressed = new byte[decompressedLen];
+			var srcIndex = 3;
+			var dstIndex = 0;
+			var decompressedLen = compressed[0] + (compressed[1] << 8) + (compressed[2] << 16);
+			var decompressed = new byte[decompressedLen];
 			while (dstIndex < decompressedLen) {
-				int partLen = compressed[srcIndex++] + (compressed[srcIndex++] << 8) + (compressed[srcIndex++] << 16);
+				var partLen = compressed[srcIndex++] + (compressed[srcIndex++] << 8) + (compressed[srcIndex++] << 16);
 				if (partLen < 0x800000) {
 					Array.Copy(compressed, srcIndex, decompressed, dstIndex, partLen);
 					srcIndex += partLen;
@@ -216,7 +216,7 @@ namespace de4dot.code.deobfuscators.MPRESS {
 				}
 				else {
 					partLen &= 0x7FFFFF;
-					int decompressedLen2 = lzmat_old(decompressed, dstIndex, decompressedLen - dstIndex, compressed, srcIndex, partLen);
+					var decompressedLen2 = lzmat_old(decompressed, dstIndex, decompressedLen - dstIndex, compressed, srcIndex, partLen);
 					if (decompressedLen2 == 0)
 						return null;
 					dstIndex += decompressedLen2;
@@ -227,15 +227,15 @@ namespace de4dot.code.deobfuscators.MPRESS {
 		}
 
 		static int lzmat_old(byte[] outBuf, int outIndex, int outLen, byte[] inBuf, int inIndex, int inLen) {
-			int inPos = 0;
-			int outPos = 0;
+			var inPos = 0;
+			var outPos = 0;
 			while (inPos < inLen) {
-				byte tag = inBuf[inIndex + inPos++];
-				for (int bc = 0; bc < 8 && inPos < inLen && outPos < outLen; bc++, tag <<= 1) {
+				var tag = inBuf[inIndex + inPos++];
+				for (var bc = 0; bc < 8 && inPos < inLen && outPos < outLen; bc++, tag <<= 1) {
 					if ((tag & 0x80) != 0) {
-						ushort outPosDispl = (ushort)((((inBuf[inIndex + inPos + 1]) & 0xF) << 8) + inBuf[inIndex + inPos]);
+						var outPosDispl = (ushort)((((inBuf[inIndex + inPos + 1]) & 0xF) << 8) + inBuf[inIndex + inPos]);
 						inPos++;
-						int r_cnt = (inBuf[inIndex + inPos++] >> 4) + 3;
+						var r_cnt = (inBuf[inIndex + inPos++] >> 4) + 3;
 						if (outPosDispl == 0)
 							outPosDispl = 0x1000;
 						if (outPosDispl > outPos)
@@ -251,7 +251,7 @@ namespace de4dot.code.deobfuscators.MPRESS {
 							r_cnt = (inBuf[inIndex + inPos + 1] << 8) + inBuf[inIndex + inPos] + 0x111;
 							inPos += 2;
 						}
-						int outPos2 = outPos - outPosDispl;
+						var outPos2 = outPos - outPosDispl;
 						while (r_cnt-- > 0 && outPos < outLen)
 							outBuf[outIndex + outPos++] = outBuf[outIndex + outPos2++];
 					}

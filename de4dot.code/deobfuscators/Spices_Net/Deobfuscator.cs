@@ -120,9 +120,9 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(stringDecrypter.Detected);
+			var sum = ToInt32(stringDecrypter.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (foundSpicesAttribute)

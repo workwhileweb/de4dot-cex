@@ -174,8 +174,8 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 		}
 
 		static bool CheckMethods(TypeDef type) {
-			bool foundCtor = false;
-			int numMethods = 0;
+			var foundCtor = false;
+			var numMethods = 0;
 
 			foreach (var method in type.Methods) {
 				if (method.Name == ".cctor")
@@ -232,7 +232,7 @@ namespace de4dot.code.deobfuscators.Spices_Net {
 		public void Deobfuscate(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var call = instrs[i];
 					if (call.OpCode.Code != Code.Call)
 						continue;

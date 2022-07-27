@@ -314,7 +314,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		public void Decrypt() {
-			for (int i = 0; i < module.Resources.Count; i++) {
+			for (var i = 0; i < module.Resources.Count; i++) {
 				var resource = module.Resources[i] as EmbeddedResource;
 				if (resource == null)
 					continue;
@@ -331,7 +331,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		byte[] Decrypt(IBinaryReader reader) {
 			try {
 				reader.Position = 0;
-				uint sig = reader.ReadUInt32();
+				var sig = reader.ReadUInt32();
 				reader.Position = 0;
 				if (sig == 0xBEEFCACE)
 					return DecryptBeefcace(reader);

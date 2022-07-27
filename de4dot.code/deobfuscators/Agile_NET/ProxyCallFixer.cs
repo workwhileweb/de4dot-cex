@@ -58,7 +58,7 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 			if (instrs[2].OpCode != OpCodes.Ret)
 				return null;
 
-			int delegateToken = 0x02000001 + instrs[0].GetLdcI4Value();
+			var delegateToken = 0x02000001 + instrs[0].GetLdcI4Value();
 			if (type.MDToken.ToInt32() != delegateToken) {
 				Logger.w("Delegate token is not current type");
 				return null;
@@ -74,8 +74,8 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 				callOpcode = OpCodes.Callvirt;
 				name = name.TrimEnd(new char[] { '%' });
 			}
-			byte[] value = Convert.FromBase64String(name);
-			int methodIndex = BitConverter.ToInt32(value, 0);	// 0-based memberRef index
+			var value = Convert.FromBase64String(name);
+			var methodIndex = BitConverter.ToInt32(value, 0);	// 0-based memberRef index
 			var mr = module.ResolveMemberRef((uint)methodIndex + 1);
 			if (mr == null || !mr.IsMethodRef)
 				throw new ApplicationException(string.Format("Invalid MemberRef index: {0}", methodIndex));

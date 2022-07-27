@@ -269,7 +269,7 @@ namespace de4dot.code.renamer {
 					if (!method.IsPublic())
 						continue;
 					var overrides = method.MethodDef.Overrides;
-					for (int i = 0; i < overrides.Count; i++) {
+					for (var i = 0; i < overrides.Count; i++) {
 						var overrideMethod = overrides[i].MethodDeclaration;
 						if (method.MethodDef.Name != overrideMethod.Name)
 							continue;
@@ -412,7 +412,7 @@ namespace de4dot.code.renamer {
 		void RenameFields2(TypeInfo info) {
 			if (!RenameFields)
 				return;
-			bool isDelegateType = isDelegateClass.Check(info.type);
+			var isDelegateType = isDelegateClass.Check(info.type);
 			foreach (var fieldDef in info.type.AllFieldsSorted) {
 				var fieldInfo = memberInfos.Field(fieldDef);
 				if (!fieldInfo.GotNewName())
@@ -554,8 +554,8 @@ namespace de4dot.code.renamer {
 		}
 
 		void FixClsTypeNames(MTypeDef nesting, MTypeDef nested) {
-			int nestingCount = nesting == null ? 0 : nesting.GenericParams.Count;
-			int arity = nested.GenericParams.Count - nestingCount;
+			var nestingCount = nesting == null ? 0 : nesting.GenericParams.Count;
+			var arity = nested.GenericParams.Count - nestingCount;
 			var nestedInfo = memberInfos.Type(nested);
 			if (nestedInfo.renamed && arity > 0)
 				nestedInfo.newName += "`" + arity;
@@ -713,7 +713,7 @@ namespace de4dot.code.renamer {
 			foreach (var group in allGroups) {
 				var groupMethod = group.Methods[0];
 				var methodName = groupMethod.MethodDef.Name.String;
-				bool onlyRenamableMethods = !group.HasNonRenamableMethod();
+				var onlyRenamableMethods = !group.HasNonRenamableMethod();
 
 				if (Utils.StartsWith(methodName, "get_", StringComparison.Ordinal)) {
 					var propName = methodName.Substring(4);
@@ -838,10 +838,10 @@ namespace de4dot.code.renamer {
 			var newSig = new PropertySig(sig.HasThis, propType);
 			newSig.GenParamCount = sig.GenParamCount;
 
-			int count = sig.Params.Count;
+			var count = sig.Params.Count;
 			if (!isGetter)
 				count--;
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 				newSig.Params.Add(sig.Params[i]);
 
 			return newSig;
@@ -885,7 +885,7 @@ namespace de4dot.code.renamer {
 			if (group.Methods.Count <= 1 || !group.HasEvent())
 				return;
 
-			EventMethodType methodType = EventMethodType.None;
+			var methodType = EventMethodType.None;
 			MEventDef evt = null;
 			List<MMethodDef> missingEvents = null;
 			foreach (var method in group.Methods) {
@@ -943,7 +943,7 @@ namespace de4dot.code.renamer {
 			foreach (var group in allGroups) {
 				var groupMethod = group.Methods[0];
 				var methodName = groupMethod.MethodDef.Name.String;
-				bool onlyRenamableMethods = !group.HasNonRenamableMethod();
+				var onlyRenamableMethods = !group.HasNonRenamableMethod();
 
 				if (Utils.StartsWith(methodName, "add_", StringComparison.Ordinal)) {
 					var eventName = methodName.Substring(4);
@@ -1115,7 +1115,7 @@ namespace de4dot.code.renamer {
 						continue;
 					var nameChecker = method.Owner.Module.ObfuscatedFile.NameChecker;
 
-					for (int i = 0; i < argNames.Length; i++) {
+					for (var i = 0; i < argNames.Length; i++) {
 						var argName = argNames[i];
 						if (argName == null || !nameChecker.IsValidMethodArgName(argName))
 							continue;
@@ -1151,7 +1151,7 @@ namespace de4dot.code.renamer {
 			var argNames = new string[group.Methods[0].ParamDefs.Count];
 			foreach (var method in methods) {
 				var nameChecker = !method.Owner.HasModule ? null : method.Owner.Module.ObfuscatedFile.NameChecker;
-				for (int i = 0; i < argNames.Length; i++) {
+				for (var i = 0; i < argNames.Length; i++) {
 					var argName = method.ParamDefs[i].ParameterDef.Name;
 					if (nameChecker == null || nameChecker.IsValidMethodArgName(argName))
 						argNames[i] = argName;
@@ -1276,7 +1276,7 @@ namespace de4dot.code.renamer {
 		}
 
 		static string GetRealName(string name) {
-			int index = name.LastIndexOf('.');
+			var index = name.LastIndexOf('.');
 			if (index < 0)
 				return name;
 			return name.Substring(index + 1);
@@ -1317,7 +1317,7 @@ namespace de4dot.code.renamer {
 			string newEventName, oldEventName;
 			var eventInfo = memberInfos.Event(eventDef);
 
-			bool mustUseOldEventName = false;
+			var mustUseOldEventName = false;
 			if (overridePrefix == "")
 				oldEventName = eventInfo.oldName;
 			else {
@@ -1427,7 +1427,7 @@ namespace de4dot.code.renamer {
 			var propDef = propMethod.Property;
 			var propInfo = memberInfos.Property(propDef);
 
-			bool mustUseOldPropName = false;
+			var mustUseOldPropName = false;
 			if (overridePrefix == "")
 				oldPropName = propInfo.oldName;
 			else {
@@ -1451,7 +1451,7 @@ namespace de4dot.code.renamer {
 			else if (IsItemProperty(group))
 				newPropName = "Item";
 			else {
-				bool trySameName = true;
+				var trySameName = true;
 				var propPrefix = GetSuggestedPropertyName(group);
 				if (propPrefix == null) {
 					trySameName = false;
@@ -1527,7 +1527,7 @@ namespace de4dot.code.renamer {
 			if (scopeType != null)
 				return scopeType;
 
-			for (int i = 0; i < 100; i++) {
+			for (var i = 0; i < 100; i++) {
 				var nls = typeSig as NonLeafSig;
 				if (nls == null)
 					break;
@@ -1556,7 +1556,7 @@ namespace de4dot.code.renamer {
 
 			var prefix = GetPrefix(propType);
 
-			string name = elementType.TypeName;
+			var name = elementType.TypeName;
 			int i;
 			if ((i = name.IndexOf('`')) >= 0)
 				name = name.Substring(0, i);
@@ -1573,7 +1573,7 @@ namespace de4dot.code.renamer {
 		}
 
 		static string GetPrefix(TypeSig typeRef) {
-			string prefix = "";
+			var prefix = "";
 			typeRef = typeRef.RemovePinnedAndModifiers();
 			while (typeRef is PtrSig) {
 				typeRef = typeRef.Next;
@@ -1749,8 +1749,8 @@ namespace de4dot.code.renamer {
 		}
 
 		static string GetAvailableName(string prefix, bool tryWithoutZero, MethodNameGroup group, Func<MethodNameGroup, string, bool> checkAvailable) {
-			for (int i = 0; ; i++) {
-				string newName = i == 0 && tryWithoutZero ? prefix : prefix + i;
+			for (var i = 0; ; i++) {
+				var newName = i == 0 && tryWithoutZero ? prefix : prefix + i;
 				if (checkAvailable(group, newName))
 					return newName;
 			}

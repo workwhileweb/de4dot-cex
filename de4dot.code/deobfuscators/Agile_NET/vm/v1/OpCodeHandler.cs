@@ -131,7 +131,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 
 		static Instruction compare_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
 			int type = reader.ReadByte();
-			Instruction instr = new Instruction();
+			var instr = new Instruction();
 			switch (type) {
 			case 0: instr.OpCode = OpCodes.Br; break;
 			case 1: instr.OpCode = OpCodes.Brtrue; break;
@@ -203,9 +203,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 			new InstructionInfo1 { Type = 12, Second = true, Third = true, OpCode = OpCodes.Conv_R_Un },
 		};
 		static Instruction convert_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			byte type = reader.ReadByte();
-			bool second = reader.ReadBoolean();
-			bool third = reader.ReadBoolean();
+			var type = reader.ReadByte();
+			var second = reader.ReadBoolean();
+			var third = reader.ReadBoolean();
 
 			Instruction instr = null;
 			foreach (var info in instructionInfos1) {
@@ -261,9 +261,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		};
 		static Instruction ldelem_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
 			Instruction instr = null;
-			bool first = reader.ReadBoolean();
-			bool second = reader.ReadBoolean();
-			int value = reader.ReadInt32();
+			var first = reader.ReadBoolean();
+			var second = reader.ReadBoolean();
+			var value = reader.ReadInt32();
 			foreach (var info in instructionInfos2) {
 				if (info.First != first || info.Second != second)
 					continue;
@@ -291,7 +291,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction ldfld_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			byte b = reader.ReadByte();
+			var b = reader.ReadByte();
 			var field = resolver.ResolveToken(reader.ReadUInt32(), gpContext) as IField;
 			switch (b) {
 			case 0: return new Instruction(null, new FieldInstructionOperand(OpCodes.Ldsfld, OpCodes.Ldfld, field));
@@ -306,8 +306,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction ldloc_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			bool isLdarg = reader.ReadBoolean();
-			ushort index = reader.ReadUInt16();
+			var isLdarg = reader.ReadBoolean();
+			var index = reader.ReadUInt16();
 
 			var instr = new Instruction();
 			if (isLdarg) {
@@ -323,7 +323,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction ldloca_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			Instruction instr = new Instruction();
+			var instr = new Instruction();
 			if (reader.ReadBoolean()) {
 				instr.OpCode = OpCodes.Ldarga;
 				instr.Operand = new ArgOperand(reader.ReadUInt16());
@@ -367,7 +367,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction leave_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			int displacement = reader.ReadInt32();
+			var displacement = reader.ReadInt32();
 			return new Instruction(OpCodes.Leave, new TargetDisplOperand(displacement));
 		}
 
@@ -383,8 +383,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction ldftn_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			byte code = reader.ReadByte();
-			uint token = reader.ReadUInt32();
+			var code = reader.ReadByte();
+			var token = reader.ReadUInt32();
 
 			switch (code) {
 			case 0:
@@ -447,8 +447,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction stloc_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			bool isStarg = reader.ReadBoolean();
-			ushort index = reader.ReadUInt16();
+			var isStarg = reader.ReadBoolean();
+			var index = reader.ReadUInt16();
 
 			var instr = new Instruction();
 			if (isStarg) {
@@ -469,9 +469,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static Instruction switch_read(BinaryReader reader, IInstructionOperandResolver resolver, GenericParamContext gpContext) {
-			int numTargets = reader.ReadInt32();
-			int[] targetDispls = new int[numTargets];
-			for (int i = 0; i < targetDispls.Length; i++)
+			var numTargets = reader.ReadInt32();
+			var targetDispls = new int[numTargets];
+			for (var i = 0; i < targetDispls.Length; i++)
 				targetDispls[i] = reader.ReadInt32();
 			return new Instruction(OpCodes.Switch, new SwitchTargetDisplOperand(targetDispls));
 		}

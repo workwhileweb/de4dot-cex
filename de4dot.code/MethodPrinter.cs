@@ -84,7 +84,7 @@ namespace de4dot.code {
 
 			var sortedTargets = new List<Instruction>(targets.Keys);
 			sortedTargets.Sort((a, b) => a.Offset.CompareTo(b.Offset));
-			for (int i = 0; i < sortedTargets.Count; i++)
+			for (var i = 0; i < sortedTargets.Count; i++)
 				labels[sortedTargets[i]] = string.Format("label_{0}", i);
 		}
 
@@ -151,7 +151,7 @@ namespace de4dot.code {
 			else if (instr.Operand is Instruction[]) {
 				var sb = new StringBuilder();
 				var targets = (Instruction[])instr.Operand;
-				for (int i = 0; i < targets.Length; i++) {
+				for (var i = 0; i < targets.Length; i++) {
 					if (i > 0)
 						sb.Append(',');
 					sb.Append(GetLabel(targets[i]));

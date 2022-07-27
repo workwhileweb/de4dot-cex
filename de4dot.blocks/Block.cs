@@ -150,7 +150,7 @@ namespace de4dot.blocks {
 		}
 
 		public void ReplaceBccWithBranch(bool isTaken) {
-			Block target = isTaken ? targets[0] : fallThrough;
+			var target = isTaken ? targets[0] : fallThrough;
 			ReplaceLastInstrsWithBranch(1, target);
 		}
 
@@ -211,7 +211,7 @@ namespace de4dot.blocks {
 		}
 
 		public int CountTargets() {
-			int count = fallThrough != null ? 1 : 0;
+			var count = fallThrough != null ? 1 : 0;
 			if (targets != null)
 				count += targets.Count;
 			return count;
@@ -283,7 +283,7 @@ namespace de4dot.blocks {
 		}
 
 		void AddInstructions(IList<Instr> dest, IList<Instr> instrs, bool clone) {
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode != OpCodes.Nop)
 					dest.Add(clone ? new Instr(instr.Instruction.Clone()) : instr);

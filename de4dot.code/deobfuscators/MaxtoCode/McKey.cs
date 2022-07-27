@@ -40,7 +40,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		public byte[] ReadBytes(int offset, int len) {
-			byte[] bytes = new byte[len];
+			var bytes = new byte[len];
 			Array.Copy(data, offset, bytes, 0, len);
 			return bytes;
 		}

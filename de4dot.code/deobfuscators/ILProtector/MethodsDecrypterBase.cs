@@ -78,7 +78,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 		}
 
 		bool RestoreMethod(MethodDef method) {
-			int? methodId = GetMethodId(method);
+			var methodId = GetMethodId(method);
 			if (methodId == null)
 				return false;
 
@@ -107,7 +107,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				return null;
 
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldsfld = instrs[i];
 				if (ldsfld.OpCode.Code != Code.Ldsfld)
 					continue;

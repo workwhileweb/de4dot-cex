@@ -81,7 +81,7 @@ namespace de4dot.blocks {
 
 			var usedLocals = new Dictionary<Local, List<LocalVariableInfo>>();
 			foreach (var block in methodBlocks.GetAllBlocks()) {
-				for (int i = 0; i < block.Instructions.Count; i++) {
+				for (var i = 0; i < block.Instructions.Count; i++) {
 					var instr = block.Instructions[i];
 					Local local;
 					switch (instr.OpCode.Code) {
@@ -121,7 +121,7 @@ namespace de4dot.blocks {
 				}
 			}
 
-			int newIndex = -1;
+			var newIndex = -1;
 			var newLocals = new List<Local>(usedLocals.Count);
 			var newLocalsDict = new Dictionary<Local, bool>(usedLocals.Count);
 			foreach (var local in usedLocals.Keys) {
@@ -155,7 +155,7 @@ namespace de4dot.blocks {
 				newLocals.Add(local);
 			}
 
-			int numRemoved = locals.Count - newLocals.Count;
+			var numRemoved = locals.Count - newLocals.Count;
 			locals.Clear();
 			foreach (var local in newLocals)
 				locals.Add(local);
@@ -237,8 +237,8 @@ namespace de4dot.blocks {
 			if (nopBlocks.Count == 0)
 				return;
 
-			for (int i = 0; i < 10; i++) {
-				bool modified = false;
+			for (var i = 0; i < 10; i++) {
+				var modified = false;
 
 				foreach (var block in allBlocks) {
 					Block nopBlockTarget;
@@ -250,7 +250,7 @@ namespace de4dot.blocks {
 					}
 
 					if (block.Targets != null) {
-						for (int targetIndex = 0; targetIndex < block.Targets.Count; targetIndex++) {
+						for (var targetIndex = 0; targetIndex < block.Targets.Count; targetIndex++) {
 							nopBlockTarget = GetNopBlockTarget(nopBlocks, block, block.Targets[targetIndex]);
 							if (nopBlockTarget == null)
 								continue;

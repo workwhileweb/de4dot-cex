@@ -24,7 +24,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 	static class ConstantsDecrypterUtils {
 		public static FieldDef FindDictField(MethodDef method, TypeDef declaringType) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var newobj = instrs[i];
 				if (newobj.OpCode.Code != Code.Newobj)
 					continue;
@@ -48,7 +48,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		public static FieldDef FindDataField_v18_r75367(MethodDef method, TypeDef declaringType) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var callvirt = instrs[i];
 				if (callvirt.OpCode.Code != Code.Callvirt)
 					continue;
@@ -73,7 +73,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		// Normal ("safe") mode only (not dynamic or native)
 		public static FieldDef FindDataField_v19_r77172(MethodDef method, TypeDef declaringType) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldloc = instrs[i];
 				if (!ldloc.IsLdloc())
 					continue;
@@ -105,7 +105,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		public static FieldDef FindStreamField(MethodDef method, TypeDef declaringType, string fieldTypeName) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var newobj = instrs[i];
 				if (newobj.OpCode.Code != Code.Newobj)
 					continue;

@@ -149,8 +149,8 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			}
 
 			protected IntPtr GetDelegateAddress(FieldDef delegateField) {
-				FieldInfo delegateFieldInfo = dmd.reflectionProtectModule.ResolveField(0x04000000 + (int)delegateField.Rid);
-				object mainTypeInst = ((Delegate)dmd.invokerFieldInfo.GetValue(null)).Target;
+				var delegateFieldInfo = dmd.reflectionProtectModule.ResolveField(0x04000000 + (int)delegateField.Rid);
+				var mainTypeInst = ((Delegate)dmd.invokerFieldInfo.GetValue(null)).Target;
 				return GetNativeAddressOfDelegate((Delegate)delegateFieldInfo.GetValue(mainTypeInst));
 			}
 
@@ -179,7 +179,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			[HandleProcessCorruptedStateExceptions, SecurityCritical]	// Req'd on .NET 4.0
 			static bool PatchRuntime(IntPtr decryptAddr, PatchInfo info) {
 				try {
-					IntPtr baseAddr = new IntPtr(decryptAddr.ToInt64() - info.RvaDecryptMethod);
+					var baseAddr = new IntPtr(decryptAddr.ToInt64() - info.RvaDecryptMethod);
 					if ((baseAddr.ToInt64() & 0xFFFF) != 0)
 						return false;
 
@@ -214,7 +214,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public DecrypterV1_0_7_0(DynamicMethodsDecrypter dmd, FieldDef delegateField)
 				: base(dmd) {
-				IntPtr addr = GetDelegateAddress(delegateField);
+				var addr = GetDelegateAddress(delegateField);
 				decryptMethod = (DecryptMethod)Marshal.GetDelegateForFunctionPointer(addr, typeof(DecryptMethod));
 			}
 
@@ -223,7 +223,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				int methodSize;
 				if (!decryptMethod(appDomainId, asmHashCode, methodId, out pMethodCode, out methodSize))
 					return null;
-				byte[] methodData = new byte[methodSize];
+				var methodData = new byte[methodSize];
 				Marshal.Copy(new IntPtr(pMethodCode), methodData, 0, methodData.Length);
 				return methodData;
 			}
@@ -237,7 +237,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public DecrypterV2_0_0_0(DynamicMethodsDecrypter dmd, FieldDef delegateField)
 				: base(dmd) {
-				IntPtr addr = GetDelegateAddress(delegateField);
+				var addr = GetDelegateAddress(delegateField);
 				decryptMethod = (DecryptMethod)Marshal.GetDelegateForFunctionPointer(addr, typeof(DecryptMethod));
 			}
 
@@ -246,7 +246,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				int methodSize;
 				if (!decryptMethod(Environment.Version.Major, appDomainId, asmHashCode, methodId, out pMethodCode, out methodSize))
 					return null;
-				byte[] methodData = new byte[methodSize];
+				var methodData = new byte[methodSize];
 				Marshal.Copy(new IntPtr(pMethodCode), methodData, 0, methodData.Length);
 				return methodData;
 			}
@@ -262,7 +262,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public DecrypterV2_0_8_0(DynamicMethodsDecrypter dmd, FieldDef delegateField)
 				: base(dmd) {
-				IntPtr addr = GetDelegateAddress(delegateField);
+				var addr = GetDelegateAddress(delegateField);
 				decryptMethod = (DecryptMethod)Marshal.GetDelegateForFunctionPointer(addr, typeof(DecryptMethod));
 				PatchRuntime(addr);
 			}
@@ -292,7 +292,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public DecrypterV2_0_8_5(DynamicMethodsDecrypter dmd, FieldDef delegateField)
 				: base(dmd) {
-				IntPtr addr = GetDelegateAddress(delegateField);
+				var addr = GetDelegateAddress(delegateField);
 				decryptMethod = (DecryptMethod)Marshal.GetDelegateForFunctionPointer(addr, typeof(DecryptMethod));
 				PatchRuntime(addr);
 			}
@@ -324,7 +324,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public DecrypterV2_0_9_0(DynamicMethodsDecrypter dmd, FieldDef delegateField)
 				: base(dmd) {
-				IntPtr addr = GetDelegateAddress(delegateField);
+				var addr = GetDelegateAddress(delegateField);
 				decryptMethod = (DecryptMethod)Marshal.GetDelegateForFunctionPointer(addr, typeof(DecryptMethod));
 				PatchRuntime(addr);
 			}
@@ -356,7 +356,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				this.dmd = dmd;
 				this.invoker = (Delegate)dmd.invokerFieldInfo.GetValue(null);
 
-				byte* p = (byte*)GetStateAddr(invoker.Target);
+				var p = (byte*)GetStateAddr(invoker.Target);
 				p += IntPtr.Size * 3;
 				p = *(byte**)p;
 				p += 8 + IntPtr.Size * 8;
@@ -467,22 +467,22 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				this.dmd = dmd;
 				this.invoker = (Delegate)dmd.invokerFieldInfo.GetValue(null);
 
-				byte* p = (byte*)DecrypterBaseV2_0_12_x.GetStateAddr(invoker.Target);
-				byte* pis = GetAddr(*(byte**)p);
+				var p = (byte*)DecrypterBaseV2_0_12_x.GetStateAddr(invoker.Target);
+				var pis = GetAddr(*(byte**)p);
 				p = *(byte**)pis;
-				byte* pam = *(byte**)(p + IntPtr.Size * 2);
+				var pam = *(byte**)(p + IntPtr.Size * 2);
 				p = *(byte**)(p + ((Environment.Version.Major - 2) / 2 * IntPtr.Size));
 				p += IntPtr.Size * 8 + 0x18;
 				p = LookUp(p, AppDomain.CurrentDomain.Id);
 				p = *(byte**)(p + IntPtr.Size * 16 + 0x18);
-				byte* pd = p + IntPtr.Size * 2;
+				var pd = p + IntPtr.Size * 2;
 				p = *(byte**)(p + IntPtr.Size * 13);
 
 				getCallerMethodAsILByteArrayDelegate = GetCallerMethodAsILByteArray;
 				decryptCallbackDelegate = DecryptCallback;
 				ignoreDelegate = IgnoreMethod;
 
-				byte* pm = p + 0x28 * IntPtr.Size;
+				var pm = p + 0x28 * IntPtr.Size;
 				*(IntPtr*)(p + 0x29 * IntPtr.Size) = Marshal.GetFunctionPointerForDelegate(getCallerMethodAsILByteArrayDelegate);
 				*(IntPtr*)(p + 0x2A * IntPtr.Size) = Marshal.GetFunctionPointerForDelegate(decryptCallbackDelegate);
 				if (IntPtr.Size == 4)
@@ -501,13 +501,13 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			static unsafe byte* GetAddr(byte* p) {
 				if (IntPtr.Size == 4) {
-					for (int i = 0; i < 20; i++, p++) {
+					for (var i = 0; i < 20; i++, p++) {
 						if (*p == 0xA1)
 							return *(byte**)(p + 1);
 					}
 				}
 				else {
-					for (int i = 0; i < 20; i++, p++)
+					for (var i = 0; i < 20; i++, p++)
 						if (*p == 0x4C && p[1] == 0x8B && p[2] == 0x15)
 							return p + 7 + *(int*)(p + 3);
 				}
@@ -518,17 +518,17 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				p = *(byte**)(p + IntPtr.Size);
 				p = *(byte**)(p + IntPtr.Size);
 
-				int f1 = 0;
-				int f2 = IntPtr.Size * 2;
-				int f3 = IntPtr.Size * 3;
-				int f4 = IntPtr.Size * 4;
-				int f5 = IntPtr.Size * 5 + 1;
+				var f1 = 0;
+				var f2 = IntPtr.Size * 2;
+				var f3 = IntPtr.Size * 3;
+				var f4 = IntPtr.Size * 4;
+				var f5 = IntPtr.Size * 5 + 1;
 
 				byte* res = null;
 				while (true) {
 					if (*(p + f5) != 0)
 						break;
-					int k = *(int*)(p + f3);
+					var k = *(int*)(p + f3);
 					if (k < key)
 						p = *(byte**)(p + f2);
 					else {
@@ -581,8 +581,8 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			unsafe delegate void InitCode32Delegate(byte* pppam, byte* m, IntPtr s, byte* pd, byte* f);
 			unsafe delegate void InitCode64Delegate(byte* pppam, byte* m, IntPtr s, byte* pd);
 			protected unsafe override void InitCode(byte* ba, byte* pam, byte* pd, byte* pm) {
-				byte* ppam = (byte*)&pam;
-				byte* pppam = (byte*)&ppam;
+				var ppam = (byte*)&pam;
+				var pppam = (byte*)&ppam;
 				if (IntPtr.Size == 4) {
 					var del = (InitCode32Delegate)Marshal.GetDelegateForFunctionPointer(CodeAllocator.Allocate(initCode_x86), typeof(InitCode32Delegate));
 					del(pppam, pm, new IntPtr(IntPtr.Size * 4), pd, ba + 0x00012500);
@@ -601,10 +601,10 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			unsafe delegate void InitCodeDelegate(byte* pppam, byte* m, IntPtr s, byte* pd);
 			protected unsafe override void InitCode(byte* ba, byte* pam, byte* pd, byte* pm) {
-				int rva = IntPtr.Size == 4 ? 0x00013650 : 0x00016B50;
+				var rva = IntPtr.Size == 4 ? 0x00013650 : 0x00016B50;
 				var del = (InitCodeDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(ba + rva), typeof(InitCodeDelegate));
-				byte* ppam = (byte*)&pam;
-				byte* pppam = (byte*)&ppam;
+				var ppam = (byte*)&pam;
+				var pppam = (byte*)&ppam;
 				del(pppam, pm, new IntPtr(IntPtr.Size * 4), pd);
 			}
 		}
@@ -639,7 +639,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 		}
 
 		public DecryptedMethodInfo Decrypt(int methodId, uint rid) {
-			byte[] methodData = decrypter.Decrypt(methodId, rid);
+			var methodData = decrypter.Decrypt(methodId, rid);
 			if (methodData == null)
 				throw new ApplicationException(string.Format("Probably a new version. Could not decrypt method. ID:{0}, RID:{1:X4}", methodId, rid));
 			return new DecryptedMethodInfo(methodId, methodData);
@@ -737,7 +737,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				return false;
 			if (a.Length != b.Length)
 				return false;
-			for (int i = 0; i < a.Length; i++) {
+			for (var i = 0; i < a.Length; i++) {
 				if (a[i] != b[i])
 					return false;
 			}

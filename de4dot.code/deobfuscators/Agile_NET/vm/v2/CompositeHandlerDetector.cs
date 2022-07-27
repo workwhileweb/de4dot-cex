@@ -31,7 +31,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			this.handlers = new List<MethodSigInfo>(handlers);
 
 			this.handlers.Sort((a, b) => {
-				int r = b.BlockSigInfos.Count.CompareTo(a.BlockSigInfos.Count);
+				var r = b.BlockSigInfos.Count.CompareTo(a.BlockSigInfos.Count);
 				if (r != 0)
 					return r;
 				return b.BlockSigInfos[0].Hashes.Count.CompareTo(a.BlockSigInfos[0].Hashes.Count);
@@ -101,7 +101,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 
 		MethodSigInfo FindHandlerMethod(ref FindHandlerState findExecState) {
 			foreach (var handler in handlers) {
-				FindHandlerState findExecStateNew = findExecState.Clone();
+				var findExecStateNew = findExecState.Clone();
 				if (!Matches(handler.BlockSigInfos, ref findExecStateNew))
 					continue;
 
@@ -134,10 +134,10 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 
 				var hblock = matchState.OtherState.BlockSigInfos[matchState.OtherState.BlockIndex];
 				var hinstrs = hblock.Hashes;
-				int hi = matchState.OtherState.HashIndex;
+				var hi = matchState.OtherState.HashIndex;
 				var cblock = matchState.CompositeState.BlockSigInfos[matchState.CompositeState.BlockIndex];
 				var cinstrs = cblock.Hashes;
-				int ci = matchState.CompositeState.HashIndex;
+				var ci = matchState.CompositeState.HashIndex;
 				if (hi < hinstrs.Count)
 					return false;
 
@@ -156,7 +156,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 					if (cblock.HasFallThrough != hblock.HasFallThrough)
 						return false;
 
-					for (int i = 0; i < cblock.Targets.Count; i++) {
+					for (var i = 0; i < cblock.Targets.Count; i++) {
 						var hs = new HandlerState(handler, hblock.Targets[i], 0);
 						var cs = new HandlerState(findState.CompositeState.BlockSigInfos, cblock.Targets[i], 0);
 						stack.Push(new MatchState(hs, cs));
@@ -184,7 +184,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		}
 
 		static HandlerState? GetNextHandlerState(ref FindHandlerState findState) {
-			for (int i = 0; i < findState.CompositeState.BlockSigInfos.Count; i++) {
+			for (var i = 0; i < findState.CompositeState.BlockSigInfos.Count; i++) {
 				if (findState.VisitedCompositeBlocks.ContainsKey(i))
 					continue;
 				return new HandlerState(findState.CompositeState.BlockSigInfos, i, 0);
@@ -195,9 +195,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 
 		static bool Compare(ref HandlerState handler, ref HandlerState composite) {
 			var hhashes = handler.BlockSigInfos[handler.BlockIndex].Hashes;
-			int hi = handler.HashIndex;
+			var hi = handler.HashIndex;
 			var chashes = composite.BlockSigInfos[composite.BlockIndex].Hashes;
-			int ci = composite.HashIndex;
+			var ci = composite.HashIndex;
 
 			while (true) {
 				if (hi >= hhashes.Count && ci >= chashes.Count)

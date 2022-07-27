@@ -299,19 +299,19 @@ namespace de4dot.code.deobfuscators {
 
 		public void Initialize(byte[] key) {
 			Array.Copy(Sboxes, S, S.Length);
-			int kl = key.Length;
+			var kl = key.Length;
 			for (int i = 0, ki = 0; i < 18; i++) {
 				P[i] = Pboxes[i] ^ (((uint)key[ki++ % kl] << 24) | ((uint)key[ki++ % kl] << 16) |
 							((uint)key[ki++ % kl] << 8) | key[ki++ % kl]);
 			}
 
 			uint xl = 0, xr = 0;
-			for (int i = 0; i < 18; i += 2) {
+			for (var i = 0; i < 18; i += 2) {
 				Encrypt(ref xl, ref xr);
 				P[i] = xl;
 				P[i + 1] = xr;
 			}
-			for (int i = 0; i < 1024; i += 2) {
+			for (var i = 0; i < 1024; i += 2) {
 				Encrypt(ref xl, ref xr);
 				S[i] = xl;
 				S[i + 1] = xr;
@@ -319,9 +319,9 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public void Encrypt_LE(byte[] data) {
-			for (int i = 0; i + 8 <= data.Length; i += 8) {
-				uint xl = BitConverter.ToUInt32(data, i);
-				uint xr = BitConverter.ToUInt32(data, i + 4);
+			for (var i = 0; i + 8 <= data.Length; i += 8) {
+				var xl = BitConverter.ToUInt32(data, i);
+				var xr = BitConverter.ToUInt32(data, i + 4);
 				Encrypt(ref xl, ref xr);
 				data[i] = (byte)xl;
 				data[i + 1] = (byte)(xl >> 8);
@@ -335,9 +335,9 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public void Encrypt(byte[] data) {
-			for (int i = 0; i + 8 <= data.Length; i += 8) {
-				uint xl = (uint)((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | data[i + 3]);
-				uint xr = (uint)((data[i + 4] << 24) | (data[i + 5] << 16) | (data[i + 6] << 8) | data[i + 7]);
+			for (var i = 0; i + 8 <= data.Length; i += 8) {
+				var xl = (uint)((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | data[i + 3]);
+				var xr = (uint)((data[i + 4] << 24) | (data[i + 5] << 16) | (data[i + 6] << 8) | data[i + 7]);
 				Encrypt(ref xl, ref xr);
 				data[i] = (byte)(xl >> 24);
 				data[i + 1] = (byte)(xl >> 16);
@@ -352,10 +352,10 @@ namespace de4dot.code.deobfuscators {
 
 		protected virtual void Encrypt(ref uint rxl, ref uint rxr) {
 			uint xl = rxl, xr = rxr;
-			for (int i = 0; i < 16; i++) {
+			for (var i = 0; i < 16; i++) {
 				xl ^= P[i];
 				xr ^= ((S[0 * 256 + (xl >> 24)] + S[1 * 256 + (byte)(xl >> 16)]) ^ S[2 * 256 + (byte)(xl >> 8)]) + S[3 * 256 + (byte)xl];
-				uint t = xl;
+				var t = xl;
 				xl = xr;
 				xr = t;
 			}
@@ -364,9 +364,9 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public void Decrypt_LE(byte[] data) {
-			for (int i = 0; i + 8 <= data.Length; i += 8) {
-				uint xl = BitConverter.ToUInt32(data, i);
-				uint xr = BitConverter.ToUInt32(data, i + 4);
+			for (var i = 0; i + 8 <= data.Length; i += 8) {
+				var xl = BitConverter.ToUInt32(data, i);
+				var xr = BitConverter.ToUInt32(data, i + 4);
 				Decrypt(ref xl, ref xr);
 				data[i] = (byte)xl;
 				data[i + 1] = (byte)(xl >> 8);
@@ -380,9 +380,9 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public void Decrypt(byte[] data) {
-			for (int i = 0; i + 8 <= data.Length; i += 8) {
-				uint xl = (uint)((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | data[i + 3]);
-				uint xr = (uint)((data[i + 4] << 24) | (data[i + 5] << 16) | (data[i + 6] << 8) | data[i + 7]);
+			for (var i = 0; i + 8 <= data.Length; i += 8) {
+				var xl = (uint)((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | data[i + 3]);
+				var xr = (uint)((data[i + 4] << 24) | (data[i + 5] << 16) | (data[i + 6] << 8) | data[i + 7]);
 				Decrypt(ref xl, ref xr);
 				data[i] = (byte)(xl >> 24);
 				data[i + 1] = (byte)(xl >> 16);
@@ -397,10 +397,10 @@ namespace de4dot.code.deobfuscators {
 
 		protected virtual void Decrypt(ref uint rxl, ref uint rxr) {
 			uint xl = rxl, xr = rxr;
-			for (int i = 17; i >= 2; i--) {
+			for (var i = 17; i >= 2; i--) {
 				xl ^= P[i];
 				xr ^= ((S[0 * 256 + (xl >> 24)] + S[1 * 256 + (byte)(xl >> 16)]) ^ S[2 * 256 + (byte)(xl >> 8)]) + S[3 * 256 + (byte)xl];
-				uint t = xl;
+				var t = xl;
 				xl = xr;
 				xr = t;
 			}

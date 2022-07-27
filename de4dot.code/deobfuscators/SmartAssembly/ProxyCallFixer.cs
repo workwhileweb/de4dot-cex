@@ -40,7 +40,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		ISimpleDeobfuscator simpleDeobfuscator;
 
 		static ProxyCallFixer() {
-			for (int i = 0; i < specialChars.Length; i++)
+			for (var i = 0; i < specialChars.Length; i++)
 				specialCharsDict[specialChars[i]] = i;
 		}
 
@@ -64,7 +64,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (instrs[2].OpCode != OpCodes.Ret)
 				return null;
 
-			int delegateToken = 0x02000001 + instrs[0].GetLdcI4Value();
+			var delegateToken = 0x02000001 + instrs[0].GetLdcI4Value();
 			if (type.MDToken.ToInt32() != delegateToken) {
 				Logger.w("Delegate token is not current type");
 				return null;
@@ -75,11 +75,11 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		protected override void GetCallInfo(object context, FieldDef field, out IMethod calledMethod, out OpCode callOpcode) {
 			callOpcode = OpCodes.Call;
-			string name = field.Name.String;
+			var name = field.Name.String;
 
 			uint memberRefRid = 0;
-			for (int i = name.Length - 1; i >= 0; i--) {
-				char c = name[i];
+			for (var i = name.Length - 1; i >= 0; i--) {
+				var c = name[i];
 				if (c == '~') {
 					callOpcode = OpCodes.Callvirt;
 					break;

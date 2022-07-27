@@ -33,25 +33,25 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				keyData[4], 0x74, 0x32, keyData[3], keyData[2],
 			};
 			key = new byte[32];
-			for (int i = 0; i < 32; i++) {
+			for (var i = 0; i < 32; i++) {
 				key[i] = (byte)(i + keyInit[i % keyInit.Length] * keyInit[((i + 0x0B) | 0x1F) % keyInit.Length]);
 				kb += key[i];
 			}
 
 			var transformTemp = new ushort[256, 256];
-			for (int i = 0; i < 256; i++)
-				for (int j = 0; j < 256; j++)
+			for (var i = 0; i < 256; i++)
+				for (var j = 0; j < 256; j++)
 					transformTemp[i, j] = 0x400;
-			int counter = 0x0B;
+			var counter = 0x0B;
 			byte newByte = 0;
-			int ki = 0;
-			for (int i = 0; i < 256; i++) {
+			var ki = 0;
+			for (var i = 0; i < 256; i++) {
 				while (true) {
-					for (int j = key.Length - 1; j >= ki; j--)
+					for (var j = key.Length - 1; j >= ki; j--)
 						newByte += (byte)(key[j] + counter);
-					bool done = true;
+					var done = true;
 					ki = (ki + 1) % key.Length;
-					for (int k = 0; k <= i; k++) {
+					for (var k = 0; k <= i; k++) {
 						if (newByte == transformTemp[k, 0]) {
 							done = false;
 							break;
@@ -65,37 +65,37 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			counter = ki = 0;
-			for (int i = 1; i < 256; i++) {
+			for (var i = 1; i < 256; i++) {
 				ki++;
 				int i1;
 				do {
 					counter++;
 					i1 = 1 + (this.key[(i + 37 + counter) % key.Length] + counter + kb) % 255;
 				} while (transformTemp[0, i1] != 0x400);
-				for (int i0 = 0; i0 < 256; i0++)
+				for (var i0 = 0; i0 < 256; i0++)
 					transformTemp[i0, i1] = transformTemp[(i0 + ki) % 256, 0];
 			}
 
-			for (int i = 0; i < 256; i++) {
-				for (int j = 0; j < 256; j++)
+			for (var i = 0; i < 256; i++) {
+				for (var j = 0; j < 256; j++)
 					transform[(byte)transformTemp[i, j], j] = (byte)i;
 			}
 		}
 
 		public void Decrypt(byte[] data, int offset, int count) {
-			for (int i = 0; i < count; i += 1024, offset += 1024) {
-				int blockLen = Math.Min(1024, count - i);
+			for (var i = 0; i < count; i += 1024, offset += 1024) {
+				var blockLen = Math.Min(1024, count - i);
 
 				if (blockLen == 1) {
 					data[offset] = transform[data[offset], kb];
 					continue;
 				}
 
-				for (int j = 0; j < blockLen - 1; j++)
+				for (var j = 0; j < blockLen - 1; j++)
 					data[offset + j] = transform[data[offset + j], data[offset + j + 1]];
 				data[offset + blockLen - 1] = transform[data[offset + blockLen - 1], kb ^ 0x55];
 
-				for (int j = blockLen - 1; j > 0; j--)
+				for (var j = blockLen - 1; j > 0; j--)
 					data[offset + j] = transform[data[offset + j], data[offset + j - 1]];
 				data[offset] = transform[data[offset], kb];
 			}

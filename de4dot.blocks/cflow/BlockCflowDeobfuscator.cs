@@ -41,7 +41,7 @@ namespace de4dot.blocks.cflow {
 			if (instructions.Count == 0)
 				return false;
 			try {
-				for (int i = 0; i < instructions.Count - 1; i++) {
+				for (var i = 0; i < instructions.Count - 1; i++) {
 					var instr = instructions[i].Instruction;
 					instructionEmulator.Emulate(instr);
 				}
@@ -57,7 +57,7 @@ namespace de4dot.blocks.cflow {
 		void PopPushedArgs(int stackArgs) {
 			// Pop the arguments to the bcc instruction. The dead code remover will get rid of the
 			// pop and any pushed arguments. Insert the pops just before the bcc instr.
-			for (int i = 0; i < stackArgs; i++)
+			for (var i = 0; i < stackArgs; i++)
 				block.Insert(block.Instructions.Count - 1, OpCodes.Pop.ToInstruction());
 		}
 

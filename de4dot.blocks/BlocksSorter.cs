@@ -96,7 +96,7 @@ namespace de4dot.blocks {
 					finalList.Insert(0, firstBlock);
 				else if (validBlocks[0] != finalList[0]) {
 					// Make sure the original first block is first
-					int index = finalList.IndexOf(validBlocks[0]);
+					var index = finalList.IndexOf(validBlocks[0]);
 					finalList.RemoveAt(index);
 					finalList.Insert(0, validBlocks[0]);
 				}
@@ -187,7 +187,7 @@ namespace de4dot.blocks {
 				// This method used to be recursive but to prevent stack overflows,
 				// it's not recursive anymore.
 
-				VisitState state = new VisitState(info);
+				var state = new VisitState(info);
 recursive_call:
 				if (state.Info.baseBlock == firstBlock)
 					throw new ApplicationException("Can't visit firstBlock");
@@ -281,7 +281,7 @@ return_from_method:
 					}
 				}
 
-				int max = -1;
+				var max = -1;
 				Block loopStart = null;
 				foreach (var kv in targetBlocks) {
 					if (kv.Value <= max)

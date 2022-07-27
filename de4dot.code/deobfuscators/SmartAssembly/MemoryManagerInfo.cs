@@ -70,7 +70,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		bool CheckMemoryManagerType(TypeDef type, MethodDef method) {
 			// Only two fields: itself and a long
-			int fields = 0;
+			var fields = 0;
 			foreach (var field in type.Fields) {
 				if (new SigComparer().Equals(field.FieldType, type) ||
 					field.FieldType.FullName == "System.Int64") {

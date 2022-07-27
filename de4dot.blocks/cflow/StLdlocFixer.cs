@@ -32,9 +32,9 @@ namespace de4dot.blocks.cflow {
 		}
 
 		protected override bool Deobfuscate(Block block) {
-			bool modified = false;
+			var modified = false;
 			var instructions = block.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i];
 				switch (instr.OpCode.Code) {
 				// Xenocode generates stloc + ldloc (bool). Replace it with dup + stloc. It will eventually

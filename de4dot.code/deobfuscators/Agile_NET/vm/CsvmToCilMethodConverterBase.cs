@@ -228,12 +228,12 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 				return locals;
 
 			// v6.0.0.5 sometimes duplicates the last two locals so only check for a negative value.
-			int numLocals = reader.ReadInt32();
+			var numLocals = reader.ReadInt32();
 			if (numLocals < 0)
 				throw new ApplicationException("Invalid number of locals");
 
 			var gpContext = GenericParamContext.Create(cilMethod);
-			for (int i = 0; i < numLocals; i++)
+			for (var i = 0; i < numLocals; i++)
 				locals.Add(new Local(ReadTypeRef(reader, gpContext)));
 
 			return locals;
@@ -296,12 +296,12 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 			if (reader.BaseStream.Length == 0)
 				return ehs;
 
-			int numExceptions = reader.ReadInt32();
+			var numExceptions = reader.ReadInt32();
 			if (numExceptions < 0)
 				throw new ApplicationException("Invalid number of exception handlers");
 
 			var gpContext = GenericParamContext.Create(cilMethod);
-			for (int i = 0; i < numExceptions; i++) {
+			for (var i = 0; i < numExceptions; i++) {
 				var eh = new ExceptionHandler((ExceptionHandlerType)reader.ReadInt32());
 				eh.TryStart = GetInstruction(reader.ReadInt32());
 				eh.TryEnd = GetInstructionEnd(reader.ReadInt32());
@@ -330,7 +330,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 		}
 
 		Instruction GetInstruction(Instruction source, int displ) {
-			int vmIndex = cilToVmIndex[source];
+			var vmIndex = cilToVmIndex[source];
 			return vmIndexToCil[vmIndex + displ];
 		}
 
@@ -348,8 +348,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 
 			if (vmOperand is SwitchTargetDisplOperand) {
 				var targetDispls = ((SwitchTargetDisplOperand)vmOperand).TargetDisplacements;
-				Instruction[] targets = new Instruction[targetDispls.Length];
-				for (int i = 0; i < targets.Length; i++)
+				var targets = new Instruction[targetDispls.Length];
+				for (var i = 0; i < targets.Length; i++)
 					targets[i] = GetInstruction(instr, targetDispls[i]);
 				return targets;
 			}
@@ -383,7 +383,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 				return;
 
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.Code != Code.Callvirt)
 					continue;

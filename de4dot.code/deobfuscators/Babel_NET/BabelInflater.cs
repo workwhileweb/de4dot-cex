@@ -32,7 +32,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		protected override bool ReadHeader(ref bool isLastBlock, out int blockType) {
 			const int numBits = 4;
 
-			int type = input.PeekBits(numBits);
+			var type = input.PeekBits(numBits);
 			if (type < 0) {
 				blockType = -1;
 				return false;

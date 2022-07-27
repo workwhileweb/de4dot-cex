@@ -159,12 +159,12 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 		}
 
 		bool Patch2(MyPEImage peImage) {
-			uint numPatches = peImage.OffsetReadUInt32(peImage.Length - 4);
-			uint offset = checked(peImage.Length - 4 - numPatches * 8);
+			var numPatches = peImage.OffsetReadUInt32(peImage.Length - 4);
+			var offset = checked(peImage.Length - 4 - numPatches * 8);
 
-			bool startedPatchingBadData = false;
+			var startedPatchingBadData = false;
 			for (uint i = 0; i < numPatches; i++, offset += 8) {
-				uint rva = GetValue(peImage.OffsetReadUInt32(offset));
+				var rva = GetValue(peImage.OffsetReadUInt32(offset));
 				var value = peImage.OffsetReadUInt32(offset + 4);
 
 				if (value == 4) {

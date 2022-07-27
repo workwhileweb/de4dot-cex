@@ -187,7 +187,7 @@ namespace de4dot.code.deobfuscators {
 
 		public bool DotNetSafeWriteOffset(uint offset, byte[] data) {
 			if (MetaData != null) {
-				uint length = (uint)data.Length;
+				var length = (uint)data.Length;
 
 				if (!IsInside(dotNetSection, offset, length))
 					return false;

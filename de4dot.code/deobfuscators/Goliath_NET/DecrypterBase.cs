@@ -112,7 +112,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		protected abstract bool CheckDecrypterType(TypeDef type);
 
 		void SplitTypeName(string fullName, out string ns, out string name) {
-			int index = fullName.LastIndexOf('.');
+			var index = fullName.LastIndexOf('.');
 			if (index < 0) {
 				ns = "";
 				name = fullName;
@@ -173,7 +173,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 
 		Info GetDecrypterInfo(MethodDef method, FieldDef delegateField) {
 			try {
-				int index = 0;
+				var index = 0;
 				var instrs = method.Body.Instructions;
 				if (instrs[index].OpCode.Code != Code.Ldsfld)
 					return null;
@@ -183,7 +183,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 
 				if (!instrs[index].IsLdcI4())
 					return null;
-				int offset = instrs[index++].GetLdcI4Value();
+				var offset = instrs[index++].GetLdcI4Value();
 
 				if (instrs[index].OpCode.Code != Code.Call && instrs[index].OpCode.Code != Code.Callvirt)
 					return null;

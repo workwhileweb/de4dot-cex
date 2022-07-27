@@ -136,13 +136,13 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(methodsDecrypter.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(tamperDetection.Detected) +
-					ToInt32(proxyCallFixer.Detected) +
-					ToInt32(constantsDecrypter.Detected);
+			var sum = ToInt32(methodsDecrypter.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(tamperDetection.Detected) +
+                      ToInt32(proxyCallFixer.Detected) +
+                      ToInt32(constantsDecrypter.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (foundCryptoObfuscatorAttribute || foundObfuscatedSymbols || foundObfuscatorUserString)
@@ -189,7 +189,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		bool CheckCryptoObfuscator() {
-			int matched = 0;
+			var matched = 0;
 			foreach (var type in module.Types) {
 				if (type.Namespace != "A")
 					continue;

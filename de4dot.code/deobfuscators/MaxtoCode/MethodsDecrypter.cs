@@ -67,16 +67,16 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 				structSize = GetStructSize(mcKey);
 
-				uint methodInfosRva = peHeader.GetRva(0x0FF8, mcKey.ReadUInt32(0x005A));
-				uint encryptedDataRva = peHeader.GetRva(0x0FF0, mcKey.ReadUInt32(0x0046));
+				var methodInfosRva = peHeader.GetRva(0x0FF8, mcKey.ReadUInt32(0x005A));
+				var encryptedDataRva = peHeader.GetRva(0x0FF0, mcKey.ReadUInt32(0x0046));
 
 				methodInfosOffset = peImage.RvaToOffset(methodInfosRva);
 				encryptedDataOffset = peImage.RvaToOffset(encryptedDataRva);
 			}
 
 			static uint GetStructSize(McKey mcKey) {
-				uint magicLo = mcKey.ReadUInt32(0x8C0);
-				uint magicHi = mcKey.ReadUInt32(0x8C4);
+				var magicLo = mcKey.ReadUInt32(0x8C0);
+				var magicHi = mcKey.ReadUInt32(0x8C4);
 				foreach (var info in EncryptionInfos.McKey8C0h) {
 					if (magicLo == info.MagicLo && magicHi == info.MagicHi)
 						return 0xC + 6 * ENCRYPTED_DATA_INFO_SIZE;
@@ -88,8 +88,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 				if (peHeader.EncryptionVersion != EncryptionVersion.Unknown)
 					return peHeader.EncryptionVersion;
 
-				uint m2lo = mcKey.ReadUInt32(0x8C0);
-				uint m2hi = mcKey.ReadUInt32(0x8C4);
+				var m2lo = mcKey.ReadUInt32(0x8C0);
+				var m2hi = mcKey.ReadUInt32(0x8C4);
 
 				foreach (var info in EncryptionInfos.McKey8C0h) {
 					if (info.MagicLo == m2lo && info.MagicHi == m2hi)
@@ -213,7 +213,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			uint GetRuntimeTimeStamp() {
-				string path = module.Location;
+				var path = module.Location;
 				if (string.IsNullOrEmpty(path))
 					return 0;
 
@@ -248,7 +248,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			bool InitializeInfos2() {
-				uint rtTimeStamp = GetRuntimeTimeStamp();
+				var rtTimeStamp = GetRuntimeTimeStamp();
 				if (rtTimeStamp != 0) {
 					var decrypter = GetCorrectDecrypter(rtTimeStamp);
 					if (decrypter != null) {
@@ -291,33 +291,33 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			bool InitializeInfos2(IDecrypter decrypter) {
-				int numMethods = ReadInt32(0) ^ ReadInt32(4);
+				var numMethods = ReadInt32(0) ^ ReadInt32(4);
 				if (numMethods < 0)
 					throw new ApplicationException("Invalid number of encrypted methods");
 
 				xorKey = (uint)numMethods;
-				int numEncryptedDataInfos = ((int)structSize - 0xC) / ENCRYPTED_DATA_INFO_SIZE;
+				var numEncryptedDataInfos = ((int)structSize - 0xC) / ENCRYPTED_DATA_INFO_SIZE;
 				var encryptedDataInfos = new byte[numEncryptedDataInfos][];
 
 				uint offset = 8;
 				infos.Clear();
-				for (int i = 0; i < numMethods; i++, offset += structSize) {
-					uint methodBodyRva = ReadEncryptedUInt32(offset);
-					uint totalSize = ReadEncryptedUInt32(offset + 4);
+				for (var i = 0; i < numMethods; i++, offset += structSize) {
+					var methodBodyRva = ReadEncryptedUInt32(offset);
+					var totalSize = ReadEncryptedUInt32(offset + 4);
 					/*uint methodInstructionRva =*/ ReadEncryptedUInt32(offset + 8);
 
 					// Read the method body header and method body (instrs + exception handlers).
 					// The method body header is always in the first one. The instrs + ex handlers
 					// are always in the last 4, and evenly divided (each byte[] is totalLen / 4).
 					// The 2nd one is for the exceptions (or padding), but it may be null.
-					uint offset2 = offset + 0xC;
-					int exOffset = 0;
-					for (int j = 0; j < encryptedDataInfos.Length; j++, offset2 += ENCRYPTED_DATA_INFO_SIZE) {
+					var offset2 = offset + 0xC;
+					var exOffset = 0;
+					for (var j = 0; j < encryptedDataInfos.Length; j++, offset2 += ENCRYPTED_DATA_INFO_SIZE) {
 						// readByte(offset2); <-- index
 						int encryptionType = ReadEncryptedInt16(offset2 + 1);
-						uint dataOffset = ReadEncryptedUInt32(offset2 + 3);
-						uint encryptedSize = ReadEncryptedUInt32(offset2 + 7);
-						uint realSize = ReadEncryptedUInt32(offset2 + 11);
+						var dataOffset = ReadEncryptedUInt32(offset2 + 3);
+						var encryptedSize = ReadEncryptedUInt32(offset2 + 7);
+						var realSize = ReadEncryptedUInt32(offset2 + 11);
 						if (j >= 3 && dataOffset == xorKey && encryptedSize == xorKey) {
 							encryptedDataInfos[j] = null;
 							continue;
@@ -331,9 +331,9 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 					}
 
 					var decryptedData = new byte[totalSize];
-					int copyOffset = 0;
+					var copyOffset = 0;
 					copyOffset = CopyData(decryptedData, encryptedDataInfos[0], copyOffset);
-					for (int j = 2; j < encryptedDataInfos.Length; j++)
+					for (var j = 2; j < encryptedDataInfos.Length; j++)
 						copyOffset = CopyData(decryptedData, encryptedDataInfos[j], copyOffset);
 					CopyData(decryptedData, encryptedDataInfos[1], exOffset); // Exceptions or padding
 
@@ -469,18 +469,18 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			byte[] Decrypt2(byte[] encrypted, int offset) {
 				if ((encrypted.Length & 7) != 0)
 					throw new ApplicationException("Invalid encryption #2 length");
-				uint key4 = mcKey.ReadUInt32(offset + 4 * 4);
-				uint key5 = mcKey.ReadUInt32(offset + 5 * 4);
+				var key4 = mcKey.ReadUInt32(offset + 4 * 4);
+				var key5 = mcKey.ReadUInt32(offset + 5 * 4);
 
-				byte[] decrypted = new byte[encrypted.Length & ~7];
+				var decrypted = new byte[encrypted.Length & ~7];
 				var writer = new BinaryWriter(new MemoryStream(decrypted));
 
-				int loopCount = encrypted.Length / 8;
-				for (int i = 0; i < loopCount; i++) {
-					uint val0 = BitConverter.ToUInt32(encrypted, i * 8);
-					uint val1 = BitConverter.ToUInt32(encrypted, i * 8 + 4);
-					uint x = (val1 >> 26) + (val0 << 6);
-					uint y = (val0 >> 26) + (val1 << 6);
+				var loopCount = encrypted.Length / 8;
+				for (var i = 0; i < loopCount; i++) {
+					var val0 = BitConverter.ToUInt32(encrypted, i * 8);
+					var val1 = BitConverter.ToUInt32(encrypted, i * 8 + 4);
+					var x = (val1 >> 26) + (val0 << 6);
+					var y = (val0 >> 26) + (val1 << 6);
 
 					writer.Write(x ^ key4);
 					writer.Write(y ^ key5);
@@ -533,20 +533,20 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			byte[] Decrypt3(byte[] encrypted, int offset) {
 				if ((encrypted.Length & 7) != 0)
 					throw new ApplicationException("Invalid encryption #3 length");
-				uint key0 = mcKey.ReadUInt32(offset + 0 * 4);
-				uint key3 = mcKey.ReadUInt32(offset + 3 * 4);
+				var key0 = mcKey.ReadUInt32(offset + 0 * 4);
+				var key3 = mcKey.ReadUInt32(offset + 3 * 4);
 
-				byte[] decrypted = new byte[encrypted.Length & ~7];
+				var decrypted = new byte[encrypted.Length & ~7];
 				var writer = new BinaryWriter(new MemoryStream(decrypted));
 
-				int loopCount = encrypted.Length / 8;
-				for (int i = 0; i < loopCount; i++) {
-					uint x = BitConverter.ToUInt32(encrypted, i * 8);
-					uint y = BitConverter.ToUInt32(encrypted, i * 8 + 4);
+				var loopCount = encrypted.Length / 8;
+				for (var i = 0; i < loopCount; i++) {
+					var x = BitConverter.ToUInt32(encrypted, i * 8);
+					var y = BitConverter.ToUInt32(encrypted, i * 8 + 4);
 					foreach (var shift in decrypt3Shifts) {
-						int shift1 = 32 - shift;
-						uint x1 = (y >> shift1) + (x << shift);
-						uint y1 = (x >> shift1) + (y << shift);
+						var shift1 = 32 - shift;
+						var x1 = (y >> shift1) + (x << shift);
+						var y1 = (x >> shift1) + (y << shift);
 						x = x1;
 						y = y1;
 					}
@@ -609,12 +609,12 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			byte[] Decrypt4(byte[] encrypted, int keyStart, int keyReset, int keyEnd) {
 				var decrypted = new byte[encrypted.Length / 3 * 2 + 1];
 
-				int count = encrypted.Length / 3;
+				var count = encrypted.Length / 3;
 				int i = 0, ki = keyStart, j = 0;
 				while (count-- > 0) {
-					byte k1 = mcKey.ReadByte(ki + 1);
-					byte k2 = mcKey.ReadByte(ki + 2);
-					byte k3 = mcKey.ReadByte(ki + 3);
+					var k1 = mcKey.ReadByte(ki + 1);
+					var k2 = mcKey.ReadByte(ki + 2);
+					var k3 = mcKey.ReadByte(ki + 3);
 					decrypted[j++] = (byte)(((encrypted[i + 1] ^ k2) >> 4) | ((encrypted[i] ^ k1) & 0xF0));
 					decrypted[j++] = (byte)(((encrypted[i + 1] ^ k2) << 4) | ((encrypted[i + 2] ^ k3) & 0x0F));
 					i += 3;
@@ -677,9 +677,9 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 			byte[] Decrypt8(byte[] encrypted, int keyStart, int keyReset, int keyEnd) {
 				var decrypted = new byte[encrypted.Length];
-				int ki = keyStart;
-				for (int i = 0; i < encrypted.Length; i++) {
-					int b = mcKey.ReadByte(ki++) ^ encrypted[i];
+				var ki = keyStart;
+				for (var i = 0; i < encrypted.Length; i++) {
+					var b = mcKey.ReadByte(ki++) ^ encrypted[i];
 					decrypted[i] = (byte)((b << 4) | (b >> 4));
 					if (ki >= keyEnd)
 						ki = keyReset;
@@ -726,8 +726,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 			byte[] Decrypt9(byte[] encrypted, int keyStart, int keyReset, int keyEnd) {
 				var decrypted = new byte[encrypted.Length];
-				int ki = keyStart;
-				for (int i = 0; ; ) {
+				var ki = keyStart;
+				for (var i = 0; ; ) {
 					byte b, k;
 
 					if (i >= encrypted.Length) break;
@@ -759,11 +759,11 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			byte[] Decrypt10(byte[] encrypted) {
-				byte[] enc = (byte[])encrypted.Clone();
-				byte[] dest = new byte[enc.Length];
-				int halfSize = enc.Length / 2;
+				var enc = (byte[])encrypted.Clone();
+				var dest = new byte[enc.Length];
+				var halfSize = enc.Length / 2;
 
-				byte b = enc[0];
+				var b = enc[0];
 				b ^= 0xA1;
 				dest[0] = b;
 
@@ -774,10 +774,10 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 				enc[0] = dest[0];
 				enc[enc.Length - 1] = b;
 
-				for (int i = 1; i < halfSize; i++)
+				for (var i = 1; i < halfSize; i++)
 					dest[i] = (byte)(enc[i] ^ dest[i - 1]);
 
-				for (int i = enc.Length - 2; i >= halfSize; i--)
+				for (var i = enc.Length - 2; i >= halfSize; i--)
 					dest[i] = (byte)(enc[i] ^ dest[i + 1]);
 
 				return dest;
@@ -788,7 +788,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			}
 
 			byte[] Decrypt11(byte[] encrypted, int keyStart, int keyReset, int keyEnd) {
-				byte[] dest = new byte[encrypted.Length];
+				var dest = new byte[encrypted.Length];
 
 				for (int i = 0, ki = keyStart; i < encrypted.Length; i++, ki++) {
 					if (ki >= keyEnd)
@@ -822,7 +822,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 				var key = new byte[100];
 				int i;
 				for (i = 0; i < key.Length; i++) {
-					byte b = mcKey.ReadByte(i);
+					var b = mcKey.ReadByte(i);
 					if (b == 0)
 						break;
 					key[i] = b;
@@ -866,7 +866,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 				if (info == null)
 					continue;
 
-				ushort magic = peImage.ReadUInt16(dm.mdRVA);
+				var magic = peImage.ReadUInt16(dm.mdRVA);
 				if (magic != 0xFFF3)
 					continue;
 
@@ -885,9 +885,9 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			var peImage = decrypterInfo.peImage;
 			var fileData = decrypterInfo.fileData;
 
-			uint decryptedResources = peHeader.ReadUInt32(0xFE8) ^ mcKey.ReadUInt32(0);
-			uint resourceRva = peHeader.GetRva(0x0E10, mcKey.ReadUInt32(0x00A0));
-			int resourceSize = (int)(peHeader.ReadUInt32(0x0E14) ^ mcKey.ReadUInt32(0x00AA));
+			var decryptedResources = peHeader.ReadUInt32(0xFE8) ^ mcKey.ReadUInt32(0);
+			var resourceRva = peHeader.GetRva(0x0E10, mcKey.ReadUInt32(0x00A0));
+			var resourceSize = (int)(peHeader.ReadUInt32(0x0E14) ^ mcKey.ReadUInt32(0x00AA));
 			if (decryptedResources == 1) {
 				Logger.v("Resources have already been decrypted");
 				return;
@@ -901,8 +901,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 			Logger.v("Decrypting resources @ RVA {0:X8}, {1} bytes", resourceRva, resourceSize);
 
-			int resourceOffset = (int)peImage.RvaToOffset(resourceRva);
-			for (int i = 0; i < resourceSize; i++)
+			var resourceOffset = (int)peImage.RvaToOffset(resourceRva);
+			for (var i = 0; i < resourceSize; i++)
 				fileData[resourceOffset + i] ^= mcKey[i % 0x2000];
 		}
 
@@ -912,8 +912,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			var peImage = decrypterInfo.peImage;
 			var fileData = decrypterInfo.fileData;
 
-			uint usHeapRva = peHeader.GetRva(0x0E00, mcKey.ReadUInt32(0x0078));
-			uint usHeapSize = peHeader.ReadUInt32(0x0E04) ^ mcKey.ReadUInt32(0x0082);
+			var usHeapRva = peHeader.GetRva(0x0E00, mcKey.ReadUInt32(0x0078));
+			var usHeapSize = peHeader.ReadUInt32(0x0E04) ^ mcKey.ReadUInt32(0x0082);
 			if (usHeapRva == 0 || usHeapSize == 0)
 				return;
 			var usHeap = peImage.MetaData.USStream;
@@ -926,9 +926,9 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			Logger.v("Decrypting strings @ RVA {0:X8}, {1} bytes", usHeapRva, usHeapSize);
 			Logger.Instance.Indent();
 
-			int mcKeyOffset = 0;
-			int usHeapOffset = (int)peImage.RvaToOffset(usHeapRva);
-			int usHeapEnd = usHeapOffset + (int)usHeapSize;
+			var mcKeyOffset = 0;
+			var usHeapOffset = (int)peImage.RvaToOffset(usHeapRva);
+			var usHeapEnd = usHeapOffset + (int)usHeapSize;
 			usHeapOffset++;
 			while (usHeapOffset < usHeapEnd) {
 				if (fileData[usHeapOffset] == 0 || fileData[usHeapOffset] == 1) {
@@ -936,12 +936,12 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 					continue;
 				}
 
-				int usHeapOffsetOrig = usHeapOffset;
-				int stringDataLength = DeobUtils.ReadVariableLengthInt32(fileData, ref usHeapOffset);
-				int usHeapOffsetString = usHeapOffset;
-				int encryptedLength = stringDataLength - (usHeapOffset - usHeapOffsetOrig == 1 ? 1 : 2);
-				for (int i = 0; i < encryptedLength; i++) {
-					byte k = mcKey.ReadByte(mcKeyOffset++ % 0x2000);
+				var usHeapOffsetOrig = usHeapOffset;
+				var stringDataLength = DeobUtils.ReadVariableLengthInt32(fileData, ref usHeapOffset);
+				var usHeapOffsetString = usHeapOffset;
+				var encryptedLength = stringDataLength - (usHeapOffset - usHeapOffsetOrig == 1 ? 1 : 2);
+				for (var i = 0; i < encryptedLength; i++) {
+					var k = mcKey.ReadByte(mcKeyOffset++ % 0x2000);
 					fileData[usHeapOffset] = Rolb((byte)(fileData[usHeapOffset] ^ k), 3);
 					usHeapOffset++;
 				}

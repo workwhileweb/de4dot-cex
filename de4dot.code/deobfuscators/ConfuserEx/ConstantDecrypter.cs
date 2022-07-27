@@ -155,7 +155,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
                 _deobfuscator.Deobfuscate(method, SimpleDeobfuscatorFlags.Force);
 
-                if (!IsStringDecrypterInit(method, out FieldDef aField, out FieldDef dField))
+                if (!IsStringDecrypterInit(method, out var aField, out var dField))
                     continue;
                 try
                 {
@@ -233,7 +233,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
         private byte[] DecryptArray(MethodDef method, byte[] encryptedArray)
         {
-            ModuleDefUser tempModule = new ModuleDefUser("TempModule");
+            var tempModule = new ModuleDefUser("TempModule");
             
             AssemblyDef tempAssembly = new AssemblyDefUser("TempAssembly");
             tempAssembly.Modules.Add(tempModule);
@@ -246,29 +246,29 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             tempMethod.MethodSig.Params.Add(new SZArraySig(tempModule.CorLibTypes.Byte));
             tempMethod.Attributes = MethodAttributes.Public | MethodAttributes.Static;
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
                 tempMethod.Body.Instructions.RemoveAt(2); // read encrypted array from argument
             tempMethod.Body.Instructions.Insert(2, OpCodes.Ldarg_0.ToInstruction());
 
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
                 tempMethod.Body.Instructions.RemoveAt(tempMethod.Body.Instructions.Count -
                                                       2); // make return decrypted array
 
             tempType.Methods.Add(tempMethod);
             tempModule.Types.Add(tempType);
             
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
-                ModuleWriterOptions moduleWriterOptions = new ModuleWriterOptions();
+                var moduleWriterOptions = new ModuleWriterOptions();
                 moduleWriterOptions.MetaDataOptions = new MetaDataOptions();
 
                 tempModule.Write(memoryStream, moduleWriterOptions);
 
-                Assembly patchedAssembly = Assembly.Load(memoryStream.ToArray());
+                var patchedAssembly = Assembly.Load(memoryStream.ToArray());
                 var type = patchedAssembly.ManifestModule.GetType("TempType");
                 var methods = type.GetMethods();
-                MethodInfo patchedMethod = methods.First(m => m.IsPublic && m.IsStatic);
-                byte[] decryptedBytes = (byte[]) patchedMethod.Invoke(null, new object[]{encryptedArray});
+                var patchedMethod = methods.First(m => m.IsPublic && m.IsStatic);
+                var decryptedBytes = (byte[]) patchedMethod.Invoke(null, new object[]{encryptedArray});
                 return Lzma.Decompress(decryptedBytes);
             }
         }
@@ -293,7 +293,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
                 _deobfuscator.Deobfuscate(method, SimpleDeobfuscatorFlags.Force);
 
-                if (IsNativeStringDecrypter(method, out MethodDef nativeMethod))
+                if (IsNativeStringDecrypter(method, out var nativeMethod))
                 {
                     yield return new ConstantDecrypterBase
                     {
@@ -302,7 +302,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                         NativeMethod = nativeMethod
                     };
                 }
-                if (IsNormalStringDecrypter(method, out int num1, out int num2))
+                if (IsNormalStringDecrypter(method, out var num1, out var num2))
                 {
                     yield return new ConstantDecrypterBase
                     {

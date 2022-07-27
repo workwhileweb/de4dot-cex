@@ -67,7 +67,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 				var infos = new List<DecryptedMethodInfo>();
 
-				for (int i = 0; i < methodIds.Count; i += 2)
+				for (var i = 0; i < methodIds.Count; i += 2)
 					infos.Add(decrypter.Decrypt(methodIds[i], (uint)methodIds[i + 1]));
 
 				hasDelegateTypeFlag = decrypter.MethodReaderHasDelegateTypeFlag;

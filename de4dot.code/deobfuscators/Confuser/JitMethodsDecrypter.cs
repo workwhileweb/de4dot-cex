@@ -131,7 +131,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static int CountInt32s(MethodDef method, int val) {
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (!instr.IsLdcI4())
 					continue;
@@ -260,7 +260,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey4(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int index = 0; index < instrs.Count; index++) {
+			for (var index = 0; index < instrs.Count; index++) {
 				index = ConfuserUtils.FindCallMethod(instrs, index, Code.Call, "System.Void System.Runtime.InteropServices.Marshal::Copy(System.Byte[],System.Int32,System.IntPtr,System.Int32)");
 				if (index < 0)
 					break;
@@ -282,8 +282,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey5(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i + 4 < instrs.Count; i++) {
-				int index = i;
+			for (var i = 0; i + 4 < instrs.Count; i++) {
+				var index = i;
 				var ldci4_8 = instrs[index++];
 				if (!ldci4_8.IsLdcI4() || ldci4_8.GetLdcI4Value() != 8)
 					continue;
@@ -338,17 +338,17 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static TypeDef FindFirstThreeIndexes(MethodDef method, out int maxStackIndex, out int ehsIndex, out int optionsIndex) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index1 = FindLdfldStind(instrs, i, false, true);
+			for (var i = 0; i < instrs.Count; i++) {
+				var index1 = FindLdfldStind(instrs, i, false, true);
 				if (index1 < 0)
 					break;
 				i = index1;
 
-				int index2 = FindLdfldStind(instrs, index1 + 1, true, true);
+				var index2 = FindLdfldStind(instrs, index1 + 1, true, true);
 				if (index2 < 0)
 					continue;
 
-				int index3 = FindLdfldStind(instrs, index2 + 1, true, false);
+				var index3 = FindLdfldStind(instrs, index2 + 1, true, false);
 				if (index3 < 0)
 					continue;
 
@@ -374,7 +374,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindLocalVarSigTokIndex(MethodDef method, TypeDef methodDataType, out int localVarSigTokIndex) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldfld = instrs[i];
 				if (ldfld.OpCode.Code != Code.Ldfld)
 					continue;
@@ -399,7 +399,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindCodeSizeIndex(MethodDef method, TypeDef methodDataType, out int codeSizeIndex) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldfld = instrs[i];
 				if (ldfld.OpCode.Code != Code.Ldfld)
 					continue;
@@ -419,7 +419,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static int GetInstanceFieldIndex(FieldDef field) {
-			int i = 0;
+			var i = 0;
 			foreach (var f in field.DeclaringType.Fields) {
 				if (f.IsStatic)
 					continue;
@@ -431,7 +431,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static int FindLdfldStind(IList<Instruction> instrs, int index, bool onlyInBlock, bool checkStindi4) {
-			for (int i = index; i < instrs.Count - 1; i++) {
+			for (var i = index; i < instrs.Count - 1; i++) {
 				var ldfld = instrs[i];
 				if (onlyInBlock && ldfld.OpCode.FlowControl != FlowControl.Next)
 					break;
@@ -483,14 +483,14 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 				if (dm.mdRVA == 0)
 					continue;
-				uint bodyOffset = peImage.RvaToOffset(dm.mdRVA);
+				var bodyOffset = peImage.RvaToOffset(dm.mdRVA);
 
 				if (!IsEncryptedMethod(fileData, (int)bodyOffset))
 					continue;
 
-				int key = BitConverter.ToInt32(fileData, (int)bodyOffset + 6);
-				int mdOffs = BitConverter.ToInt32(fileData, (int)bodyOffset + 2) ^ key;
-				int len = BitConverter.ToInt32(fileData, (int)bodyOffset + 11) ^ ~key;
+				var key = BitConverter.ToInt32(fileData, (int)bodyOffset + 6);
+				var mdOffs = BitConverter.ToInt32(fileData, (int)bodyOffset + 2) ^ key;
+				var len = BitConverter.ToInt32(fileData, (int)bodyOffset + 11) ^ ~key;
 				var codeData = DecryptMethodData_v17_r73404(methodsData, mdOffs + 2, (uint)key, len);
 
 				var reader = MemoryImageStream.Create(codeData);
@@ -551,7 +551,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				var data = new byte[size];
 				Array.Copy(fileData, offset, data, 0, data.Length);
 				var key = BitConverter.GetBytes(k1);
-				for (int i = 0; i < data.Length; i++)
+				for (var i = 0; i < data.Length; i++)
 					data[i] ^= key[i & 3];
 
 				methodData = new uint[5];
@@ -565,8 +565,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 			public override void Decrypt(byte[] fileData, int offset, uint k1, int size, out uint[] methodData, out byte[] codeData) {
 				var data = new byte[size];
 				Array.Copy(fileData, offset, data, 0, data.Length);
-				uint k = k1;
-				for (int i = 0; i < data.Length; i++) {
+				var k = k1;
+				for (var i = 0; i < data.Length; i++) {
 					data[i] ^= (byte)k;
 					k = (k * data[i] + k1) % 0xFF;
 				}
@@ -588,8 +588,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 			public override void Decrypt(byte[] fileData, int offset, uint k1, int size, out uint[] methodData, out byte[] codeData) {
 				var data = new byte[size];
 				Array.Copy(fileData, offset, data, 0, data.Length);
-				uint k2 = jitDecrypter.key4 * k1;
-				for (int i = 0; i < data.Length; i++) {
+				var k2 = jitDecrypter.key4 * k1;
+				for (var i = 0; i < data.Length; i++) {
 					data[i] ^= (byte)k2;
 					k2 = (byte)((k2 * data[i] + k1) % 0xFF);
 				}
@@ -611,28 +611,28 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 				if (dm.mdRVA == 0)
 					continue;
-				uint bodyOffset = peImage.RvaToOffset(dm.mdRVA);
+				var bodyOffset = peImage.RvaToOffset(dm.mdRVA);
 
 				if (!IsEncryptedMethod(fileData, (int)bodyOffset))
 					continue;
 
-				int key = BitConverter.ToInt32(fileData, (int)bodyOffset + 6);
-				int mdOffs = BitConverter.ToInt32(fileData, (int)bodyOffset + 2) ^ key;
-				int len = BitConverter.ToInt32(fileData, (int)bodyOffset + 11) ^ ~key;
-				int methodDataOffset = mdOffs + 2;
+				var key = BitConverter.ToInt32(fileData, (int)bodyOffset + 6);
+				var mdOffs = BitConverter.ToInt32(fileData, (int)bodyOffset + 2) ^ key;
+				var len = BitConverter.ToInt32(fileData, (int)bodyOffset + 11) ^ ~key;
+				var methodDataOffset = mdOffs + 2;
 				uint[] methodData;
 				byte[] codeData;
 				decrypter.Decrypt(methodsData, methodDataOffset, (uint)key, len, out methodData, out codeData);
 
 				dm.mhFlags = 0x03;
-				int maxStack = (int)methodData[methodDataIndexes.maxStack];
+				var maxStack = (int)methodData[methodDataIndexes.maxStack];
 				dm.mhMaxStack = (ushort)maxStack;
 				dm.mhLocalVarSigTok = methodData[methodDataIndexes.localVarSigTok];
 				if (dm.mhLocalVarSigTok != 0 && (dm.mhLocalVarSigTok >> 24) != 0x11)
 					throw new ApplicationException("Invalid local var sig token");
-				int numExceptions = (int)methodData[methodDataIndexes.ehs];
-				uint options = methodData[methodDataIndexes.options];
-				int codeSize = (int)methodData[methodDataIndexes.codeSize];
+				var numExceptions = (int)methodData[methodDataIndexes.ehs];
+				var options = methodData[methodDataIndexes.options];
+				var codeSize = (int)methodData[methodDataIndexes.codeSize];
 
 				var codeDataReader = MemoryImageStream.Create(codeData);
 				if (decrypter.IsCodeFollowedByExtraSections(options)) {
@@ -650,10 +650,10 @@ namespace de4dot.code.deobfuscators.Confuser {
 				dm.mhCodeSize = (uint)dm.code.Length;
 
 				// Figure out if the original method was tiny or not.
-				bool isTiny = dm.code.Length <= 0x3F &&
-							dm.mhLocalVarSigTok == 0 &&
-							dm.extraSections == null &&
-							dm.mhMaxStack == 8;
+				var isTiny = dm.code.Length <= 0x3F &&
+                             dm.mhLocalVarSigTok == 0 &&
+                             dm.extraSections == null &&
+                             dm.mhMaxStack == 8;
 				if (isTiny)
 					dm.mhFlags |= 0x10;	// Set 'init locals'
 				dm.mhFlags |= (ushort)(options & 0x10);	// copy 'init locals' bit
@@ -678,11 +678,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var memStream = new MemoryStream();
 			var writer = new BinaryWriter(memStream);
 
-			ulong header64 = (((ulong)numExceptions * 24) << 8) | 0x41;
+			var header64 = (((ulong)numExceptions * 24) << 8) | 0x41;
 			if (header64 > uint.MaxValue)
 				throw new ApplicationException("Too many exception handlers...");
 			writer.Write((uint)header64);
-			for (int i = 0; i < numExceptions; i++) {
+			for (var i = 0; i < numExceptions; i++) {
 				writer.Write(reader.ReadUInt32());	// flags
 				writer.Write(reader.ReadUInt32());	// try offset
 				writer.Write(reader.ReadUInt32());	// try length
@@ -697,7 +697,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		byte[] DecryptMethodData_v17_r73404(byte[] fileData, int offset, uint k1, int size) {
 			var data = new byte[size];
 			var kbytes = BitConverter.GetBytes(k1);
-			for (int i = 0; i < size; i++)
+			for (var i = 0; i < size; i++)
 				data[i] = (byte)(fileData[offset + i] ^ kbytes[i & 3]);
 			return data;
 		}
@@ -707,12 +707,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return null;
 			using (var reader = MemoryImageStream.Create(methodsData)) {
 				reader.Position = (token & ~0xFF800000) + 2;
-				int len = reader.ReadInt32();
+				var len = reader.ReadInt32();
 				if ((len & 1) != 1)
 					throw new ApplicationException("Invalid string len");
-				int chars = len / 2;
+				var chars = len / 2;
 				var sb = new StringBuilder(chars);
-				for (int i = 0; i < chars; i++)
+				for (var i = 0; i < chars; i++)
 					sb.Append((char)(reader.ReadUInt16() ^ key5));
 				return sb.ToString();
 			}

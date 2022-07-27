@@ -34,7 +34,7 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 		}
 
 		public override int GetHashCode() {
-			int hash = 0;
+			var hash = 0;
 			if (Method != null)
 				hash ^= Method.GetHashCode();
 			if (Field != null)

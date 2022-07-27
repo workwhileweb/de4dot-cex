@@ -60,11 +60,11 @@ namespace de4dot.code.deobfuscators.CodeWall {
 			}
 
 			public string Decrypt(int magic1, int magic2, int magic3) {
-				int dataLen = magic3 ^ Magic3;
+				var dataLen = magic3 ^ Magic3;
 				var key = GetKey(magic1 ^ Magic1, dataLen);
 				Reader.Position = GetDataOffset(magic2);
 				var data = Reader.ReadBytes(dataLen);
-				for (int i = 0; i < dataLen; i++)
+				for (var i = 0; i < dataLen; i++)
 					data[i] ^= key[i];
 				return Encoding.Unicode.GetString(data);
 			}
@@ -161,7 +161,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 			"System.String",
 		};
 		MethodDef CheckTypeV30(TypeDef type) {
-			MethodDef decrypterMethod = CheckMethodsV30(type);
+			var decrypterMethod = CheckMethodsV30(type);
 			if (decrypterMethod == null)
 				return null;
 			if (!new FieldTypes(type).Exactly(requiredTypes_v30))
@@ -208,7 +208,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 			"System.Object",
 		};
 		MethodDef CheckTypeV36(TypeDef type) {
-			MethodDef decrypterMethod = CheckMethodsV36(type);
+			var decrypterMethod = CheckMethodsV36(type);
 			if (decrypterMethod == null)
 				return null;
 			if (!new FieldTypes(type).Exactly(requiredTypes_v36))
@@ -265,7 +265,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		static int FindMagic1(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldarg = instrs[i];
 				if (!ldarg.IsLdarg() || ldarg.GetParameterIndex() != 0)
 					continue;
@@ -281,7 +281,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		static int FindMagic2(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldloc = instrs[i];
 				if (!ldloc.IsLdloc())
 					continue;
@@ -297,7 +297,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		static int FindMagic3(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldarg = instrs[i];
 				if (!ldarg.IsLdarg() || ldarg.GetParameterIndex() != 2)
 					continue;

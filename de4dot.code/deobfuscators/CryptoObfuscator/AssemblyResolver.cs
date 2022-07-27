@@ -111,7 +111,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return false;
 
 			var instructions = initMethod.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Ldnull, OpCodes.Ldftn, OpCodes.Newobj);
 				if (instrs == null)
 					continue;
@@ -143,7 +143,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return null;
 
 			var newAssemblyInfos = new List<AssemblyInfo>(tmpAssemblyInfos.Length / 2);
-			for (int i = 0; i < tmpAssemblyInfos.Length; i += 2) {
+			for (var i = 0; i < tmpAssemblyInfos.Length; i += 2) {
 				var assemblyName = tmpAssemblyInfos[i];
 				var resourceName = tmpAssemblyInfos[i + 1];
 				var resource = DotNetUtils.GetResource(module, resourceName) as EmbeddedResource;

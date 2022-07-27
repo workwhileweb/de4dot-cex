@@ -105,7 +105,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		static int FindCallMethod(Block block, int index, bool keepLooking, Func<IMethod, bool> func) {
 			var instrs = block.Instructions;
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.Code != Code.Call && instr.OpCode.Code != Code.Callvirt)
 					continue;
@@ -144,14 +144,14 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			 */
 
 			var instrs = block.Instructions;
-			int end = instrs.Count - 1;
+			var end = instrs.Count - 1;
 			Instr instr;
 			IMethod method;
 			tamperBlocks.type = Type.V1;
 
-			int index = 0;
+			var index = 0;
 
-			int start = FindCallMethod(block, index, true, (calledMethod) => calledMethod.ToString() == "System.Reflection.Assembly System.Reflection.Assembly::GetExecutingAssembly()");
+			var start = FindCallMethod(block, index, true, (calledMethod) => calledMethod.ToString() == "System.Reflection.Assembly System.Reflection.Assembly::GetExecutingAssembly()");
 			if (start < 0)
 				return false;
 			index = start + 1;
@@ -264,8 +264,8 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 				return null;
 
 			Instr instr;
-			int start = 0;
-			int end = 0;
+			var start = 0;
+			var end = 0;
 
 			instr = instrs[end++];
 			if (instr.OpCode != OpCodes.Ldstr)

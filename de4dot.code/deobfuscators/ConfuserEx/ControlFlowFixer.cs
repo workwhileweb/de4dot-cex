@@ -26,7 +26,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                 return null;
 
             _instructionEmulator.Pop();
-            int num = ((Int32Value)popValue).Value;
+            var num = ((Int32Value)popValue).Value;
 
             if (switchData is NativeSwitchData)
             {
@@ -66,11 +66,11 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             var targets = switchBlock.Targets;
             _instructionEmulator.Push(new Int32Value(switchBlock.SwitchData.Key.Value));
 
-            int? key = CalculateKey(switchBlock.SwitchData);
+            var key = CalculateKey(switchBlock.SwitchData);
             if (!key.HasValue)
                 throw new Exception("CRITICAL ERROR: KEY HAS NO VALUE");
 
-            int? switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
+            var switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
             if (!switchCaseIndex.HasValue)
                 throw new Exception("CRITICAL ERROR: SWITCH CASE HAS NO VALUE");
             if (targets.Count < switchCaseIndex)
@@ -83,19 +83,19 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             switchBlock.ReplaceLastNonBranchWithBranch(0, targetBlock);
         }
 
-        private void ProcessBlock(List<Block> switchCaseBlocks, Block block, Block switchBlock)
+        private void ProcessBlock(List<Block> switchFallThroughs, Block switchCaseBlock, Block switchBlock)
         {
             var targets = switchBlock.Targets;
-            _instructionEmulator.Emulate(block.Instructions, 0, block.Instructions.Count);
+            _instructionEmulator.Emulate(switchCaseBlock.Instructions, 0, switchCaseBlock.Instructions.Count);
 
             if (_instructionEmulator.Peek().IsUnknown())
                 throw new Exception("CRITICAL ERROR: STACK VALUE UNKNOWN");
 
-            int? key = CalculateKey(switchBlock.SwitchData);
+            var key = CalculateKey(switchBlock.SwitchData);
             if (!key.HasValue)
                 throw new Exception("CRITICAL ERROR: KEY HAS NO VALUE");
 
-            int? switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
+            var switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
             if (!switchCaseIndex.HasValue)
                 throw new Exception("CRITICAL ERROR: SWITCH CASE HAS NO VALUE");
             if (targets.Count < switchCaseIndex)
@@ -104,18 +104,18 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             var targetBlock = targets[switchCaseIndex.Value];
             targetBlock.SwitchData.Key = key;
 
-            block.Add(new Instr(OpCodes.Pop.ToInstruction())); // neutralize the arithmetics and leave de4dot to remove them
-            block.ReplaceLastNonBranchWithBranch(0, targetBlock);
+            switchCaseBlock.Add(new Instr(OpCodes.Pop.ToInstruction())); // neutralize the arithmetics and leave de4dot to remove them
+            switchCaseBlock.ReplaceLastNonBranchWithBranch(0, targetBlock);
 
-            ProcessFallThroughs(switchCaseBlocks, switchBlock, targetBlock, key.Value);
-            block.Processed = true;
+            ProcessFallThroughs(switchFallThroughs, switchBlock, targetBlock, key.Value);
+            switchCaseBlock.Processed = true;
         }
 
         private void ProcessTernaryBlock(List<Block> switchCaseBlocks, Block ternaryBlock, Block switchBlock)
         {
             var targets = switchBlock.Targets;
 
-            for (int i = 0; i < 2; i++) // loop both source blocks 
+            for (var i = 0; i < 2; i++) // loop both source blocks 
             {
                 var sourceBlock = ternaryBlock.Sources[0];
 
@@ -128,11 +128,11 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                 if (_instructionEmulator.Peek().IsUnknown())
                     throw new Exception("CRITICAL ERROR: STACK VALUE UNKNOWN");
 
-                int? key = CalculateKey(switchBlock.SwitchData);
+                var key = CalculateKey(switchBlock.SwitchData);
                 if (!key.HasValue)
                     throw new Exception("CRITICAL ERROR: KEY HAS NO VALUE");
 
-                int? switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
+                var switchCaseIndex = CalculateSwitchCaseIndex(switchBlock, switchBlock.SwitchData, key.Value);
                 if (!switchCaseIndex.HasValue)
                     throw new Exception("CRITICAL ERROR: SWITCH CASE HAS NO VALUE");
                 if (targets.Count < switchCaseIndex)
@@ -162,10 +162,10 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
         public bool Deobfuscate(List<Block> methodBlocks)
         {
-            List<Block> switchBlocks = GetSwitchBlocks(methodBlocks); // blocks that contain a switch
-            int modifications = 0;
+            var switchBlocks = GetSwitchBlocks(methodBlocks); // blocks that contain a switch
+            var modifications = 0;
 
-            foreach (Block switchBlock in switchBlocks)
+            foreach (var switchBlock in switchBlocks)
             {
                 if (switchBlock.SwitchData.IsKeyHardCoded)
                 {
@@ -185,12 +185,12 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
         private bool DeobfuscateSwitchBlock(List<Block> methodBlocks, Block switchBlock)
         {
-            List<Block> switchFallThroughs = methodBlocks.FindAll(b => b.FallThrough == switchBlock); // blocks that fallthrough to the switch block
+            var switchFallThroughs = methodBlocks.FindAll(b => b.FallThrough == switchBlock); // blocks that fallthrough to the switch block
             _instructionEmulator.Initialize(_blocks, true); //TODO: Remove temporary precaution
 
-            int blocksLeft = switchFallThroughs.Count; //  how many blocks left to proccess
-            int blockIndex = 0; // block that sets the first switch destination
-            int failedCount = 0;
+            var blocksLeft = switchFallThroughs.Count; //  how many blocks left to proccess
+            var blockIndex = 0; // block that sets the first switch destination
+            var failedCount = 0;
 
             while (blocksLeft > 0)
             {
@@ -203,7 +203,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                     break;
                 }
 
-                Block switchCaseBlock = switchFallThroughs[blockIndex];
+                var switchCaseBlock = switchFallThroughs[blockIndex];
                 if (switchCaseBlock.Processed)
                 {
                     blockIndex++;
@@ -248,6 +248,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             var instructions = block.Instructions;
             var lastIndex = instructions.Count - 1;
 
+            
             if (instructions.Count < 4)
                 return false;
             if (!instructions[lastIndex - 3].IsStloc())
@@ -256,7 +257,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                 return false;
             if (instructions[lastIndex - 1].OpCode != OpCodes.Rem_Un)
                 return false;
-
+            
             var nativeSwitchData = new NativeSwitchData(block);
             if (nativeSwitchData.Initialize())
             {
@@ -278,9 +279,9 @@ namespace de4dot.code.deobfuscators.ConfuserEx
 
         public List<Block> GetSwitchBlocks(List<Block> blocks) // get the blocks which contain the switch statement
         {
-            List<Block> switchBlocks = new List<Block>();
+            var switchBlocks = new List<Block>();
 
-            foreach (Block block in blocks)
+            foreach (var block in blocks)
                 if (IsConfuserExSwitchBlock(block))
                     switchBlocks.Add(block);
 
@@ -314,7 +315,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
                 DoProcessFallThroughs(switchCaseBlocks, switchBlock, fallThrough, switchKey);
 
             if (targetBlock.CountTargets() > 1)
-                foreach (Block targetBlockTarget in targetBlock.Targets)
+                foreach (var targetBlockTarget in targetBlock.Targets)
                 {
                     if (targetBlockTarget == switchBlock)
                         return;

@@ -48,7 +48,7 @@ namespace de4dot.blocks.cflow {
 		}
 
 		public Value Pop() {
-			Value value = Peek();
+			var value = Peek();
 			if (stack.Count != 0)
 				stack.RemoveAt(stack.Count - 1);
 			return value;
@@ -57,7 +57,7 @@ namespace de4dot.blocks.cflow {
 		public void Push(int count) {
 			if (count < 0)
 				throw new ArgumentOutOfRangeException("count");
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 				PushUnknown();
 		}
 
@@ -84,8 +84,8 @@ namespace de4dot.blocks.cflow {
 
 			var sb = new StringBuilder();
 			const int maxValues = 5;
-			for (int i = 0; i < maxValues; i++) {
-				int index = stack.Count - i - 1;
+			for (var i = 0; i < maxValues; i++) {
+				var index = stack.Count - i - 1;
 				if (index < 0)
 					break;
 				if (i > 0)

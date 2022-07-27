@@ -56,15 +56,15 @@ namespace de4dot.blocks.cflow {
 
 			localFlags.Clear();
 			deadLocals.Clear();
-			for (int i = 0; i < blocks.Locals.Count; i++) {
+			for (var i = 0; i < blocks.Locals.Count; i++) {
 				localFlags.Add(AccessFlags.None);
 				deadLocals.Add(false);
 			}
 
 			FindLoadStores();
 
-			bool deadStores = false;
-			for (int i = 0; i < blocks.Locals.Count; i++) {
+			var deadStores = false;
+			for (var i = 0; i < blocks.Locals.Count; i++) {
 				var flags = localFlags[i];
 				if ((flags & AccessFlags.Read) == AccessFlags.None) {
 					deadLocals[i] = true;
@@ -123,10 +123,10 @@ namespace de4dot.blocks.cflow {
 		}
 
 		bool RemoveDeadStores() {
-			bool modified = false;
+			var modified = false;
 			foreach (var block in allBlocks) {
 				var instructions = block.Instructions;
-				for (int i = 0; i < instructions.Count; i++) {
+				for (var i = 0; i < instructions.Count; i++) {
 					var instr = instructions[i];
 					Local local;
 					switch (instr.OpCode.Code) {

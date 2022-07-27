@@ -64,7 +64,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			foreach (var type in module.GetTypes()) {
 				foreach (var method in type.Methods) {
-					int? id = GetMethodId(method);
+					var id = GetMethodId(method);
 					if (id == null)
 						continue;
 

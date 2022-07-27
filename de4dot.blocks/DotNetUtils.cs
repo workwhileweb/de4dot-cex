@@ -48,7 +48,7 @@ namespace de4dot.blocks {
 
 		public IMethod Most(out int numCalls) {
 			IMethod method = null;
-			int callCount = 0;
+			var callCount = 0;
 			foreach (var key in calls.Keys) {
 				if (calls[key] > callCount) {
 					callCount = calls[key];
@@ -83,7 +83,7 @@ namespace de4dot.blocks {
 		public static bool IsEmptyObfuscated(MethodDef method) {
 			if (method.Body == null)
 				return false;
-			int index = 0;
+			var index = 0;
 			var instr = GetInstruction(method.Body.Instructions, ref index);
 			if (instr == null || instr.OpCode.Code != Code.Ret)
 				return false;
@@ -116,7 +116,7 @@ namespace de4dot.blocks {
 					continue;
 				if (sig.RetType.GetFullName() != returnType)
 					continue;
-				for (int i = 0; i < argsTypes.Length; i++) {
+				for (var i = 0; i < argsTypes.Length; i++) {
 					if (sig.Params[i].GetFullName() != argsTypes[i])
 						goto next;
 				}
@@ -349,7 +349,7 @@ namespace de4dot.blocks {
 		}
 
 		static string RemoveFromNullChar(string s) {
-			int index = s.IndexOf((char)0);
+			var index = s.IndexOf((char)0);
 			if (index < 0)
 				return s;
 			return s.Substring(0, index);
@@ -396,7 +396,7 @@ namespace de4dot.blocks {
 				else if (operand is IList<Instruction>) {
 					var oldArray = (IList<Instruction>)operand;
 					var newArray = new Instruction[oldArray.Count];
-					for (int i = 0; i < oldArray.Count; i++)
+					for (var i = 0; i < oldArray.Count; i++)
 						newArray[i] = instructions[oldToIndex[oldArray[i]]];
 					newInstr.Operand = newArray;
 				}
@@ -467,9 +467,9 @@ namespace de4dot.blocks {
 			var newOperands = new Dictionary<object, object>();
 			var fromParams = fromMethod.Parameters;
 			var toParams = toMethod.Parameters;
-			for (int i = 0; i < fromParams.Count; i++)
+			for (var i = 0; i < fromParams.Count; i++)
 				newOperands[fromParams[i]] = toParams[i];
-			for (int i = 0; i < fromBody.Variables.Count; i++)
+			for (var i = 0; i < fromBody.Variables.Count; i++)
 				newOperands[fromBody.Variables[i]] = toBody.Variables[i];
 
 			foreach (var instr in toBody.Instructions) {
@@ -515,7 +515,7 @@ namespace de4dot.blocks {
 				return null;
 
 			var list = new List<Instruction>(opcodes.Length);
-			for (int j = 0; j < opcodes.Length; j++) {
+			for (var j = 0; j < opcodes.Length; j++) {
 				var instr = instructions[i + j];
 				if (instr.OpCode != opcodes[j])
 					return null;
@@ -556,7 +556,7 @@ namespace de4dot.blocks {
 			var sig = method.MethodSig;
 			if (sig == null)
 				return 0;
-			int count = sig.Params.Count;
+			var count = sig.Params.Count;
 			if (sig.ImplicitThis)
 				count++;
 			return count;
@@ -565,7 +565,7 @@ namespace de4dot.blocks {
 		public static IList<TypeSig> ReplaceGenericParameters(GenericInstSig typeOwner, MethodSpec methodOwner, IList<TypeSig> types) {
 			if (typeOwner == null && methodOwner == null)
 				return types;
-			for (int i = 0; i < types.Count; i++)
+			for (var i = 0; i < types.Count; i++)
 				types[i] = GetGenericArgument(typeOwner, methodOwner, types[i]);
 			return types;
 		}
@@ -578,7 +578,7 @@ namespace de4dot.blocks {
 		}
 
 		public static Instruction GetInstruction(IList<Instruction> instructions, ref int index) {
-			for (int i = 0; i < 10; i++) {
+			for (var i = 0; i < 10; i++) {
 				if (index < 0 || index >= instructions.Count)
 					return null;
 				var instr = instructions[index++];
@@ -631,7 +631,7 @@ namespace de4dot.blocks {
 			if (method == null || method.Body == null)
 				return 0;
 
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code != Code.Call && instr.OpCode.Code != Code.Callvirt && instr.OpCode.Code != Code.Newobj)
 					continue;
@@ -688,9 +688,9 @@ namespace de4dot.blocks {
 			startInstr.CalculateStackUsage(false, out pushes, out pops);
 
 			index--;
-			int numArgs = pops;
+			var numArgs = pops;
 			var args = new List<Instruction>(numArgs);
-			int stackSize = numArgs;
+			var stackSize = numArgs;
 			while (index >= 0 && args.Count != numArgs) {
 				var instr = instrs[index--];
 				instr.CalculateStackUsage(false, out pushes, out pops);

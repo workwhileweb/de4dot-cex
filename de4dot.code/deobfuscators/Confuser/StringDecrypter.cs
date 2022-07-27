@@ -72,13 +72,13 @@ namespace de4dot.code.deobfuscators.Confuser {
 			public override string Decrypt(MethodDef caller, int magic) {
 				var reader = stringDecrypter.reader;
 				reader.Position = (caller.MDToken.ToInt32() ^ magic) - stringDecrypter.magic1;
-				int len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
+				var len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
 				var bytes = reader.ReadBytes(len);
 				var rand = new Random(key == null ? caller.MDToken.ToInt32() : key.Value);
 
-				int mask = 0;
-				for (int i = 0; i < bytes.Length; i++) {
-					byte b = bytes[i];
+				var mask = 0;
+				for (var i = 0; i < bytes.Length; i++) {
+					var b = bytes[i];
 					bytes[i] = (byte)(b ^ (rand.Next() & mask));
 					mask += b;
 				}
@@ -96,19 +96,19 @@ namespace de4dot.code.deobfuscators.Confuser {
 			public override string Decrypt(MethodDef caller, int magic) {
 				var reader = stringDecrypter.reader;
 				reader.Position = (caller.MDToken.ToInt32() ^ magic) - stringDecrypter.magic1;
-				int len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
+				var len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
 				var rand = new Random(caller.MDToken.ToInt32());
 
 				var instrs = stringDecrypter.decryptMethod.Body.Instructions;
 				constReader = new PolyConstantsReader(instrs, false);
-				int polyIndex = ConfuserUtils.FindCallMethod(instrs, 0, Code.Callvirt, "System.Int64 System.IO.BinaryReader::ReadInt64()");
+				var polyIndex = ConfuserUtils.FindCallMethod(instrs, 0, Code.Callvirt, "System.Int64 System.IO.BinaryReader::ReadInt64()");
 				if (polyIndex < 0)
 					throw new ApplicationException("Could not find start of decrypt code");
 
 				var decrypted = new byte[len];
-				for (int i = 0; i < len; i += 8) {
+				for (var i = 0; i < len; i += 8) {
 					constReader.Arg = reader.ReadInt64();
-					int index = polyIndex;
+					var index = polyIndex;
 					long val;
 					if (!constReader.GetInt64(ref index, out val) || instrs[index].OpCode.Code != Code.Conv_I8)
 						throw new ApplicationException("Could not get string int64 value");
@@ -127,7 +127,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			public override string Decrypt(MethodDef caller, int magic) {
 				var reader = stringDecrypter.reader;
 				reader.Position = (caller.MDToken.ToInt32() ^ magic) - stringDecrypter.magic1;
-				int len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
+				var len = reader.ReadInt32() ^ (int)~stringDecrypter.magic2;
 				var decrypted = new byte[len];
 
 				int startIndex, endIndex;
@@ -158,7 +158,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static Local FindLocal(MethodDef method) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 3; i++) {
+				for (var i = 0; i < instrs.Count - 3; i++) {
 					if (instrs[i].OpCode.Code != Code.And)
 						continue;
 					if (instrs[i + 1].OpCode.Code != Code.Shl)
@@ -174,7 +174,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static int FindEndIndex(MethodDef method) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					if (instrs[i].OpCode.Code != Code.Conv_U1)
 						continue;
 					if (instrs[i + 1].OpCode.Code != Code.Stelem_I1)
@@ -194,7 +194,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static int FindStartIndex(MethodDef method, int endIndex) {
 				var instrs = method.Body.Instructions;
-				for (int i = endIndex; i >= 0; i--) {
+				for (var i = endIndex; i >= 0; i--) {
 					var instr = instrs[i];
 					if (instr.OpCode.FlowControl != FlowControl.Next)
 						break;
@@ -218,7 +218,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			}
 
 			protected override bool ProcessInstructionInt64(ref int index, Stack<ConstantInfo<long>> stack) {
-				int i = index;
+				var i = index;
 
 				if (instructions[i].IsLdloc()) {
 					i++;
@@ -320,8 +320,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic1(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte[] System.IO.BinaryReader::ReadBytes(System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte[] System.IO.BinaryReader::ReadBytes(System.Int32)");
 				if (index < 0)
 					break;
 				if (index < 4)
@@ -347,7 +347,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindNewMagic1(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				if (instrs[i].OpCode.Code != Code.Ldarg_0)
 					continue;
 				if (instrs[i + 1].OpCode.Code != Code.Xor)
@@ -369,8 +369,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic2(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.UInt32 System.IO.BinaryReader::ReadUInt32()");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.UInt32 System.IO.BinaryReader::ReadUInt32()");
 				if (index < 0)
 					break;
 				if (index + 4 >= instrs.Count)
@@ -395,8 +395,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindSafeKey1(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Newobj, "System.Void System.Random::.ctor(System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Newobj, "System.Void System.Random::.ctor(System.Int32)");
 				if (index < 0)
 					break;
 				if (index == 0)

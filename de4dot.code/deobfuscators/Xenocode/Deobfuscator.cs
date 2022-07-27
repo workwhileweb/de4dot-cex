@@ -69,7 +69,7 @@ namespace de4dot.code.deobfuscators.Xenocode {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
 			if (stringDecrypter.Detected)
 				val += 100;
@@ -159,7 +159,7 @@ namespace de4dot.code.deobfuscators.Xenocode {
 				return;
 			if (hca == null)
 				return;
-			for (int i = hca.CustomAttributes.Count - 1; i >= 0; i--) {
+			for (var i = hca.CustomAttributes.Count - 1; i >= 0; i--) {
 				var ca = hca.CustomAttributes[i];
 				if (ca.Constructor == null)
 					hca.CustomAttributes.RemoveAt(i);

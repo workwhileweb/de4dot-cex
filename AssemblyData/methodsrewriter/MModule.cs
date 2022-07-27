@@ -42,7 +42,7 @@ namespace AssemblyData.methodsrewriter {
 		void InitTokenToType() {
 			moduleType = moduleDef.Types[0];
 			foreach (var typeDef in moduleDef.GetTypes()) {
-				int token = (int)typeDef.MDToken.Raw;
+				var token = (int)typeDef.MDToken.Raw;
 				Type type;
 				try {
 					type = module.ResolveType(token);

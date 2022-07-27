@@ -219,7 +219,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				instrsToRemove.Clear();
 				var instrs = block.Instructions;
-				for (int i = instrs.Count - 1; i >= 0; i--) {
+				for (var i = instrs.Count - 1; i >= 0; i--) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code != Code.Ldflda && instr.OpCode.Code != Code.Ldfld)
 						continue;
@@ -242,7 +242,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			//var instrsToRemove = new List<int>();
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var stfld = instrs[i];
 					if (stfld.OpCode.Code != Code.Stfld)
 						continue;
@@ -281,8 +281,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		static int FindLdStFieldIndex(IList<Instr> instrs, int index) {
-			int stack = 0;
-			for (int i = index; i < instrs.Count; i++) {
+			var stack = 0;
+			for (var i = index; i < instrs.Count; i++) {
 				var instr = instrs[i];
 
 				if (stack == 0 && (instr.OpCode.Code == Code.Ldfld || instr.OpCode.Code == Code.Ldflda))

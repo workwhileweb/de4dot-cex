@@ -146,11 +146,11 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(stringDecrypter.Detected) +
-					ToInt32(resourceResolver.Detected) +
-					ToInt32(assemblyResolver.Detected);
+			var sum = ToInt32(stringDecrypter.Detected) +
+                      ToInt32(resourceResolver.Detected) +
+                      ToInt32(assemblyResolver.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 

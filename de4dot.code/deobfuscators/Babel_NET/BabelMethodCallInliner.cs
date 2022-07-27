@@ -72,9 +72,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		protected override bool DeobfuscateInternal() {
-			bool modified = false;
+			var modified = false;
 			var instructions = block.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i].Instruction;
 				if (instr.OpCode.Code == Code.Call)
 					modified |= InlineMethod(instr, i);
@@ -132,7 +132,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			Instruction instr;
 			emulateIndex = 0;
 			instructions = method.Body.Instructions;
-			int counter = 0;
+			var counter = 0;
 			while (true) {
 				if (counter++ >= 50)
 					return false;

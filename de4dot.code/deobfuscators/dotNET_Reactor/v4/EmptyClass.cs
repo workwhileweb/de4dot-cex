@@ -41,7 +41,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 
 		void Initialize() {
 			var callCounter = new CallCounter();
-			int count = 0;
+			var count = 0;
 			foreach (var type in module.GetTypes()) {
 				if (count >= 40)
 					break;
@@ -81,7 +81,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			if (type.IsPublic)
 				return false;
 
-			int otherMethods = 0;
+			var otherMethods = 0;
 			foreach (var method in type.Methods) {
 				if (method.Name == ".ctor" || method.Name == ".cctor")
 					continue;

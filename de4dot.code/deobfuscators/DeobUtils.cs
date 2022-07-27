@@ -60,7 +60,7 @@ namespace de4dot.code.deobfuscators {
 		public static bool IsCode(short[] nativeCode, byte[] code) {
 			if (nativeCode.Length != code.Length)
 				return false;
-			for (int i = 0; i < nativeCode.Length; i++) {
+			for (var i = 0; i < nativeCode.Length; i++) {
 				if (nativeCode[i] == -1)
 					continue;
 				if ((byte)nativeCode[i] != code[i])
@@ -108,14 +108,14 @@ namespace de4dot.code.deobfuscators {
 		// Code converted from C implementation @ http://en.wikipedia.org/wiki/XXTEA (btea() func)
 		public static void XxteaDecrypt(uint[] v, uint[] key) {
 			const uint DELTA = 0x9E3779B9;
-			int n = v.Length;
-			uint rounds = (uint)(6 + 52 / n);
-			uint sum = rounds * DELTA;
-			uint y = v[0];
+			var n = v.Length;
+			var rounds = (uint)(6 + 52 / n);
+			var sum = rounds * DELTA;
+			var y = v[0];
 			uint z;
 			//#define MX (((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z)))
 			do {
-				int e = (int)((sum >> 2) & 3);
+				var e = (int)((sum >> 2) & 3);
 				int p;
 				for (p = n - 1; p > 0; p--) {
 					z = v[p - 1];
@@ -129,8 +129,8 @@ namespace de4dot.code.deobfuscators {
 		// Code converted from C implementation @ http://en.wikipedia.org/wiki/XTEA (decipher() func)
 		public static void XteaDecrypt(ref uint v0, ref uint v1, uint[] key, int rounds) {
 			const uint delta = 0x9E3779B9;
-			uint sum = (uint)(delta * rounds);
-			for (int i = 0; i < rounds; i++) {
+			var sum = (uint)(delta * rounds);
+			for (var i = 0; i < rounds; i++) {
 				v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + key[(sum >> 11) & 3]);
 				sum -= delta;
 				v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + key[sum & 3]);
@@ -167,7 +167,7 @@ namespace de4dot.code.deobfuscators {
 			var memStream = new MemoryStream();
 			inflater.SetInput(data, start, len);
 			while (true) {
-				int count = inflater.Inflate(buffer, 0, buffer.Length);
+				var count = inflater.Inflate(buffer, 0, buffer.Length);
 				if (count == 0)
 					break;
 				memStream.Write(buffer, 0, count);
@@ -194,7 +194,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		public static int ReadVariableLengthInt32(byte[] data, ref int index) {
-			byte b = data[index++];
+			var b = data[index++];
 			if ((b & 0x80) == 0)
 				return b;
 			if ((b & 0x40) == 0)
@@ -217,7 +217,7 @@ namespace de4dot.code.deobfuscators {
 			if (method == null || method.Body == null)
 				return -1;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (!instr.IsLdcI4())
 					continue;

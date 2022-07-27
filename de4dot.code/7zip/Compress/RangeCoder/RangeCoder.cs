@@ -17,7 +17,7 @@ namespace SevenZip.Compression.RangeCoder
 
 			Code = 0;
 			Range = 0xFFFFFFFF;
-			for (int i = 0; i < 5; i++)
+			for (var i = 0; i < 5; i++)
 				Code = (Code << 8) | (byte)Stream.ReadByte();
 		}
 
@@ -64,10 +64,10 @@ namespace SevenZip.Compression.RangeCoder
 
 		public uint DecodeDirectBits(int numTotalBits)
 		{
-			uint range = Range;
-			uint code = Code;
+			var range = Range;
+			var code = Code;
 			uint result = 0;
-			for (int i = numTotalBits; i > 0; i--)
+			for (var i = numTotalBits; i > 0; i--)
 			{
 				range >>= 1;
 				/*
@@ -78,7 +78,7 @@ namespace SevenZip.Compression.RangeCoder
 					result |= 1;
 				}
 				*/
-				uint t = (code - range) >> 31;
+				var t = (code - range) >> 31;
 				code -= range & (t - 1);
 				result = (result << 1) | (1 - t);
 
@@ -95,7 +95,7 @@ namespace SevenZip.Compression.RangeCoder
 
 		public uint DecodeBit(uint size0, int numTotalBits)
 		{
-			uint newBound = (Range >> numTotalBits) * size0;
+			var newBound = (Range >> numTotalBits) * size0;
 			uint symbol;
 			if (Code < newBound)
 			{

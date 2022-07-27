@@ -65,9 +65,9 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 				if (ints.Length % 3 != 0)
 					throw new ApplicationException("Invalid encrypted string");
 				var sb = new StringBuilder(ints.Length / 3);
-				for (int i = 0; i < ints.Length; i += 3) {
-					int val1 = int.Parse(ints[i]);
-					int val2 = int.Parse(ints[i + 1]);
+				for (var i = 0; i < ints.Length; i += 3) {
+					var val1 = int.Parse(ints[i]);
+					var val2 = int.Parse(ints[i + 1]);
 					if ((double)val2 / 2.0 == Math.Round((double)val2 / 2.0))
 						val1 += val1;
 					sb.Append((char)val1);
@@ -116,7 +116,7 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 
 			deobfuscator.Deobfuscate(decrypterCctor);
 			var instrs = decrypterCctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				var ldstr = instrs[i];
 				if (ldstr.OpCode.Code != Code.Ldstr)
 					continue;
@@ -209,12 +209,12 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 
 			var ary = s.ToCharArray();
 			Array.Reverse(ary);
-			for (int i = 0; i < ary.Length; i++)
+			for (var i = 0; i < ary.Length; i++)
 				ary[i]--;
 			var s2 = new string(ary);
 
 			var saltAry = new byte[(int)Math.Round((double)s2.Length / 2 - 1) + 1];
-			for (int i = 0; i < saltAry.Length; i++) {
+			for (var i = 0; i < saltAry.Length; i++) {
 				int result;
 				if (!int.TryParse(s2.Substring(i * 2, 2), NumberStyles.AllowHexSpecifier, null, out result))
 					return null;
@@ -248,8 +248,8 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 
 		string FixPassword(string hexChars) {
 			var ary = hexChars.Trim().Split(' ');
-			string password = "";
-			for (int i = 0; i < ary.Length; i++) {
+			var password = "";
+			for (var i = 0; i < ary.Length; i++) {
 				int result;
 				if (!int.TryParse(ary[i], NumberStyles.AllowHexSpecifier, null, out result))
 					return null;
@@ -259,7 +259,7 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 		}
 
 		string GetPassword2(MethodDef method) {
-			string password = "";
+			var password = "";
 			foreach (var calledMethod in DotNetUtils.GetCalledMethods(module, method)) {
 				var s = GetPassword3(calledMethod);
 				if (string.IsNullOrEmpty(s))
@@ -285,7 +285,7 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 		public void Deobfuscate(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 
 					if (instr.OpCode.Code == Code.Call || instr.OpCode.Code == Code.Callvirt) {

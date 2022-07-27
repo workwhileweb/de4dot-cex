@@ -36,7 +36,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		public byte[] Generate(int size) {
 			var key = new byte[size];
-			for (int i = 0; i < size; i++)
+			for (var i = 0; i < size; i++)
 				key[i] = (byte)Random();
 			return key;
 		}

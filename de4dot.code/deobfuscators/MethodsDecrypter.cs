@@ -33,7 +33,7 @@ namespace de4dot.code.deobfuscators {
 
 		public static DumpedMethods Decrypt(ServerClrVersion serverVersion, string filename, byte[] moduleCctorBytes) {
 			Exception lastEx = null;
-			for (int i = 0; i < 5; i++) {
+			for (var i = 0; i < 5; i++) {
 				try {
 					return Decrypt2(serverVersion, filename, moduleCctorBytes);
 				}

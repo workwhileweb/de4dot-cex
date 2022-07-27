@@ -36,11 +36,11 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			if (reader.ReadInt32() > 1)
 				throw new ApplicationException("Invalid EREX file");
 
-			byte flags = reader.ReadByte();
-			bool isEncrypted = (flags & 1) != 0;
-			bool isDeflated = (flags & 2) != 0;
+			var flags = reader.ReadByte();
+			var isEncrypted = (flags & 1) != 0;
+			var isDeflated = (flags & 2) != 0;
 
-			int length = reader.ReadInt32();
+			var length = reader.ReadInt32();
 			if (length < 0)
 				throw new ApplicationException("Invalid length");
 
@@ -58,7 +58,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 		void ReadKey() {
 			key = new uint[reader.ReadByte()];
-			for (int i = 0; i < key.Length; i++)
+			for (var i = 0; i < key.Length; i++)
 				key[i] = reader.ReadUInt32();
 		}
 

@@ -91,7 +91,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 				return null;
 			if (!IsDelegateCreatorMethod(call.Operand as MethodDef))
 				return null;
-			int rid = ldci4.GetLdcI4Value();
+			var rid = ldci4.GetLdcI4Value();
 			if (cctor.DeclaringType.Rid != rid)
 				throw new ApplicationException("Invalid rid");
 			return rid;

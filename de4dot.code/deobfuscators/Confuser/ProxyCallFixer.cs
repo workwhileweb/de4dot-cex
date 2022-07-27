@@ -167,7 +167,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var fieldToInfo = new FieldDefAndDeclaringTypeDict<DelegateInitInfo>();
 
 			var instrs = cctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldtoken = instrs[i];
 				if (ldtoken.OpCode.Code != Code.Ldtoken)
 					continue;
@@ -266,13 +266,13 @@ namespace de4dot.code.deobfuscators.Confuser {
 		void GetCallInfo_v10_r42915(DelegateInitInfo info, ProxyCreatorInfo creatorInfo, out IMethod calledMethod, out OpCode callOpcode) {
 			var reader = new BinaryReader(new MemoryStream(info.data));
 
-			bool isCallvirt = false;
+			var isCallvirt = false;
 			if (creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt)
 				isCallvirt = reader.ReadBoolean();
 
 			var asmRef = ReadAssemblyNameReference(reader);
 			// If < 1.0 r42919, then high byte is 06, else it's cleared.
-			uint token = (reader.ReadUInt32() & 0x00FFFFFF) | 0x06000000;
+			var token = (reader.ReadUInt32() & 0x00FFFFFF) | 0x06000000;
 			if (reader.BaseStream.Position != reader.BaseStream.Length)
 				throw new ApplicationException("Extra data");
 
@@ -285,12 +285,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		void GetCallInfo_v10_r48717(DelegateInitInfo info, ProxyCreatorInfo creatorInfo, out IMethod calledMethod, out OpCode callOpcode) {
-			bool isNew = creatorInfo.version == ConfuserVersion.v14_r58802;
+			var isNew = creatorInfo.version == ConfuserVersion.v14_r58802;
 
-			int offs = creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt ? 2 : 1;
+			var offs = creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt ? 2 : 1;
 			if (isNew)
 				offs--;
-			int callvirtOffs = isNew ? 0 : 1;
+			var callvirtOffs = isNew ? 0 : 1;
 
 			// This is an obfuscator bug. Field names are stored in the #Strings heap,
 			// and strings in that heap are UTF8 zero terminated strings, but Confuser
@@ -301,8 +301,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return;
 			}
 
-			uint token = BitConverter.ToUInt32(Encoding.Unicode.GetBytes(info.field.Name.String.ToCharArray(), offs, 2), 0) ^ creatorInfo.magic;
-			uint table = token >> 24;
+			var token = BitConverter.ToUInt32(Encoding.Unicode.GetBytes(info.field.Name.String.ToCharArray(), offs, 2), 0) ^ creatorInfo.magic;
+			var table = token >> 24;
 			if (table != 0 && table != 6 && table != 0x0A && table != 0x2B)
 				throw new ApplicationException("Invalid method token");
 
@@ -315,24 +315,24 @@ namespace de4dot.code.deobfuscators.Confuser {
 				calledMethod = CreateMethodReference(asmRef, token);
 			}
 
-			bool isCallvirt = false;
+			var isCallvirt = false;
 			if (creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt && info.field.Name.String[callvirtOffs] == '\r')
 				isCallvirt = true;
 			callOpcode = GetCallOpCode(creatorInfo, isCallvirt);
 		}
 
 		void GetCallInfo_v14_r58857(DelegateInitInfo info, ProxyCreatorInfo creatorInfo, out IMethod calledMethod, out OpCode callOpcode) {
-			int offs = creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt ? 1 : 0;
+			var offs = creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt ? 1 : 0;
 			var nameInfo = DecryptFieldName(info.field.Name.String);
 
-			uint token = BitConverter.ToUInt32(nameInfo, offs) ^ creatorInfo.magic;
-			uint table = token >> 24;
+			var token = BitConverter.ToUInt32(nameInfo, offs) ^ creatorInfo.magic;
+			var table = token >> 24;
 			if (table != 6 && table != 0x0A && table != 0x2B)
 				throw new ApplicationException("Invalid method token");
 
 			calledMethod = module.ResolveToken(token) as IMethod;
 
-			bool isCallvirt = false;
+			var isCallvirt = false;
 			if (creatorInfo.proxyCreatorType == ProxyCreatorType.CallOrCallvirt && nameInfo[0] == '\r')
 				isCallvirt = true;
 			callOpcode = GetCallOpCode(creatorInfo, isCallvirt);
@@ -340,7 +340,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static byte[] DecryptFieldName(string name) {
 			var chars = new char[name.Length];
-			for (int i = 0; i < chars.Length; i++)
+			for (var i = 0; i < chars.Length; i++)
 				chars[i] = (char)((byte)name[i] ^ i);
 			return Convert.FromBase64CharArray(chars, 0, chars.Length);
 		}
@@ -369,7 +369,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			uint arg, table;
 			bool isCallvirt;
 			Extract_v17_r73740(creatorInfo, nameInfo, out arg, out table, out isCallvirt);
-			uint token = (arg ^ creatorInfo.magic) | table;
+			var token = (arg ^ creatorInfo.magic) | table;
 
 			calledMethod = module.ResolveToken((int)token) as IMethod;
 			callOpcode = GetCallOpCode(creatorInfo, isCallvirt);
@@ -382,7 +382,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			Extract_v17_r73740(creatorInfo, nameInfo, out arg, out table, out isCallvirt);
 			if (x86emu == null)
 				x86emu = new x86Emulator(fileData);
-			uint token = x86emu.Emulate((uint)creatorInfo.nativeMethod.RVA, arg) | table;
+			var token = x86emu.Emulate((uint)creatorInfo.nativeMethod.RVA, arg) | table;
 
 			calledMethod = module.ResolveToken((int)token) as IMethod;
 			callOpcode = GetCallOpCode(creatorInfo, isCallvirt);
@@ -402,11 +402,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		void GetCallInfo_v18_r75367(DelegateInitInfo info, ProxyCreatorInfo creatorInfo, out IMethod calledMethod, out OpCode callOpcode, Func<ProxyCreatorInfo, uint, uint> getRid) {
 			var sig = module.ReadBlob(info.field.MDToken.Raw);
-			int len = sig.Length;
-			uint magic = (uint)((sig[len - 2] << 24) | (sig[len - 3] << 16) | (sig[len - 5] << 8) | sig[len - 6]);
-			uint rid = getRid(creatorInfo, magic);
-			int token = (sig[len - 7] << 24) | (int)rid;
-			uint table = (uint)token >> 24;
+			var len = sig.Length;
+			var magic = (uint)((sig[len - 2] << 24) | (sig[len - 3] << 16) | (sig[len - 5] << 8) | sig[len - 6]);
+			var rid = getRid(creatorInfo, magic);
+			var token = (sig[len - 7] << 24) | (int)rid;
+			var table = (uint)token >> 24;
 			if (table != 6 && table != 0x0A && table != 0x2B)
 				throw new ApplicationException("Invalid method token");
 			calledMethod = module.ResolveToken(token) as IMethod;
@@ -445,14 +445,14 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var name = ReadString(reader);
 			var version = new Version(reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16());
 			var culture = ReadString(reader);
-			byte[] pkt = reader.ReadBoolean() ? reader.ReadBytes(8) : null;
+			var pkt = reader.ReadBoolean() ? reader.ReadBytes(8) : null;
 			return module.UpdateRowId(new AssemblyRefUser(name, version, pkt == null ? null : new PublicKeyToken(pkt), culture));
 		}
 
 		static string ReadString(BinaryReader reader) {
 			int len = reader.ReadByte();
 			var bytes = new byte[len];
-			for (int i = 0; i < len; i++)
+			for (var i = 0; i < len; i++)
 				bytes[i] = (byte)(reader.ReadByte() ^ len);
 			return Encoding.UTF8.GetString(bytes);
 		}
@@ -476,7 +476,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			foreach (var method in type.Methods) {
 				if (method.Body == null || !method.IsStatic || !method.IsAssembly)
 					continue;
-				ConfuserVersion theVersion = ConfuserVersion.Unknown;
+				var theVersion = ConfuserVersion.Unknown;
 
 				if (DotNetUtils.IsMethod(method, "System.Void", "(System.String,System.RuntimeFieldHandle)"))
 					theVersion = ConfuserVersion.v10_r42915;
@@ -526,7 +526,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 					else {
 						if (proxyType == ProxyCreatorType.CallOrCallvirt && !DotNetUtils.CallsMethod(method, "System.Int32 System.String::get_Length()"))
 							theVersion = ConfuserVersion.v11_r50378;
-						int numCalls = ConfuserUtils.CountCalls(method, "System.Byte[] System.Text.Encoding::GetBytes(System.Char[],System.Int32,System.Int32)");
+						var numCalls = ConfuserUtils.CountCalls(method, "System.Byte[] System.Text.Encoding::GetBytes(System.Char[],System.Int32,System.Int32)");
 						if (numCalls == 2)
 							theVersion = ConfuserVersion.v12_r54564;
 						if (!DotNetUtils.CallsMethod(method, "System.Reflection.Assembly System.Reflection.Assembly::Load(System.Reflection.AssemblyName)"))
@@ -592,7 +592,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static bool IsMethodCreator_v14_r58802(MethodDef method, ProxyCreatorType proxyType) {
-			int index = GetFieldNameIndex(method);
+			var index = GetFieldNameIndex(method);
 			if (index < 0)
 				throw new ApplicationException("Could not find field name index");
 			switch (proxyType) {
@@ -618,7 +618,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static int GetFieldNameIndex(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte[] System.Text.Encoding::GetBytes(System.Char[],System.Int32,System.Int32)");
 				if (i < 0)
 					break;
@@ -635,7 +635,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic_v19_r76101(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 7; i++) {
+			for (var i = 0; i < instrs.Count - 7; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4() || ldci4_1.GetLdcI4Value() != 24)
 					continue;
@@ -664,7 +664,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static MethodDef FindNativeMethod_v19_r76101(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 6; i++) {
+			for (var i = 0; i < instrs.Count - 6; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4() || ldci4.GetLdcI4Value() != 24)
 					continue;
@@ -692,7 +692,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic_v18_r75367(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.Module System.Reflection.MemberInfo::get_Module()");
 				if (i < 0 || i + 3 >= instrs.Count)
 					break;
@@ -714,7 +714,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static MethodDef FindNativeMethod_v18_r75367(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.Module System.Reflection.MemberInfo::get_Module()");
 				if (i < 0 || i + 2 >= instrs.Count)
 					break;
@@ -736,8 +736,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic_v17_r73740(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
 				if (index < 0)
 					break;
 				if (index < 1 || index + 2 >= instrs.Count)
@@ -760,8 +760,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static MethodDef FindNativeMethod_v17_r73740(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
 				if (index < 0)
 					break;
 				if (index < 1 || index + 1 >= instrs.Count)
@@ -783,8 +783,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool Is_v17_r73740(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.MethodBase System.Reflection.Module::ResolveMethod(System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.MethodBase System.Reflection.Module::ResolveMethod(System.Int32)");
 				if (index < 0)
 					break;
 				if (index < 3)
@@ -806,11 +806,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMagic_v14_r58564(MethodDef method, out uint magic) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Int32 System.BitConverter::ToInt32(System.Byte[],System.Int32)");
 				if (index < 0)
 					break;
-				int index2 = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.MethodBase System.Reflection.Module::ResolveMethod(System.Int32)");
+				var index2 = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.MethodBase System.Reflection.Module::ResolveMethod(System.Int32)");
 				if (index2 < 0 || index2 - index != 3)
 					continue;
 				var ldci4 = instrs[index + 1];
@@ -876,7 +876,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool CheckCtorProxyTypeV2(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4() || ldci4.GetLdcI4Value() != 2)
 					continue;
@@ -902,7 +902,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		// CheckCtorProxyTypeV2() has returned true.
 		static bool CheckCtorProxyType_v19_r78963(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				if (instrs[i].OpCode.Code != Code.Add)
 					continue;
 				var ldci4 = instrs[i + 1];
@@ -989,7 +989,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		FieldDefAndDeclaringTypeDict<DelegateInitInfo> CreateDelegateInitInfos_v10_r42915(MethodDef method) {
 			var infos = new FieldDefAndDeclaringTypeDict<DelegateInitInfo>();
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldstr = instrs[i];
 				if (ldstr.OpCode.Code != Code.Ldstr)
 					continue;
@@ -1023,7 +1023,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		FieldDefAndDeclaringTypeDict<DelegateInitInfo> CreateDelegateInitInfos_v10_r48717(MethodDef method) {
 			var infos = new FieldDefAndDeclaringTypeDict<DelegateInitInfo>();
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldtoken = instrs[i];
 				if (ldtoken.OpCode.Code != Code.Ldtoken)
 					continue;
@@ -1068,7 +1068,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return null;
 
 			FieldDef field = null;
-			bool foundInvoke = false;
+			var foundInvoke = false;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == Code.Ldsfld) {
 					var field2 = instr.Operand as FieldDef;
@@ -1090,7 +1090,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindCallvirtChar(MethodDef method, out ushort callvirtChar) {
 			var instrs = method.Body.Instructions;
-			for (int index = 0; index < instrs.Count; index++) {
+			for (var index = 0; index < instrs.Count; index++) {
 				index = ConfuserUtils.FindCallMethod(instrs, index, Code.Callvirt, "System.Char System.String::get_Chars(System.Int32)");
 				if (index < 0)
 					break;

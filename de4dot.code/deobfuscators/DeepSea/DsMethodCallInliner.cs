@@ -37,10 +37,10 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		protected override bool DeobfuscateInternal() {
-			bool modified = false;
+			var modified = false;
 
 			var instructions = block.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i].Instruction;
 				if (instr.OpCode.Code == Code.Call)
 					modified |= InlineMethod(instr, i);
@@ -100,7 +100,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			instructionEmulator.SetArg(arg1, new Int32Value(const1));
 			instructionEmulator.SetArg(arg2, new Int32Value(const2));
 
-			int index = 0;
+			var index = 0;
 			if (!EmulateInstructions(ref index, false))
 				return false;
 			var patcher = TryInlineOtherMethod(instrIndex, methodToInline, methodToInline.Body.Instructions[index], index + 1, 2);
@@ -117,9 +117,9 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		bool EmulateInstructions(ref int index, bool allowUnknownArgs) {
 			Instruction instr;
 			var instrs = methodToInline.Body.Instructions;
-			int counter = 0;
+			var counter = 0;
 			var foundOpCodes = new Dictionary<Code, bool>();
-			bool checkInstrs = false;
+			var checkInstrs = false;
 			while (true) {
 				if (counter++ >= 50)
 					return false;
@@ -253,7 +253,7 @@ done:
 		int EmulateBranch(int stackArgs, Bool3 cond, Instruction instrTrue, Instruction instrFalse) {
 			if (cond == Bool3.Unknown)
 				return -1;
-			Instruction instr = cond == Bool3.True ? instrTrue : instrFalse;
+			var instr = cond == Bool3.True ? instrTrue : instrFalse;
 			return methodToInline.Body.Instructions.IndexOf(instr);
 		}
 
@@ -316,7 +316,7 @@ done:
 				return false;
 
 			var parameters = method.MethodSig.GetParams();
-			int paramCount = parameters.Count;
+			var paramCount = parameters.Count;
 			if (paramCount < 2)
 				return false;
 
@@ -342,7 +342,7 @@ done:
 		}
 
 		protected override bool IsReturn(MethodDef methodToInline, int instrIndex) {
-			int oldIndex = instrIndex;
+			var oldIndex = instrIndex;
 			if (base.IsReturn(methodToInline, oldIndex))
 				return true;
 

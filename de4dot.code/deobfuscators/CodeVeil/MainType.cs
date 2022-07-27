@@ -86,7 +86,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 				return;
 
 			var instrs = cctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4())
 					continue;
@@ -248,7 +248,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 2; i++) {
+				for (var i = 0; i < instrs.Count - 2; i++) {
 					if (!instrs[i].IsLdcI4())
 						continue;
 					if (!instrs[i + 1].IsLdcI4())

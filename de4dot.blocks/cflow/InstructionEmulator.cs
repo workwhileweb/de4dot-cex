@@ -65,12 +65,12 @@ namespace de4dot.blocks.cflow {
 				prev_method = method;
 
 				cached_args.Clear();
-				for (int i = 0; i < parameterDefs.Count; i++)
+				for (var i = 0; i < parameterDefs.Count; i++)
 					cached_args.Add(GetUnknownValue(parameterDefs[i].Type));
 
 				cached_locals.Clear();
 				cached_zeroed_locals.Clear();
-				for (int i = 0; i < localDefs.Count; i++) {
+				for (var i = 0; i < localDefs.Count; i++) {
 					cached_locals.Add(GetUnknownValue(localDefs[i].Type));
 					cached_zeroed_locals.Add(GetDefaultValue(localDefs[i].Type));
 				}
@@ -288,7 +288,7 @@ namespace de4dot.blocks.cflow {
 		}
 
 		public void Emulate(IList<Instr> instructions, int start, int end) {
-			for (int i = start; i < end; i++)
+			for (var i = start; i < end; i++)
 				Emulate(instructions[i].Instruction);
 		}
 

@@ -81,8 +81,8 @@ namespace de4dot.blocks.cflow {
 		}
 
 		public static Int64Value Conv_U8(Int32Value a) {
-			long value = (long)(ulong)(uint)a.Value;
-			ulong validMask = a.ValidMask | (NO_UNKNOWN_BITS << 32);
+			var value = (long)(ulong)(uint)a.Value;
+			var validMask = a.ValidMask | (NO_UNKNOWN_BITS << 32);
 			return new Int64Value(value, validMask);
 		}
 
@@ -436,8 +436,8 @@ namespace de4dot.blocks.cflow {
 				return a;
 			if (b.Value < 0 || b.Value >= sizeof(long) * 8)
 				return CreateUnknown();
-			int shift = b.Value;
-			ulong validMask = (a.ValidMask << shift) | (ulong.MaxValue >> (sizeof(long) * 8 - shift));
+			var shift = b.Value;
+			var validMask = (a.ValidMask << shift) | (ulong.MaxValue >> (sizeof(long) * 8 - shift));
 			return new Int64Value(a.Value << shift, validMask);
 		}
 
@@ -448,8 +448,8 @@ namespace de4dot.blocks.cflow {
 				return a;
 			if (b.Value < 0 || b.Value >= sizeof(long) * 8)
 				return CreateUnknown();
-			int shift = b.Value;
-			ulong validMask = a.ValidMask >> shift;
+			var shift = b.Value;
+			var validMask = a.ValidMask >> shift;
 			if (a.IsBitValid(sizeof(long) * 8 - 1))
 				validMask |= (ulong.MaxValue << (sizeof(long) * 8 - shift));
 			return new Int64Value(a.Value >> shift, validMask);
@@ -462,8 +462,8 @@ namespace de4dot.blocks.cflow {
 				return a;
 			if (b.Value < 0 || b.Value >= sizeof(long) * 8)
 				return CreateUnknown();
-			int shift = b.Value;
-			ulong validMask = (a.ValidMask >> shift) | (ulong.MaxValue << (sizeof(long) * 8 - shift));
+			var shift = b.Value;
+			var validMask = (a.ValidMask >> shift) | (ulong.MaxValue << (sizeof(long) * 8 - shift));
 			return new Int64Value((long)((ulong)a.Value >> shift), validMask);
 		}
 

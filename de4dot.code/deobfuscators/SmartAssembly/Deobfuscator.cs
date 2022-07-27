@@ -126,7 +126,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
 			if (memoryManagerInfo.Detected)
 				val += 100;
@@ -191,7 +191,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 					return;
 				}
 
-				int ver = CheckTypeIdAttribute();
+				var ver = CheckTypeIdAttribute();
 				if (ver == 2) {
 					ObfuscatorName = "SmartAssembly 2.x";
 					approxVersion = new Version(2, 0, 0, 0);
@@ -230,7 +230,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		TypeDef GetTypeIdAttribute() {
 			Dictionary<TypeDef, bool> attrs = null;
-			int counter = 0;
+			var counter = 0;
 			foreach (var type in module.GetTypes()) {
 				counter++;
 				var cattrs = type.CustomAttributes;
@@ -281,7 +281,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 				namespaces[ns]++;
 			}
 
-			foreach (int count in namespaces.Values) {
+			foreach (var count in namespaces.Values) {
 				if (count < 1)
 					return false;
 			}
@@ -378,7 +378,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			var initd = new Dictionary<StringDecrypterInfo, bool>(stringDecrypterInfos.Count);
 			while (initd.Count != stringDecrypterInfos.Count) {
 				StringDecrypterInfo initdInfo = null;
-				for (int i = 0; i < 2; i++) {
+				for (var i = 0; i < 2; i++) {
 					foreach (var info in stringDecrypterInfos) {
 						if (initd.ContainsKey(info))
 							continue;

@@ -34,7 +34,7 @@ namespace AssemblyData {
 				data = null;
 			else {
 				data = new short[s.Length];
-				for (int i = 0; i < s.Length; i++)
+				for (var i = 0; i < s.Length; i++)
 					data[i] = (short)s[i];
 			}
 		}
@@ -52,7 +52,7 @@ namespace AssemblyData {
 
 	public static class SimpleData {
 		public static object[] Pack(object[] args) {
-			for (int i = 0; i < args.Length; i++) {
+			for (var i = 0; i < args.Length; i++) {
 				var s = args[i] as string;
 				if (s != null)
 					args[i] = new MyString(s);
@@ -61,7 +61,7 @@ namespace AssemblyData {
 		}
 
 		public static object[] Unpack(object[] args) {
-			for (int i = 0; i < args.Length; i++) {
+			for (var i = 0; i < args.Length; i++) {
 				var s = args[i] as MyString;
 				if (s != null)
 					args[i] = s.ToString();

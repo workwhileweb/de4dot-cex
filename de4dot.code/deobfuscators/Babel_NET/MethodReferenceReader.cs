@@ -126,8 +126,8 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		Parameter[] ReadParameters(IList<TypeSig> argTypes, bool hasThis) {
 			var ps = new Parameter[argTypes.Count];
-			int bi = hasThis ? 1 : 0;
-			for (int i = 0; i < ps.Length; i++)
+			var bi = hasThis ? 1 : 0;
+			for (var i = 0; i < ps.Length; i++)
 				ps[i] = new Parameter(bi + i, i, argTypes[i]);
 			return ps;
 		}

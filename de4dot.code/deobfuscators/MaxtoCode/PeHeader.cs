@@ -78,7 +78,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 		bool CheckMcKeyRva(MyPEImage peImage, uint newXorKey) {
 			xorKey = newXorKey;
-			uint rva = GetMcKeyRva();
+			var rva = GetMcKeyRva();
 			return (rva & 0xFFF) == 0 && peImage.FindSection((RVA)rva) != null;
 		}
 
@@ -119,7 +119,7 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 
 		static EncryptionVersion GetHeaderOffsetAndVersion(ImageSectionHeader section, MyPEImage peImage, out uint headerOffset) {
 			headerOffset = section.PointerToRawData;
-			uint end = section.PointerToRawData + section.SizeOfRawData - 0x1000 + 1;
+			var end = section.PointerToRawData + section.SizeOfRawData - 0x1000 + 1;
 			while (headerOffset < end) {
 				var version = GetVersion(peImage, headerOffset);
 				if (version != EncryptionVersion.Unknown)
@@ -131,8 +131,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		static EncryptionVersion GetVersion(MyPEImage peImage, uint headerOffset) {
-			uint m1lo = peImage.OffsetReadUInt32(headerOffset + 0x900);
-			uint m1hi = peImage.OffsetReadUInt32(headerOffset + 0x904);
+			var m1lo = peImage.OffsetReadUInt32(headerOffset + 0x900);
+			var m1hi = peImage.OffsetReadUInt32(headerOffset + 0x904);
 
 			foreach (var info in EncryptionInfos.Rva900h) {
 				if (info.MagicLo == m1lo && info.MagicHi == m1hi)

@@ -130,19 +130,19 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(jitMethodsDecrypter != null ? jitMethodsDecrypter.Detected : false) +
-					ToInt32(memoryMethodsDecrypter != null ? memoryMethodsDecrypter.Detected : false) +
-					ToInt32(proxyCallFixer != null ? proxyCallFixer.Detected : false) +
-					ToInt32(antiDebugger != null ? antiDebugger.Detected : false) +
-					ToInt32(antiDumping != null ? antiDumping.Detected : false) +
-					ToInt32(resourceDecrypter != null ? resourceDecrypter.Detected : false) +
-					ToInt32(constantsDecrypterV18 != null ? constantsDecrypterV18.Detected : false) +
-					ToInt32(constantsDecrypterV15 != null ? constantsDecrypterV15.Detected : false) +
-					ToInt32(constantsDecrypterV17 != null ? constantsDecrypterV17.Detected : false) +
-					ToInt32(stringDecrypter != null ? stringDecrypter.Detected : false) +
-					ToInt32(unpacker != null ? unpacker.Detected : false);
+			var sum = ToInt32(jitMethodsDecrypter != null ? jitMethodsDecrypter.Detected : false) +
+                      ToInt32(memoryMethodsDecrypter != null ? memoryMethodsDecrypter.Detected : false) +
+                      ToInt32(proxyCallFixer != null ? proxyCallFixer.Detected : false) +
+                      ToInt32(antiDebugger != null ? antiDebugger.Detected : false) +
+                      ToInt32(antiDumping != null ? antiDumping.Detected : false) +
+                      ToInt32(resourceDecrypter != null ? resourceDecrypter.Detected : false) +
+                      ToInt32(constantsDecrypterV18 != null ? constantsDecrypterV18.Detected : false) +
+                      ToInt32(constantsDecrypterV15 != null ? constantsDecrypterV15.Detected : false) +
+                      ToInt32(constantsDecrypterV17 != null ? constantsDecrypterV17.Detected : false) +
+                      ToInt32(stringDecrypter != null ? stringDecrypter.Detected : false) +
+                      ToInt32(unpacker != null ? unpacker.Detected : false);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 
@@ -266,11 +266,11 @@ namespace de4dot.code.deobfuscators.Confuser {
 		bool hasUnpacked = false;
 		public override bool GetDecryptedModule(int count, ref byte[] newFileData, ref DumpedMethods dumpedMethods) {
 			hasUnpacked = false;
-			byte[] fileData = GetFileData();
+			var fileData = GetFileData();
 
 			using (var peImage = new MyPEImage(fileData)) {
 				if ((decryptState & DecryptState.CanDecryptMethods) != 0) {
-					bool decrypted = false;
+					var decrypted = false;
 					if (jitMethodsDecrypter != null && jitMethodsDecrypter.Detected) {
 						jitMethodsDecrypter.Initialize();
 						if (!jitMethodsDecrypter.Decrypt(peImage, fileData, ref dumpedMethods))

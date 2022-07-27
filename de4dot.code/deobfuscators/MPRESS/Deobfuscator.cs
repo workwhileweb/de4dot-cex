@@ -88,7 +88,7 @@ namespace de4dot.code.deobfuscators.MPRESS {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
 			if (version != Version.Unknown)
 				val += 100;
@@ -195,7 +195,7 @@ namespace de4dot.code.deobfuscators.MPRESS {
 			if (count != 0 || version == Version.Unknown)
 				return false;
 
-			byte[] fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
+			var fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
 			byte[] decompressed;
 			using (var peImage = new MyPEImage(fileData)) {
 				var section = peImage.Sections[peImage.Sections.Count - 1];
@@ -217,7 +217,7 @@ namespace de4dot.code.deobfuscators.MPRESS {
 				case Version.V218:
 					if (peImage.PEImage.ImageNTHeaders.FileHeader.Machine == Machine.AMD64 && version == Version.V218)
 						offset = section.PointerToRawData + section.VirtualSize;
-					int decompressedLen = (int)peImage.OffsetReadUInt32(offset);
+					var decompressedLen = (int)peImage.OffsetReadUInt32(offset);
 					compressedLen = fileData.Length - (int)offset - 4;
 					compressed = peImage.OffsetReadBytes(offset + 4, compressedLen);
 					decompressed = new byte[decompressedLen];

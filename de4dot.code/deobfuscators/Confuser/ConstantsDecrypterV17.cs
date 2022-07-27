@@ -79,7 +79,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static bool FindKey1_v17(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 4; i++) {
+				for (var i = 0; i < instrs.Count - 4; i++) {
 					var stloc = instrs[i];
 					if (!stloc.IsStloc())
 						continue;
@@ -129,7 +129,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static bool FindKey4_normal(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					if (!instrs[i].IsLdloc())
 						continue;
 					if (!instrs[i + 1].IsLdloc())
@@ -153,8 +153,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static bool FindKey4_other(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
-					int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.BinaryReader::ReadInt32()");
+				for (var i = 0; i < instrs.Count; i++) {
+					var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.BinaryReader::ReadInt32()");
 					if (index < 0)
 						break;
 					if (index + 1 >= instrs.Count)
@@ -193,7 +193,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 			static bool FindKey5_v17_r74788(MethodDef method, out uint key) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Reflection.Module System.Reflection.Assembly::GetModule(System.String)");
 					if (i < 0)
 						break;
@@ -293,7 +293,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected override byte[] DecryptData(DecrypterInfo info2, MethodDef caller, object[] args, out byte typeCode) {
 			var info = (DecrypterInfoV17)info2;
-			uint offs = info.CalcHash(info2.decryptMethod.MDToken.ToUInt32() ^ (info2.decryptMethod.DeclaringType.MDToken.ToUInt32() * (uint)args[0])) ^ (uint)args[1];
+			var offs = info.CalcHash(info2.decryptMethod.MDToken.ToUInt32() ^ (info2.decryptMethod.DeclaringType.MDToken.ToUInt32() * (uint)args[0])) ^ (uint)args[1];
 			reader.Position = offs;
 			typeCode = reader.ReadByte();
 			if (typeCode != info.int32Type && typeCode != info.int64Type &&
@@ -389,7 +389,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static bool CheckMethods(IEnumerable<MethodDef> methods) {
-			int numMethods = 0;
+			var numMethods = 0;
 			foreach (var method in methods) {
 				if (method.Name == ".ctor" || method.Name == ".cctor")
 					return false;
@@ -405,7 +405,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static string GetResourceName(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Call, "System.Byte[] System.BitConverter::GetBytes(System.Int32)");
 				if (i < 0)
 					break;
@@ -421,7 +421,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static int GetKeyArraySize(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				if (!instrs[i].IsLdloc())
 					continue;
 				if (!instrs[i + 1].IsLdloc())

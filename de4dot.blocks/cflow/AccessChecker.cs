@@ -188,7 +188,7 @@ namespace de4dot.blocks.cflow {
 
 			var tdEncTypes = GetEnclosingTypes(td, true);
 			var ourEncTypes = InitializeOurEnclosingTypes();
-			int maxChecks = Math.Min(tdEncTypes.Count, ourEncTypes.Count);
+			var maxChecks = Math.Min(tdEncTypes.Count, ourEncTypes.Count);
 			int commonIndex;
 			for (commonIndex = 0; commonIndex < maxChecks; commonIndex++) {
 				if (tdEncTypes[commonIndex] != ourEncTypes[commonIndex])
@@ -212,7 +212,7 @@ namespace de4dot.blocks.cflow {
 			// Normal visibility checks starting from type after common enclosing type.
 			// Note that we have full access to it so we don't need to check its access,
 			// so start from the next one.
-			for (int i = commonIndex + 1; i < tdEncTypes.Count; i++) {
+			for (var i = commonIndex + 1; i < tdEncTypes.Count; i++) {
 				if (!IsVisible(tdEncTypes[i], null))
 					return CheckTypeAccess.None;
 			}

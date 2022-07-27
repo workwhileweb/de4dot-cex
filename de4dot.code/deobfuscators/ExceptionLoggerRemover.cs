@@ -52,9 +52,9 @@ namespace de4dot.code.deobfuscators {
 				if (handlerBlock == null)
 					continue;
 
-				int calls = 0;
+				var calls = 0;
 				Instr callInstr = null;
-				bool failed = false;
+				var failed = false;
 				foreach (var bb2 in handlerBlock.BaseBlocks) {
 					var block = bb2 as Block;
 					if (block == null) {

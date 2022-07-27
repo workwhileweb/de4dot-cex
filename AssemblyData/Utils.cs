@@ -134,10 +134,10 @@ namespace AssemblyData {
 		}
 
 		public static string RandomName(int min, int max) {
-			int numChars = random.Next(min, max + 1);
+			var numChars = random.Next(min, max + 1);
 			var sb = new StringBuilder(numChars);
-			int numLower = 0;
-			for (int i = 0; i < numChars; i++) {
+			var numLower = 0;
+			for (var i = 0; i < numChars; i++) {
 				if (numLower == 0)
 					sb.Append((char)((int)'A' + random.Next(26)));
 				else
@@ -155,7 +155,7 @@ namespace AssemblyData {
 
 		public static void AddCallStringDecrypterMethodInstructions(MethodInfo method, ILGenerator ilg) {
 			var args = method.GetParameters();
-			for (int i = 0; i < args.Length; i++) {
+			for (var i = 0; i < args.Length; i++) {
 				var arg = args[i].ParameterType;
 
 				ilg.Emit(OpCodes.Ldarg_0);

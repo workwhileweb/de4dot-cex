@@ -38,7 +38,7 @@ namespace AssemblyData {
 
 			var rv = new object[args.Length];
 			var stringDecrypter = stringDecryptMethods[stringDecrypterMethod];
-			for (int i = 0; i < args.Length; i++)
+			for (var i = 0; i < args.Length; i++)
 				rv[i] = stringDecrypter((object[])args[i]);
 			return rv;
 		}

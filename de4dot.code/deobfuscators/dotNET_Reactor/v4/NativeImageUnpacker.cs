@@ -53,11 +53,11 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			if (isNet1x)
 				inflatedData = DeobUtils.Inflate(encryptedData, false);
 			else {
-				int inflatedSize = BitConverter.ToInt32(encryptedData, 0);
+				var inflatedSize = BitConverter.ToInt32(encryptedData, 0);
 				inflatedData = new byte[inflatedSize];
 				var inflater = new Inflater(false);
 				inflater.SetInput(encryptedData, 4, encryptedData.Length - 4);
-				int count = inflater.Inflate(inflatedData);
+				var count = inflater.Inflate(inflatedData);
 				if (count != inflatedSize)
 					return null;
 			}
@@ -128,7 +128,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 		};
 		byte[] GetKeyData() {
 			isNet1x = false;
-			for (int i = 0; i < baseOffsets.Length; i++) {
+			for (var i = 0; i < baseOffsets.Length; i++) {
 				var code = peImage.OffsetReadBytes(baseOffsets[i], decryptMethodPattern.Length);
 				if (DeobUtils.IsCode(decryptMethodPattern, code))
 					return GetKeyData(baseOffsets[i]);

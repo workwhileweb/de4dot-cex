@@ -189,7 +189,7 @@ namespace de4dot.code.renamer.asmmodules {
 				var oldKey = oldTypeInfo.typeRef;
 				var newKey = newTypeInfo.typeRef;
 
-				InterfaceMethodInfo newMethodsInfo = new InterfaceMethodInfo(newTypeInfo, other.interfaceMethods[oldKey]);
+				var newMethodsInfo = new InterfaceMethodInfo(newTypeInfo, other.interfaceMethods[oldKey]);
 				if (interfaceMethods.ContainsKey(newKey))
 					newMethodsInfo.Merge(interfaceMethods[newKey]);
 				interfaceMethods[newKey] = newMethodsInfo;
@@ -396,13 +396,13 @@ namespace de4dot.code.renamer.asmmodules {
 		public void AddMembers() {
 			var type = TypeDef;
 
-			for (int i = 0; i < type.Events.Count; i++)
+			for (var i = 0; i < type.Events.Count; i++)
 				Add(new MEventDef(type.Events[i], this, i));
-			for (int i = 0; i < type.Fields.Count; i++)
+			for (var i = 0; i < type.Fields.Count; i++)
 				Add(new MFieldDef(type.Fields[i], this, i));
-			for (int i = 0; i < type.Methods.Count; i++)
+			for (var i = 0; i < type.Methods.Count; i++)
 				Add(new MMethodDef(type.Methods[i], this, i));
-			for (int i = 0; i < type.Properties.Count; i++)
+			for (var i = 0; i < type.Properties.Count; i++)
 				Add(new MPropertyDef(type.Properties[i], this, i));
 
 			foreach (var propDef in properties.GetValues()) {
@@ -557,7 +557,7 @@ namespace de4dot.code.renamer.asmmodules {
 			methodsDict.Clear();
 			foreach (var methodInstList in virtualMethodInstances.GetMethods()) {
 				// This class' method is at the end
-				for (int i = methodInstList.Count - 1; i >= 0; i--) {
+				for (var i = methodInstList.Count - 1; i >= 0; i--) {
 					var classMethod = methodInstList[i];
 					// These methods are guaranteed to be virtual.
 					// We should allow newslot methods, despite what the official doc says.

@@ -42,7 +42,7 @@ namespace de4dot.code.renamer {
 				}
 			}
 
-			string prefix = GetPrefix(typeRef);
+			var prefix = GetPrefix(typeRef);
 
 			var elementType = Renamer.GetScopeType(typeRef);
 			if (elementType == null && IsFnPtrSig(typeRef))
@@ -60,7 +60,7 @@ namespace de4dot.code.renamer {
 			var dict = prefix == "" ? fullNameToShortName : fullNameToShortNamePrefix;
 			if (!dict.TryGetValue(fullName, out shortName)) {
 				fullName = fullName.Replace('/', '.');
-				int index = fullName.LastIndexOf('.');
+				var index = fullName.LastIndexOf('.');
 				shortName = index > 0 ? fullName.Substring(index + 1) : fullName;
 
 				index = shortName.LastIndexOf('`');
@@ -89,7 +89,7 @@ namespace de4dot.code.renamer {
 		}
 
 		static string GetPrefix(TypeSig typeRef) {
-			string prefix = "";
+			var prefix = "";
 			while (typeRef != null) {
 				if (typeRef.IsPointer)
 					prefix += "p";
@@ -184,8 +184,8 @@ namespace de4dot.code.renamer {
 
 		static string LowerLeadingChars(string name) {
 			var s = "";
-			for (int i = 0; i < name.Length; i++) {
-				char c = char.ToLowerInvariant(name[i]);
+			for (var i = 0; i < name.Length; i++) {
+				var c = char.ToLowerInvariant(name[i]);
 				if (c == name[i])
 					return s + name.Substring(i);
 				s += c;

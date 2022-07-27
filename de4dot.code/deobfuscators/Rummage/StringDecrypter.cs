@@ -87,13 +87,13 @@ namespace de4dot.code.deobfuscators.Rummage {
 			public abstract string Decrypt(int stringId);
 
 			protected string DecryptInternal(int stringId) {
-				uint v0 = reader.ReadUInt32();
-				uint v1 = reader.ReadUInt32();
+				var v0 = reader.ReadUInt32();
+				var v1 = reader.ReadUInt32();
 				DeobUtils.XteaDecrypt(ref v0, ref v1, key, 32);
-				int utf8Length = (int)v0;
+				var utf8Length = (int)v0;
 				var decrypted = new uint[(utf8Length + 11) / 8 * 2 - 1];
 				decrypted[0] = v1;
-				for (int i = 1; i + 1 < decrypted.Length; i += 2) {
+				for (var i = 1; i + 1 < decrypted.Length; i += 2) {
 					v0 = reader.ReadUInt32();
 					v1 = reader.ReadUInt32();
 					DeobUtils.XteaDecrypt(ref v0, ref v1, key, 32);
@@ -143,7 +143,7 @@ namespace de4dot.code.deobfuscators.Rummage {
 
 			static bool GetDispl(MethodDef method, out int displ) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 2; i++) {
+				for (var i = 0; i < instrs.Count - 2; i++) {
 					var mul = instrs[i];
 					if (mul.OpCode.Code != Code.Mul)
 						continue;
@@ -171,7 +171,7 @@ namespace de4dot.code.deobfuscators.Rummage {
 			void InitKey() {
 				reader.BaseStream.Position = reader.BaseStream.Length - 48;
 				key = new uint[4];
-				for (int i = 0; i < key.Length; i++)
+				for (var i = 0; i < key.Length; i++)
 					key[i] = reader.ReadUInt32();
 			}
 
@@ -220,7 +220,7 @@ namespace de4dot.code.deobfuscators.Rummage {
 
 			static bool GetDispl(MethodDef method, out int displ) {
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 6; i++) {
+				for (var i = 0; i < instrs.Count - 6; i++) {
 					var ldci4_1 = instrs[i];
 					if (!ldci4_1.IsLdcI4() || ldci4_1.GetLdcI4Value() != 4)
 						continue;
@@ -263,19 +263,19 @@ namespace de4dot.code.deobfuscators.Rummage {
 			void InitKey() {
 				reader.BaseStream.Position = baseOffs - 16;
 				key = new uint[4];
-				for (int i = 0; i < key.Length; i++)
+				for (var i = 0; i < key.Length; i++)
 					key[i] = reader.ReadUInt32();
 			}
 
 			long InitializeBaseOffs() {
-				byte[] buf = new byte[0x1000];	// Must be 4096 bytes
+				var buf = new byte[0x1000];	// Must be 4096 bytes
 				reader.BaseStream.Position = reader.BaseStream.Length - buf.Length;
 				while (true) {
 					if (reader.Read(buf, 0, buf.Length) != buf.Length)
 						throw new ApplicationException("Could not read");
 
-					for (int bi = buf.Length - 1; bi > magic.Length; ) {
-						int mi = magic.Length - 1;
+					for (var bi = buf.Length - 1; bi > magic.Length; ) {
+						var mi = magic.Length - 1;
 						if (buf[bi--] != magic[mi--] ||
 							buf[bi] != magic[mi--])
 							continue;
@@ -379,11 +379,11 @@ namespace de4dot.code.deobfuscators.Rummage {
 			if (method == null || method.Body == null)
 				return null;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4())
 					continue;
-				int stringId = ldci4.GetLdcI4Value();
+				var stringId = ldci4.GetLdcI4Value();
 
 				var call = instrs[i + 1];
 				if (call.OpCode.Code != Code.Call)
@@ -410,7 +410,7 @@ namespace de4dot.code.deobfuscators.Rummage {
 				return;
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 
 					if (instr.OpCode.Code != Code.Ldsfld)

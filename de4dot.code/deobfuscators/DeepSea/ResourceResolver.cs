@@ -116,7 +116,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		HandlerInfo GetHandlerArgs41(MethodDef handler) {
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.Code != Code.Call)
 					continue;
@@ -141,7 +141,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			if (data41.resourceField == null)
 				return false;
 			bool isOtherRetail;
-			int magicArgIndex = GetMagicArgIndex41Retail(info.handler, out isOtherRetail);
+			var magicArgIndex = GetMagicArgIndex41Retail(info.handler, out isOtherRetail);
 			if (magicArgIndex < 0) {
 				magicArgIndex = GetMagicArgIndex41Trial(info.handler);
 				data41.isTrial = true;
@@ -164,7 +164,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		static int GetMagicArgIndex41Retail(MethodDef method, out bool isOtherRetail) {
 			isOtherRetail = false;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				isOtherRetail = false;
 				var ld = instrs[i];
 				if (ld.IsLdarg())
@@ -193,7 +193,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static int GetMagicArgIndex41Trial(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldarg = instrs[i];
 				if (!ldarg.IsLdarg())
 					continue;
@@ -239,8 +239,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			var data40 = new Data40();
 
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = i;
 
 				if (instrs[index++].OpCode.Code != Code.Ldarg_1)
 					continue;
@@ -250,7 +250,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 					continue;
 				var field = ldtoken.Operand as FieldDef;
 
-				string methodSig = "(System.ResolveEventArgs,System.RuntimeFieldHandle,System.Int32,System.String,System.Int32)";
+				var methodSig = "(System.ResolveEventArgs,System.RuntimeFieldHandle,System.Int32,System.String,System.Int32)";
 				var method = ldtoken.Operand as MethodDef;
 				if (method != null) {
 					// >= 4.0.4
@@ -353,7 +353,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			if (resourceField == null)
 				return false;
 
-			string name = string.Format("Embedded data field {0:X8} RVA {1:X8}", resourceField.MDToken.ToInt32(), (uint)resourceField.RVA);
+			var name = string.Format("Embedded data field {0:X8} RVA {1:X8}", resourceField.MDToken.ToInt32(), (uint)resourceField.RVA);
 			DeobUtils.DecryptAndAddResources(module, name, () => DecryptResourceV4(resourceField.InitialValue, magic));
 			resourceField.InitialValue = new byte[1];
 			resourceField.FieldSig.Type = module.CorLibTypes.Byte;

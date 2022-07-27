@@ -107,11 +107,11 @@ namespace de4dot.code.renamer {
 				if (origClassName != null && checker.IsValidTypeName(origClassName))
 					Rename(state.GetTypeName(oldName, origClassName));
 				else {
-					ITypeNameCreator nameCreator = type.IsGlobalType() ?
+					var nameCreator = type.IsGlobalType() ?
 											state.globalTypeNameCreator :
 											state.internalTypeNameCreator;
 					string newBaseType = null;
-					TypeInfo baseInfo = GetBase();
+					var baseInfo = GetBase();
 					if (baseInfo != null && baseInfo.renamed)
 						newBaseType = baseInfo.newName;
 					Rename(nameCreator.Create(type.TypeDef, newBaseType));
@@ -169,8 +169,8 @@ namespace de4dot.code.renamer {
 				if (instanceFields.Count == 1)
 					Field(instanceFields[0]).Rename("value__");
 
-				int i = 0;
-				string nameFormat = HasFlagsAttribute() ? "flag_{0}" : "const_{0}";
+				var i = 0;
+				var nameFormat = HasFlagsAttribute() ? "flag_{0}" : "const_{0}";
 				foreach (var fieldDef in type.AllFieldsSorted) {
 					var fieldInfo = Field(fieldDef);
 					if (fieldInfo.renamed)
@@ -223,7 +223,7 @@ namespace de4dot.code.renamer {
 			if (propInfo.renamed)
 				return;
 
-			string propName = propInfo.oldName;
+			var propName = propInfo.oldName;
 			if (!NameChecker.IsValidPropertyName(propName))
 				propName = propInfo.suggestedName;
 			if (!NameChecker.IsValidPropertyName(propName)) {
@@ -254,7 +254,7 @@ namespace de4dot.code.renamer {
 			if (eventInfo.renamed)
 				return;
 
-			string eventName = eventInfo.oldName;
+			var eventName = eventInfo.oldName;
 			if (!NameChecker.IsValidEventName(eventName))
 				eventName = eventInfo.suggestedName;
 			if (!NameChecker.IsValidEventName(eventName))
@@ -382,11 +382,11 @@ namespace de4dot.code.renamer {
 			var checker = NameChecker;
 
 			// PInvoke methods' EntryPoint is always valid. It has to, so always rename.
-			bool isValidName = NameChecker.IsValidMethodName(info.oldName);
-			bool isExternPInvoke = methodDef.MethodDef.ImplMap != null && methodDef.MethodDef.RVA == 0;
+			var isValidName = NameChecker.IsValidMethodName(info.oldName);
+			var isExternPInvoke = methodDef.MethodDef.ImplMap != null && methodDef.MethodDef.RVA == 0;
 			if (!isValidName || isExternPInvoke) {
 				INameCreator nameCreator = null;
-				string newName = info.suggestedName;
+				var newName = info.suggestedName;
 				string newName2;
 				if (methodDef.MethodDef.ImplMap != null && !string.IsNullOrEmpty(newName2 = GetPinvokeName(methodDef)))
 					newName = newName2;
@@ -464,7 +464,7 @@ namespace de4dot.code.renamer {
 				if (methodDef.MethodDef.IsStatic || methodDef.MethodDef.IsVirtual)
 					continue;
 				var instructions = methodDef.MethodDef.Body.Instructions;
-				for (int i = 2; i < instructions.Count; i++) {
+				for (var i = 2; i < instructions.Count; i++) {
 					var call = instructions[i];
 					if (call.OpCode.Code != Code.Call && call.OpCode.Code != Code.Callvirt)
 						continue;
@@ -519,7 +519,7 @@ namespace de4dot.code.renamer {
 			if (method == null || method.Body == null)
 				return null;
 			var instructions = method.Body.Instructions;
-			int index = 0;
+			var index = 0;
 			var ldarg0 = DotNetUtils.GetInstruction(instructions, ref index);
 			if (ldarg0 == null || ldarg0.GetParameterIndex() != 0)
 				return null;
@@ -598,9 +598,9 @@ namespace de4dot.code.renamer {
 				return null;
 
 			var instructions = method.Body.Instructions;
-			int index = 0;
+			var index = 0;
 
-			int newobjIndex = FindInstruction(instructions, index, Code.Newobj);
+			var newobjIndex = FindInstruction(instructions, index, Code.Newobj);
 			if (newobjIndex == -1 || FindInstruction(instructions, newobjIndex + 1, Code.Newobj) != -1)
 				return null;
 			if (!IsEventHandlerCtor(instructions[newobjIndex].Operand as IMethod))
@@ -649,7 +649,7 @@ namespace de4dot.code.renamer {
 			field = null;
 			calledMethod = null;
 
-			int callvirt = FindInstruction(instructions, index, Code.Callvirt);
+			var callvirt = FindInstruction(instructions, index, Code.Callvirt);
 			if (callvirt < 2)
 				return false;
 			index = callvirt + 1;
@@ -668,7 +668,7 @@ namespace de4dot.code.renamer {
 		}
 
 		static int FindInstruction(IList<Instruction> instructions, int index, Code code) {
-			for (int i = index; i < instructions.Count; i++) {
+			for (var i = index; i < instructions.Count; i++) {
 				if (instructions[i].OpCode.Code == code)
 					return i;
 			}
@@ -684,7 +684,7 @@ namespace de4dot.code.renamer {
 				if (methodDef.MethodDef.IsStatic)
 					continue;
 				var instructions = methodDef.MethodDef.Body.Instructions;
-				for (int i = 0; i < instructions.Count - 6; i++) {
+				for (var i = 0; i < instructions.Count - 6; i++) {
 					// We're looking for this code pattern:
 					//	ldarg.0
 					//	ldfld field
@@ -695,7 +695,7 @@ namespace de4dot.code.renamer {
 
 					if (instructions[i].GetParameterIndex() != 0)
 						continue;
-					int index = i + 1;
+					var index = i + 1;
 
 					var ldfld = instructions[index++];
 					if (ldfld.OpCode.Code != Code.Ldfld)
@@ -764,7 +764,7 @@ namespace de4dot.code.renamer {
 					continue;
 				var method = methodDef.MethodDef;
 				var instructions = method.Body.Instructions;
-				for (int i = 0; i < instructions.Count - 5; i++) {
+				for (var i = 0; i < instructions.Count - 5; i++) {
 					// ldarg.0
 					// ldarg.0 / dup
 					// ldarg.0 / dup
@@ -774,7 +774,7 @@ namespace de4dot.code.renamer {
 
 					if (instructions[i].GetParameterIndex() != 0)
 						continue;
-					int index = i + 1;
+					var index = i + 1;
 
 					if (!IsThisOrDup(instructions[index++]))
 						continue;
@@ -847,7 +847,7 @@ namespace de4dot.code.renamer {
 				if (methodDef.MethodDef.IsStatic || methodDef.MethodDef.IsVirtual)
 					continue;
 				var instructions = methodDef.MethodDef.Body.Instructions;
-				for (int i = 2; i < instructions.Count; i++) {
+				for (var i = 2; i < instructions.Count; i++) {
 					var call = instructions[i];
 					if (call.OpCode.Code != Code.Call && call.OpCode.Code != Code.Callvirt)
 						continue;

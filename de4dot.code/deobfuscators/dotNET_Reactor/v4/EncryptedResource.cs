@@ -132,7 +132,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			if (UsesPublicKeyToken()) {
 				var publicKeyToken = module.Assembly.PublicKeyToken;
 				if (publicKeyToken != null && publicKeyToken.Data.Length > 0) {
-					for (int i = 0; i < 8; i++)
+					for (var i = 0; i < 8; i++)
 						iv[i * 2 + 1] = publicKeyToken.Data[i];
 				}
 			}
@@ -147,7 +147,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 
 		static int[] pktIndexes = new int[16] { 1, 0, 3, 1, 5, 2, 7, 3, 9, 4, 11, 5, 13, 6, 15, 7 };
 		bool UsesPublicKeyToken() {
-			int pktIndex = 0;
+			var pktIndex = 0;
 			foreach (var instr in resourceDecrypterMethod.Body.Instructions) {
 				if (instr.OpCode.FlowControl != FlowControl.Next) {
 					pktIndex = 0;
@@ -155,7 +155,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				}
 				if (!instr.IsLdcI4())
 					continue;
-				int val = instr.GetLdcI4Value();
+				var val = instr.GetLdcI4Value();
 				if (val != pktIndexes[pktIndex++]) {
 					pktIndex = 0;
 					continue;
@@ -271,7 +271,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			bool Initialize() {
-				for (int i = 0; i < iv.Length; i++)
+				for (var i = 0; i < iv.Length; i++)
 					key[i] ^= iv[i];
 
 				var origInstrs = method.Body.Instructions;
@@ -283,9 +283,9 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 						return false;
 				}
 
-				int count = emuEndIndex - emuStartIndex + 1;
+				var count = emuEndIndex - emuStartIndex + 1;
 				instructions = new List<Instruction>(count);
-				for (int i = 0; i < count; i++)
+				for (var i = 0; i < count; i++)
 					instructions.Add(origInstrs[emuStartIndex + i].Clone());
 
 				return true;
@@ -309,7 +309,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			bool FindStartEnd(IList<Instruction> instrs, out int startIndex, out int endIndex, out Local tmpLocal) {
-				for (int i = 0; i + 8 < instrs.Count; i++) {
+				for (var i = 0; i + 8 < instrs.Count; i++) {
 					if (instrs[i].OpCode.Code != Code.Conv_R_Un)
 						continue;
 					if (instrs[i + 1].OpCode.Code != Code.Conv_R8)
@@ -318,9 +318,9 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 						continue;
 					if (instrs[i + 3].OpCode.Code != Code.Add)
 						continue;
-					int newEndIndex = i + 3;
-					int newStartIndex = -1;
-					for (int x = newEndIndex; x > 0; x--)
+					var newEndIndex = i + 3;
+					var newStartIndex = -1;
+					for (var x = newEndIndex; x > 0; x--)
 						if (instrs[x].OpCode.FlowControl != FlowControl.Next) {
 							newStartIndex = x + 1;
 							break;
@@ -340,7 +340,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			bool FindStart(IList<Instruction> instrs, out int startIndex, out Local tmpLocal) {
-				for (int i = 0; i + 8 < instrs.Count; i++) {
+				for (var i = 0; i + 8 < instrs.Count; i++) {
 					if (instrs[i].OpCode.Code != Code.Conv_U)
 						continue;
 					if (instrs[i + 1].OpCode.Code != Code.Ldelem_U1)
@@ -359,7 +359,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 					if (CheckLocal(instrs[i + 7], false) != local)
 						continue;
 					var instr = instrs[i + 8];
-					int newStartIndex = i + 8;
+					var newStartIndex = i + 8;
 					if (instr.IsBr()) {
 						instr = instr.Operand as Instruction;
 						newStartIndex = instrs.IndexOf(instr);
@@ -380,7 +380,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			bool FindEnd(IList<Instruction> instrs, int startIndex, out int endIndex) {
-				for (int i = startIndex; i < instrs.Count; i++) {
+				for (var i = startIndex; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.FlowControl != FlowControl.Next)
 						break;
@@ -408,7 +408,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				var decrypted = new byte[encrypted.Length];
 
 				uint sum = 0;
-				for (int i = 0; i < encrypted.Length; i += 4) {
+				for (var i = 0; i < encrypted.Length; i += 4) {
 					sum = CalculateMagic(sum + ReadUInt32(key, i % key.Length));
 					WriteUInt32(decrypted, i, sum ^ ReadUInt32(encrypted, i));
 				}
@@ -430,7 +430,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			static uint ReadUInt32(byte[] ary, int index) {
-				int sizeLeft = ary.Length - index;
+				var sizeLeft = ary.Length - index;
 				if (sizeLeft >= 4)
 					return BitConverter.ToUInt32(ary, index);
 				switch (sizeLeft) {
@@ -442,7 +442,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			}
 
 			static void WriteUInt32(byte[] ary, int index, uint value) {
-				int sizeLeft = ary.Length - index;
+				var sizeLeft = ary.Length - index;
 				if (sizeLeft >= 1)
 					ary[index] = (byte)value;
 				if (sizeLeft >= 2)

@@ -87,7 +87,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 					return Encoding.UTF8.GetString(Convert.FromBase64String(s));
 				}
 				catch {
-					string s2 = CoUtils.DecryptResourceName(module, cctor);
+					var s2 = CoUtils.DecryptResourceName(module, cctor);
 					try {
 						return Encoding.UTF8.GetString(Convert.FromBase64String(s2));
 					}
@@ -100,7 +100,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		public string Decrypt(int index) {
-			int len = DeobUtils.ReadVariableLengthInt32(decryptedData, ref index);
+			var len = DeobUtils.ReadVariableLengthInt32(decryptedData, ref index);
 			return Encoding.Unicode.GetString(decryptedData, index, len);
 		}
 

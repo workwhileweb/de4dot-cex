@@ -100,7 +100,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 				return false;
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 2; i++) {
+				for (var i = 0; i < instrs.Count - 2; i++) {
 					var ldtoken = instrs[i];
 					if (ldtoken.OpCode.Code != Code.Ldtoken)
 						continue;

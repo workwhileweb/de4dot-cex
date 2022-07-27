@@ -52,7 +52,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 			if (cctor == null)
 				return null;
 
-			bool hasConstantM2 = DeobUtils.HasInteger(decryptStringMethod, -2);
+			var hasConstantM2 = DeobUtils.HasInteger(decryptStringMethod, -2);
 
 			/////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////
@@ -882,7 +882,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		bool CheckTypeFields(string[] fieldTypes) {
 			if (fieldTypes.Length != stringDecrypter.Type.Fields.Count)
 				return false;
-			for (int i = 0; i < fieldTypes.Length; i++) {
+			for (var i = 0; i < fieldTypes.Length; i++) {
 				if (fieldTypes[i] != stringDecrypter.Type.Fields[i].FieldType.FullName)
 					return false;
 			}
@@ -901,7 +901,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 				fieldTypes2.Add(f.FieldType.FullName);
 			fieldTypes2.Sort();
 
-			for (int i = 0; i < fieldTypes1.Count; i++) {
+			for (var i = 0; i < fieldTypes1.Count; i++) {
 				if (fieldTypes1[i] != fieldTypes2[i])
 					return false;
 			}

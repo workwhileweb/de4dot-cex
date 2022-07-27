@@ -102,14 +102,14 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				blockInfo.EndsInRet = block.LastInstr.OpCode.Code == Code.Ret;
 				blockInfos.Add(blockInfo);
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var info = CalculateHash(instrs, ref i);
 					if (info != null)
 						blockInfo.Hashes.Add(info.Value);
 				}
 			}
 
-			for (int i = 0; i < blockInfos.Count; i++) {
+			for (var i = 0; i < blockInfos.Count; i++) {
 				var block = allBlocks[i];
 				var blockInfo = blockInfos[i];
 
@@ -248,8 +248,8 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			if (fieldType == null)
 				return int.MinValue + 1;
 
-			int result = BASE_INDEX + 0x1000;
-			for (int i = 0; i < 100; i++) {
+			var result = BASE_INDEX + 0x1000;
+			for (var i = 0; i < 100; i++) {
 				result += (int)fieldType.ElementType;
 				if (fieldType.Next == null)
 					break;
@@ -528,10 +528,10 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			if (asmRef == null)
 				return;
 
-			bool canWriteAsm = IsNonObfuscatedAssembly(asmRef);
+			var canWriteAsm = IsNonObfuscatedAssembly(asmRef);
 			hasher.Hash(canWriteAsm ? 1 : 0);
 			if (canWriteAsm) {
-				bool hasPk = !PublicKeyBase.IsNullOrEmpty2(asmRef.PublicKeyOrToken);
+				var hasPk = !PublicKeyBase.IsNullOrEmpty2(asmRef.PublicKeyOrToken);
 				if (hasPk)
 					hasher.Hash(PublicKeyBase.ToPublicKeyToken(asmRef.PublicKeyOrToken).Data);
 				Hash(asmRef.Name);
@@ -562,7 +562,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			if (tr == null)
 				return false;
 
-			for (int i = 0; i < 100; i++) {
+			for (var i = 0; i < 100; i++) {
 				var asmRef = tr.ResolutionScope as AssemblyRef;
 				if (asmRef != null)
 					return IsNonObfuscatedAssembly(asmRef);

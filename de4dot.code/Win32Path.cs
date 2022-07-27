@@ -27,7 +27,7 @@ namespace de4dot.code {
 			var c = path[path.Length - 1];
 			if (c == '\\' || c == ':')
 				return string.Empty;
-			int index = path.LastIndexOf('\\');
+			var index = path.LastIndexOf('\\');
 			if (index < 0)
 				return path;
 			return path.Substring(index + 1);
@@ -37,7 +37,7 @@ namespace de4dot.code {
 			if (path == null)
 				return null;
 			var s = GetFileName(path);
-			int i = s.LastIndexOf('.');
+			var i = s.LastIndexOf('.');
 			if (i < 0)
 				return s;
 			return s.Substring(0, i);
@@ -47,7 +47,7 @@ namespace de4dot.code {
 			if (path == null)
 				return null;
 			var s = GetFileName(path);
-			int i = s.LastIndexOf('.');
+			var i = s.LastIndexOf('.');
 			if (i < 0)
 				return string.Empty;
 			return s.Substring(i);

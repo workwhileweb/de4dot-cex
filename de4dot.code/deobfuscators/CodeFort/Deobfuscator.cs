@@ -85,11 +85,11 @@ namespace de4dot.code.deobfuscators.CodeFort {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(proxyCallFixer.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(assemblyDecrypter.Detected);
+			var sum = ToInt32(proxyCallFixer.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(assemblyDecrypter.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 

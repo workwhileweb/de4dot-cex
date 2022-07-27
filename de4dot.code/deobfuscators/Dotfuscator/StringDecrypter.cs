@@ -74,7 +74,7 @@ namespace de4dot.code.deobfuscators.Dotfuscator {
 
 				simpleDeobfuscator.Deobfuscate(method);
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 3; i++) {
+				for (var i = 0; i < instrs.Count - 3; i++) {
 					var ldarg = instrs[i];
 					if (!ldarg.IsLdarg() || ldarg.GetParameterIndex() != 0)
 						continue;
@@ -101,12 +101,12 @@ namespace de4dot.code.deobfuscators.Dotfuscator {
 
 		public string Decrypt(IMethod method, string encrypted, int value) {
 			var info = stringDecrypterMethods.FindAny(method);
-			char[] chars = encrypted.ToCharArray();
-			byte key = (byte)(info.magic + value);
-			for (int i = 0; i < chars.Length; i++) {
-				char c = chars[i];
-				byte b1 = (byte)((byte)c ^ key++);
-				byte b2 = (byte)((byte)(c >> 8) ^ key++);
+			var chars = encrypted.ToCharArray();
+			var key = (byte)(info.magic + value);
+			for (var i = 0; i < chars.Length; i++) {
+				var c = chars[i];
+				var b1 = (byte)((byte)c ^ key++);
+				var b2 = (byte)((byte)(c >> 8) ^ key++);
 				chars[i] = (char)((b1 << 8) | b2);
 			}
 			return new string(chars);

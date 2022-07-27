@@ -50,15 +50,15 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		public static string XorCipher(string text, int key) {
 			var array = text.ToCharArray();
-			int len = array.Length;
-			char cKey = Convert.ToChar(key);
+			var len = array.Length;
+			var cKey = Convert.ToChar(key);
 			while (--len >= 0)
 				array[len] ^= cKey;
 			return new string(array);
 		}
 
 		public static string DecryptResourceName(string resourceName, int key, byte[] coddedBytes) {
-			int len = resourceName.Length;
+			var len = resourceName.Length;
 			var array = resourceName.ToCharArray();
 			while (--len >= 0)
 				array[len] = (char)((int)array[len] ^ ((int)coddedBytes[key & 15] | key));
@@ -66,12 +66,12 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		public static string DecryptResourceName(ModuleDefMD module, MethodDef method) {
-			string resourceName = "";
+			var resourceName = "";
 			MethodDef cctor = method, orginalResMethod = null;
 			// retrive key and encrypted resource name 
-			int key = 0;
+			var key = 0;
 			var instrs = cctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				if (instrs[i].OpCode != OpCodes.Ldstr)
 					continue;
 				if (!instrs[i + 1].IsLdcI4())
@@ -86,7 +86,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 			while (orginalResMethod == null) {
 				foreach (var instr in cctor.Body.Instructions) {
 					if (instr.OpCode == OpCodes.Ldftn) {
-						MethodDef tempMethod = instr.Operand as MethodDef;
+						var tempMethod = instr.Operand as MethodDef;
 						if (tempMethod.ReturnType.FullName != "System.String")
 							continue;
 						orginalResMethod = tempMethod;
@@ -101,10 +101,10 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 			}
 
 			// Get encrypted Resource name
-			string encResourcename = DotNetUtils.GetCodeStrings(orginalResMethod)[0];
+			var encResourcename = DotNetUtils.GetCodeStrings(orginalResMethod)[0];
 			// get Decryption key
-			int xorKey = 0;
-			for (int i = 0; i < orginalResMethod.Body.Instructions.Count; i++) {
+			var xorKey = 0;
+			for (var i = 0; i < orginalResMethod.Body.Instructions.Count; i++) {
 				if (orginalResMethod.Body.Instructions[i].OpCode == OpCodes.Xor)
 					xorKey = orginalResMethod.Body.Instructions[i - 1].GetLdcI4Value();
 			}

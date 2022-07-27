@@ -146,8 +146,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		protected static byte[] DecryptResourceV41SL(EmbeddedResource resource) {
 			var data = resource.GetResourceData();
-			byte k = data[0];
-			for (int i = 0; i < data.Length - 1; i++)
+			var k = data[0];
+			for (var i = 0; i < data.Length - 1; i++)
 				data[i + 1] ^= (byte)((k << (i & 5)) + i);
 			return InflateIfNeeded(data, 1, data.Length - 1);
 		}
@@ -165,7 +165,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		protected static byte[] DecryptResource(byte[] data, int start, int len, int magic) {
-			for (int i = start; i < start + len; i++)
+			for (var i = start; i < start + len; i++)
 				data[i] ^= (byte)(i - start + magic);
 			return InflateIfNeeded(data, start, len);
 		}

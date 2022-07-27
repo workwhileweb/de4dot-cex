@@ -42,7 +42,7 @@ namespace de4dot.blocks.cflow {
 			if (iteration++ >= MAX_ITERATIONS)
 				return false;
 
-			bool modified = false;
+			var modified = false;
 			foreach (var block in allBlocks) {
 				this.block = block;
 				modified |= DeobfuscateInternal();
@@ -73,8 +73,8 @@ namespace de4dot.blocks.cflow {
 			if (!IsReturn(methodToInline, instrIndex))
 				return false;
 
-			int methodArgsCount = DotNetUtils.GetArgsCount(methodToInline);
-			for (int i = 0; i < methodArgsCount; i++)
+			var methodArgsCount = DotNetUtils.GetArgsCount(methodToInline);
+			for (var i = 0; i < methodArgsCount; i++)
 				block.Insert(patchIndex++, OpCodes.Pop.ToInstruction());
 
 			block.Instructions[patchIndex] = new Instr(loadInstr.Clone());
@@ -109,11 +109,11 @@ namespace de4dot.blocks.cflow {
 		}
 
 		protected InstructionPatcher TryInlineOtherMethod(int patchIndex, MethodDef methodToInline, Instruction instr, int instrIndex, int popLastArgs) {
-			int loadIndex = 0;
-			int methodArgsCount = DotNetUtils.GetArgsCount(methodToInline);
-			bool foundLdarga = false;
+			var loadIndex = 0;
+			var methodArgsCount = DotNetUtils.GetArgsCount(methodToInline);
+			var foundLdarga = false;
 			while (instr != null && loadIndex < methodArgsCount) {
-				bool isLdarg = true;
+				var isLdarg = true;
 				switch (instr.OpCode.Code) {
 				case Code.Ldarg:
 				case Code.Ldarg_S:
@@ -178,7 +178,7 @@ namespace de4dot.blocks.cflow {
 				var calledMethodArgs = DotNetUtils.GetArgs(ctor);
 				if (methodArgs.Count + 1 - popLastArgs != calledMethodArgs.Count)
 					return null;
-				for (int i = 1; i < calledMethodArgs.Count; i++) {
+				for (var i = 1; i < calledMethodArgs.Count; i++) {
 					if (!IsCompatibleType(i, calledMethodArgs[i], methodArgs[i - 1].Type))
 						return null;
 				}
@@ -236,10 +236,10 @@ namespace de4dot.blocks.cflow {
 		protected bool CheckSameMethods(IMethod method, MethodDef methodToInline, int ignoreLastMethodToInlineArgs) {
 			var methodToInlineArgs = methodToInline.Parameters;
 			var methodArgs = DotNetUtils.GetArgs(method);
-			bool hasImplicitThis = method.MethodSig.ImplicitThis;
+			var hasImplicitThis = method.MethodSig.ImplicitThis;
 			if (methodToInlineArgs.Count - ignoreLastMethodToInlineArgs != methodArgs.Count)
 				return false;
-			for (int i = 0; i < methodArgs.Count; i++) {
+			for (var i = 0; i < methodArgs.Count; i++) {
 				var methodArg = methodArgs[i];
 				var methodToInlineArg = GetArgType(methodToInline, methodToInlineArgs[i].Type);
 				if (!IsCompatibleType(i, methodArg, methodToInlineArg)) {

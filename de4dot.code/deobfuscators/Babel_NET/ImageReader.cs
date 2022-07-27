@@ -67,7 +67,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (reader.ReadInt32() != METHODS_SIG)
 				return false;
 
-			int metadataOffset = GetMetadataOffset();
+			var metadataOffset = GetMetadataOffset();
 			if (metadataOffset < 0)
 				return false;
 			long pos = metadataOffset + 4;
@@ -85,10 +85,10 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		void InitializeV10() {
 			reader.ReadInt16();
-			int methodNamesOffset = (int)reader.ReadInt64();
-			int typeRefsOffset = (int)reader.ReadInt64();
-			int assemblyRefsOffset = (int)reader.ReadInt64();
-			int stringsOffset = (int)reader.ReadInt64();
+			var methodNamesOffset = (int)reader.ReadInt64();
+			var typeRefsOffset = (int)reader.ReadInt64();
+			var assemblyRefsOffset = (int)reader.ReadInt64();
+			var stringsOffset = (int)reader.ReadInt64();
 
 			InitializeStrings(stringsOffset);
 			InitializeAssemblyNames(assemblyRefsOffset);
@@ -97,10 +97,10 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		void InitializeV55() {
-			int methodNamesOffset = (int)reader.ReadInt64() ^ METADATA_SIG;
-			int typeRefsOffset = (int)reader.ReadInt64() ^ (METADATA_SIG << 1);
-			int assemblyRefsOffset = (int)reader.ReadInt64() ^ ((METADATA_SIG << 1) + 1);
-			int stringsOffset = (int)reader.ReadInt64() ^ (((METADATA_SIG << 1) + 1) << 1);
+			var methodNamesOffset = (int)reader.ReadInt64() ^ METADATA_SIG;
+			var typeRefsOffset = (int)reader.ReadInt64() ^ (METADATA_SIG << 1);
+			var assemblyRefsOffset = (int)reader.ReadInt64() ^ ((METADATA_SIG << 1) + 1);
+			var stringsOffset = (int)reader.ReadInt64() ^ (((METADATA_SIG << 1) + 1) << 1);
 
 			InitializeStrings(stringsOffset);
 			InitializeAssemblyNames(assemblyRefsOffset);
@@ -122,7 +122,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			var toNewOperand = new Dictionary<object, object>();
 			if (babelMethod.ThisParameter != null)
 				toNewOperand[babelMethod.ThisParameter] = method.Parameters[0];
-			for (int i = 0; i < babelMethod.Parameters.Length; i++)
+			for (var i = 0; i < babelMethod.Parameters.Length; i++)
 				toNewOperand[babelMethod.Parameters[i]] = method.Parameters[i + method.Parameters.MethodSigIndexBase];
 
 			body.Instructions.Clear();
@@ -139,7 +139,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		BabelMethodDef GetMethod(string name) {
-			int offset = methodOffsets[name];
+			var offset = methodOffsets[name];
 			methodOffsets.Remove(name);
 			reader.Position = offset;
 			return new MethodDefReader(this, reader).Read();
@@ -155,7 +155,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		public TypeSig[] ReadTypeSigs() {
 			var refs = new TypeSig[ReadVariableLengthInt32()];
-			for (int i = 0; i < refs.Length; i++)
+			for (var i = 0; i < refs.Length; i++)
 				refs[i] = ReadTypeSig();
 			return refs;
 		}
@@ -247,7 +247,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (!new SigComparer().Equals(sig.RetType, babelMethodRef.ReturnType))
 				return false;
 
-			for (int i = 0; i < babelMethodRef.Parameters.Length; i++) {
+			for (var i = 0; i < babelMethodRef.Parameters.Length; i++) {
 				if (!new SigComparer().Equals(sig.Params[i], babelMethodRef.Parameters[i].Type))
 					return false;
 			}
@@ -302,7 +302,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				throw new ApplicationException("Invalid strings sig");
 
 			strings = new string[ReadVariableLengthInt32()];
-			for (int i = 0; i < strings.Length; i++)
+			for (var i = 0; i < strings.Length; i++)
 				strings[i] = reader.ReadString();
 		}
 
@@ -312,7 +312,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 				throw new ApplicationException("Invalid assembly names sig");
 
 			assemblyNames = new AssemblyRef[ReadVariableLengthInt32()];
-			for (int i = 0; i < assemblyNames.Length; i++)
+			for (var i = 0; i < assemblyNames.Length; i++)
 				assemblyNames[i] = module.UpdateRowId(new AssemblyRefUser(new AssemblyNameInfo(ReadString())));
 		}
 
@@ -321,9 +321,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (reader.ReadInt32() != METHOD_NAMES_SIG)
 				throw new ApplicationException("Invalid methods sig");
 
-			int numMethods = ReadVariableLengthInt32();
+			var numMethods = ReadVariableLengthInt32();
 			methodOffsets = new Dictionary<string, int>(numMethods, StringComparer.Ordinal);
-			for (int i = 0; i < numMethods; i++) {
+			for (var i = 0; i < numMethods; i++) {
 				var methodName = ReadString();
 				methodOffsets[methodName] = ReadVariableLengthInt32();
 			}
@@ -334,12 +334,12 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			if (reader.ReadInt32() != TYPEREFS_SIG)
 				throw new ApplicationException("Invalid typerefs sig");
 
-			int numTypeRefs = reader.ReadInt32();
+			var numTypeRefs = reader.ReadInt32();
 			typeRefs = new List<TypeSig>(numTypeRefs + 1);
 			typeRefs.Add(null);
 			var genericArgFixes = new Dictionary<GenericInstSig, List<int>>();
-			for (int i = 0; i < numTypeRefs; i++) {
-				TypeId typeId = (TypeId)reader.ReadByte();
+			for (var i = 0; i < numTypeRefs; i++) {
+				var typeId = (TypeId)reader.ReadByte();
 				switch (typeId) {
 				case TypeId.TypeRef:
 					typeRefs.Add(ReadTypeRef());
@@ -403,7 +403,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		static void ParseReflectionTypeName(string fullName, out string ns, out string name) {
-			int index = GetLastChar(fullName, '.');
+			var index = GetLastChar(fullName, '.');
 			if (index < 0) {
 				ns = "";
 				name = fullName;
@@ -425,7 +425,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		static int GetLastChar(string name, char c) {
 			if (string.IsNullOrEmpty(name))
 				return -1;
-			int index = name.Length - 1;
+			var index = name.Length - 1;
 			while (true) {
 				index = name.LastIndexOf(c, index);
 				if (index < 0)
@@ -440,7 +440,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		static string UnEscape(string s) {
 			var sb = new StringBuilder(s.Length);
-			for (int i = 0; i < s.Length; i++) {
+			for (var i = 0; i < s.Length; i++) {
 				if (s[i] == '\\' && i + 1 < s.Length)
 					i++;
 				sb.Append(s[i]);
@@ -450,9 +450,9 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		GenericInstSig ReadGenericInstanceType(out List<int> genericArgs) {
 			var git = new GenericInstSig(ReadTypeSig() as ClassOrValueTypeSig);
-			int numArgs = ReadVariableLengthInt32();
+			var numArgs = ReadVariableLengthInt32();
 			genericArgs = new List<int>(numArgs);
-			for (int i = 0; i < numArgs; i++)
+			for (var i = 0; i < numArgs; i++)
 				genericArgs.Add(ReadVariableLengthInt32());
 			return git;
 		}
@@ -463,7 +463,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		TypeSig ReadArrayType() {
 			var typeSig = ReadTypeSig();
-			int rank = ReadVariableLengthInt32();
+			var rank = ReadVariableLengthInt32();
 			if (rank == 1)
 				return new SZArraySig(typeSig);
 			return new ArraySig(typeSig, rank);
@@ -487,7 +487,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		int GetMetadataOffset() {
 			reader.Position = reader.Length - 4;
-			for (int i = 0; i < 30; i++) {
+			for (var i = 0; i < 30; i++) {
 				if (reader.ReadInt32() == METADATA_SIG)
 					return (int)reader.Position - 4;
 				reader.Position -= 8;

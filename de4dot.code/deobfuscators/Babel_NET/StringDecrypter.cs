@@ -85,7 +85,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 			string Decrypt(string s, int k) {
 				var sb = new StringBuilder(s.Length);
-				byte b = key[(byte)k];
+				var b = key[(byte)k];
 				foreach (var c in s)
 					sb.Append((char)(c ^ (b | k)));
 				return sb.ToString();
@@ -348,7 +348,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 					case Code.Newarr:
 						var arrayType = (ITypeDefOrRef)instr.Operand;
-						int arrayCount = ((Int32Value)emulator.Pop()).Value;
+						var arrayCount = ((Int32Value)emulator.Pop()).Value;
 						if (arrayType.FullName == "System.Char")
 							emulator.Push(new UserValue(new char[arrayCount]));
 						else
@@ -474,20 +474,20 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			creator.Create();
 			var instrs = creator.Instructions;
 
-			int index = 0;
+			var index = 0;
 
 			index = FindInstruction(instrs, index, OpCodes.Conv_I4);
 			if (index < 0)
 				return null;
-			int startInstr = ++index;
+			var startInstr = ++index;
 
 			index = FindInstruction(instrs, index, OpCodes.Box);
 			if (index < 0)
 				return null;
-			int endInstr = index - 1;
+			var endInstr = index - 1;
 
 			var transformInstructions = new List<Instruction>();
-			for (int i = startInstr; i <= endInstr; i++)
+			for (var i = startInstr; i <= endInstr; i++)
 				transformInstructions.Add(instrs[i]);
 			return transformInstructions;
 		}
@@ -495,7 +495,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		static int FindInstruction(IList<Instruction> instrs, int index, OpCode opcode) {
 			if (index < 0)
 				return -1;
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				if (instrs[i].OpCode == opcode)
 					return i;
 			}
@@ -512,8 +512,8 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		static int GetOffsetMagic(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 4; i++) {
+				var index = i;
 
 				var ldsfld1 = instrs[index++];
 				if (ldsfld1.OpCode.Code != Code.Ldsfld)

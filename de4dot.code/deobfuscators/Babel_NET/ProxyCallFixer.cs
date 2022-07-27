@@ -56,7 +56,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		protected override object CheckCctor(TypeDef type, MethodDef cctor) {
 			var instructions = cctor.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				ITypeDefOrRef delegateType;
 				IField delegateField;
 				IMethod createMethod;

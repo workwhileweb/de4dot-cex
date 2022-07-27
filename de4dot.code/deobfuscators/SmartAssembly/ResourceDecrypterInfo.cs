@@ -58,7 +58,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 			var instructions = method.Body.Instructions;
 			simpleDeobfuscator.Deobfuscate(method);
-			for (int i = 0; i <= instructions.Count - 2; i++) {
+			for (var i = 0; i <= instructions.Count - 2; i++) {
 				var ldtoken = instructions[i];
 				if (ldtoken.OpCode.Code != Code.Ldtoken)
 					continue;

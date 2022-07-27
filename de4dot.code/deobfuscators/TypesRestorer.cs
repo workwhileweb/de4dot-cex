@@ -118,7 +118,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		UpdatedMethod GetUpdatedMethod(MethodDef method) {
-			int token = method.MDToken.ToInt32();
+			var token = method.MDToken.ToInt32();
 			UpdatedMethod updatedMethod;
 			if (updatedMethods.TryGetValue(token, out updatedMethod))
 				return updatedMethod;
@@ -126,7 +126,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		UpdatedField GetUpdatedField(FieldDef field) {
-			int token = field.MDToken.ToInt32();
+			var token = field.MDToken.ToInt32();
 			UpdatedField updatedField;
 			if (updatedFields.TryGetValue(token, out updatedField))
 				return updatedField;
@@ -170,8 +170,8 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		void DeobfuscateLoop() {
-			for (int i = 0; i < 10; i++) {
-				bool modified = false;
+			for (var i = 0; i < 10; i++) {
+				var modified = false;
 				modified |= DeobfuscateFields();
 				modified |= DeobfuscateMethods();
 				if (!modified)
@@ -208,7 +208,7 @@ namespace de4dot.code.deobfuscators {
 							Utils.RemoveNewlines(updatedMethod.newReturnType.FullName),
 							updatedMethod.newReturnType.MDToken.ToInt32());
 				}
-				for (int i = 0; i < updatedMethod.newArgTypes.Length; i++) {
+				for (var i = 0; i < updatedMethod.newArgTypes.Length; i++) {
 					var updatedArg = updatedMethod.newArgTypes[i];
 					if (updatedArg == null)
 						continue;
@@ -223,7 +223,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		bool DeobfuscateMethods() {
-			bool modified = false;
+			var modified = false;
 			foreach (var method in allMethods) {
 				methodReturnInfo = new TypeInfo<Parameter>(method.Parameters.ReturnParameter);
 				DeobfuscateMethod(method);
@@ -256,7 +256,7 @@ namespace de4dot.code.deobfuscators {
 			if (!method.IsStatic || method.Body == null)
 				return;
 
-			bool fixReturnType = IsUnknownType(method.MethodSig.GetRetType());
+			var fixReturnType = IsUnknownType(method.MethodSig.GetRetType());
 
 			argInfos.Clear();
 			foreach (var arg in method.Parameters) {
@@ -272,7 +272,7 @@ namespace de4dot.code.deobfuscators {
 			var methodParams = method.Parameters;
 			PushedArgs pushedArgs;
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i];
 				switch (instr.OpCode.Code) {
 				case Code.Ret:
@@ -294,8 +294,8 @@ namespace de4dot.code.deobfuscators {
 					if (calledMethod == null)
 						break;
 					var calledMethodParams = DotNetUtils.GetArgs(calledMethod);
-					for (int j = 0; j < pushedArgs.NumValidArgs; j++) {
-						int calledMethodParamIndex = calledMethodParams.Count - j - 1;
+					for (var j = 0; j < pushedArgs.NumValidArgs; j++) {
+						var calledMethodParamIndex = calledMethodParams.Count - j - 1;
 						var ldInstr = pushedArgs.GetEnd(j);
 						switch (ldInstr.OpCode.Code) {
 						case Code.Ldarg:
@@ -477,7 +477,7 @@ namespace de4dot.code.deobfuscators {
 				if (method.Body == null)
 					continue;
 				var instructions = method.Body.Instructions;
-				for (int i = 0; i < instructions.Count; i++) {
+				for (var i = 0; i < instructions.Count; i++) {
 					var instr = instructions[i];
 					TypeSig fieldType = null;
 					TypeInfo<FieldDef> info = null;
@@ -514,7 +514,7 @@ namespace de4dot.code.deobfuscators {
 
 						IList<TypeSig> calledMethodArgs = DotNetUtils.GetArgs(calledMethodDefOrRef);
 						calledMethodArgs = DotNetUtils.ReplaceGenericParameters(calledMethodDefOrRef.DeclaringType.TryGetGenericInstSig(), calledMethodSpec, calledMethodArgs);
-						for (int j = 0; j < pushedArgs.NumValidArgs; j++) {
+						for (var j = 0; j < pushedArgs.NumValidArgs; j++) {
 							var pushInstr = pushedArgs.GetEnd(j);
 							if (pushInstr.OpCode.Code != Code.Ldfld && pushInstr.OpCode.Code != Code.Ldsfld)
 								continue;
@@ -537,7 +537,7 @@ namespace de4dot.code.deobfuscators {
 				}
 			}
 
-			bool modified = false;
+			var modified = false;
 			var removeThese = new List<FieldDef>();
 			foreach (var info in fieldWrites.Values) {
 				if (info.UpdateNewType(module)) {

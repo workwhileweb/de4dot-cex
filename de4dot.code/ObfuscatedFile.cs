@@ -151,7 +151,7 @@ namespace de4dot.code {
 		}
 
 		string GetDefaultNewFilename() {
-			string newFilename = Path.GetFileNameWithoutExtension(options.Filename) + "-cleaned" + Path.GetExtension(options.Filename);
+			var newFilename = Path.GetFileNameWithoutExtension(options.Filename) + "-cleaned" + Path.GetExtension(options.Filename);
 			return Path.Combine(Path.GetDirectoryName(options.Filename), newFilename);
 		}
 
@@ -174,7 +174,7 @@ namespace de4dot.code {
 		}
 
 		void LoadModule(IEnumerable<IDeobfuscator> deobfuscators) {
-			ModuleDefMD oldModule = module;
+			var oldModule = module;
 			try {
 				module = assemblyModule.Load();
 			}
@@ -288,7 +288,7 @@ namespace de4dot.code {
 		IDeobfuscator DetectObfuscator2(IEnumerable<IDeobfuscator> deobfuscators) {
 			var allDetected = new List<IDeobfuscator>();
 			IDeobfuscator detected = null;
-			int detectVal = 0;
+			var detectVal = 0;
 			foreach (var deob in deobfuscators) {
 				this.deob = deob;	// So we can call deob.CanInlineMethods in deobfuscate()
 				int val;
@@ -389,7 +389,7 @@ namespace de4dot.code {
 			Logger.n("Cleaning {0}", options.Filename);
 			InitAssemblyClient();
 
-			for (int i = 0; ; i++) {
+			for (var i = 0; ; i++) {
 				byte[] fileData = null;
 				DumpedMethods dumpedMethods = null;
 				if (!deob.GetDecryptedModule(i, ref fileData, ref dumpedMethods))
@@ -489,7 +489,7 @@ namespace de4dot.code {
 					else {
 						if (argsStrings.Length != sig.Params.Count)
 							continue;
-						for (int i = 0; i < argsStrings.Length; i++) {
+						for (var i = 0; i < argsStrings.Length; i++) {
 							if (argsStrings[i] != sig.Params[i].FullName)
 								continue;
 						}
@@ -510,7 +510,7 @@ namespace de4dot.code {
 			name = null;
 
 			var remaining = methodDesc;
-			int index = remaining.LastIndexOf("::");
+			var index = remaining.LastIndexOf("::");
 			if (index >= 0) {
 				type = remaining.Substring(0, index);
 				remaining = remaining.Substring(index + 2);
@@ -538,7 +538,7 @@ namespace de4dot.code {
 				if (stringArgs.EndsWith(")", StringComparison.Ordinal))
 					stringArgs = stringArgs.Substring(0, stringArgs.Length - 1);
 				args = stringArgs.Split(',');
-				for (int i = 0; i < args.Length; i++)
+				for (var i = 0; i < args.Length; i++)
 					args[i] = args[i].Trim();
 			}
 
@@ -571,8 +571,8 @@ namespace de4dot.code {
 					return;
 			}
 
-			bool isVerbose = !Logger.Instance.IgnoresEvent(LoggerEvent.Verbose);
-			bool isVV = !Logger.Instance.IgnoresEvent(LoggerEvent.VeryVerbose);
+			var isVerbose = !Logger.Instance.IgnoresEvent(LoggerEvent.Verbose);
+			var isVV = !Logger.Instance.IgnoresEvent(LoggerEvent.VeryVerbose);
 			if (isVerbose)
 				Logger.v("Deobfuscating methods");
 			var methodPrinter = new MethodPrinter();
@@ -583,7 +583,7 @@ namespace de4dot.code {
 					Logger.Instance.Indent();
 				}
 
-				int oldIndentLevel = Logger.Instance.IndentLevel;
+				var oldIndentLevel = Logger.Instance.IndentLevel;
 				//TODO: Re-enable exception handler
                 //try {
 					Deobfuscate(method, cflowDeobfuscator, methodPrinter, isVerbose, isVV);
@@ -631,8 +631,8 @@ namespace de4dot.code {
 				return;
 
 			var blocks = new Blocks(method);
-			int numRemovedLocals = 0;
-			int oldNumInstructions = method.Body.Instructions.Count;
+			var numRemovedLocals = 0;
+			var oldNumInstructions = method.Body.Instructions.Count;
 
 			deob.DeobfuscateMethodBegin(blocks);
 			if (options.ControlFlowDeobfuscation) {
@@ -659,7 +659,7 @@ namespace de4dot.code {
 
 			if (isVerbose && numRemovedLocals > 0)
 				Logger.v("Removed {0} unused local(s)", numRemovedLocals);
-			int numRemovedInstructions = oldNumInstructions - method.Body.Instructions.Count;
+			var numRemovedInstructions = oldNumInstructions - method.Body.Instructions.Count;
 			if (isVerbose && numRemovedInstructions > 0)
 				Logger.v("Removed {0} dead instruction(s)", numRemovedInstructions);
 
@@ -696,11 +696,11 @@ namespace de4dot.code {
 
 		void RemoveNoInliningAttribute(MethodDef method) {
 			method.IsNoInlining = false;
-			for (int i = 0; i < method.CustomAttributes.Count; i++) {
+			for (var i = 0; i < method.CustomAttributes.Count; i++) {
 				var cattr = method.CustomAttributes[i];
 				if (cattr.TypeFullName != "System.Runtime.CompilerServices.MethodImplAttribute")
 					continue;
-				int options = 0;
+				var options = 0;
 				if (!GetMethodImplOptions(cattr, ref options))
 					continue;
 				if (options != 0 && options != (int)MethodImplAttributes.NoInlining)
@@ -796,12 +796,12 @@ namespace de4dot.code {
 		}
 
 		void ISimpleDeobfuscator.Deobfuscate(MethodDef method, SimpleDeobfuscatorFlags flags) {
-			bool force = (flags & SimpleDeobfuscatorFlags.Force) != 0;
+			var force = (flags & SimpleDeobfuscatorFlags.Force) != 0;
 			if (method == null || (!force && Check(method, SimpleDeobFlags.HasDeobfuscated)))
 				return;
 
 			Deobfuscate(method, "Deobfuscating control flow", (blocks) => {
-				bool disableNewCFCode = (flags & SimpleDeobfuscatorFlags.DisableConstantsFolderExtraInstrs) != 0;
+				var disableNewCFCode = (flags & SimpleDeobfuscatorFlags.DisableConstantsFolderExtraInstrs) != 0;
 				var cflowDeobfuscator = new BlocksCflowDeobfuscator(deob.BlocksDeobfuscators, disableNewCFCode);
 				cflowDeobfuscator.Initialize(blocks);
 				cflowDeobfuscator.Deobfuscate();

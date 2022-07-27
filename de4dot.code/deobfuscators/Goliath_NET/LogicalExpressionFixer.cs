@@ -25,7 +25,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		public void Deobfuscate(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var first = instrs[i];
 					var second = instrs[i + 1];
 					if (first.OpCode.Code == Code.Not && second.OpCode.Code == Code.Neg) {

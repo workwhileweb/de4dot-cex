@@ -95,7 +95,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		bool CheckCctor(MethodDef cctor) {
 			if (cctor.Body == null)
 				return false;
-			int stsfldCount = 0;
+			var stsfldCount = 0;
 			foreach (var instr in cctor.Body.Instructions) {
 				if (instr.OpCode.Code == Code.Stsfld) {
 					var field = instr.Operand as IField;
@@ -206,14 +206,14 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 			var constants = new List<int>();
 			simpleDeobfuscator.Deobfuscate(method);
 			var instructions = method.Body.Instructions;
-			for (int i = 2; i < instructions.Count; i++) {
+			for (var i = 2; i < instructions.Count; i++) {
 				var and = instructions[i];
 				if (and.OpCode.Code != Code.And)
 					continue;
 				var ldci4 = instructions[i - 1];
 				if (!ldci4.IsLdcI4())
 					continue;
-				int flagValue = ldci4.GetLdcI4Value();
+				var flagValue = ldci4.GetLdcI4Value();
 				if (!IsFlag(flagValue))
 					continue;
 				var ldloc = instructions[i - 2];
@@ -265,11 +265,11 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		static int GetHeaderSkipBytes(MethodDef method, out int index) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4())
 					continue;
-				int loopCount = ldci4.GetLdcI4Value();
+				var loopCount = ldci4.GetLdcI4Value();
 				if (loopCount < 2 || loopCount > 4)
 					continue;
 				var blt = instrs[i + 1];
@@ -283,7 +283,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		static bool IsFlag(int value) {
-			for (uint tmp = (uint)value; tmp != 0; tmp >>= 1) {
+			for (var tmp = (uint)value; tmp != 0; tmp >>= 1) {
 				if ((tmp & 1) != 0)
 					return tmp == 1;
 			}
@@ -318,15 +318,15 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		public byte[] Decrypt(Stream resourceStream) {
-			Stream sourceStream = resourceStream;
-			int sourceStreamOffset = 1;
-			bool didSomething = false;
+			var sourceStream = resourceStream;
+			var sourceStreamOffset = 1;
+			var didSomething = false;
 
 			if (skipBeforeFlag) {
 				sourceStream.Position += skipBytes;
 				sourceStreamOffset += skipBytes;
 			}
-			byte flags = (byte)sourceStream.ReadByte();
+			var flags = (byte)sourceStream.ReadByte();
 			if (flipFlagsBits)
 				flags = (byte)~flags;
 			if (!skipBeforeFlag) {
@@ -334,7 +334,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				sourceStreamOffset += skipBytes;
 			}
 
-			byte allFlags = (byte)(desEncryptedFlag | deflatedFlag | bitwiseNotEncryptedFlag);
+			var allFlags = (byte)(desEncryptedFlag | deflatedFlag | bitwiseNotEncryptedFlag);
 			if ((flags & ~allFlags) != 0)
 				Logger.w("Found unknown resource encryption flags: 0x{0:X2}", flags);
 
@@ -348,10 +348,10 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 					using (var transform = provider.CreateDecryptor()) {
 						while (true) {
-							int count = sourceStream.Read(buffer1, 0, buffer1.Length);
+							var count = sourceStream.Read(buffer1, 0, buffer1.Length);
 							if (count <= 0)
 								break;
-							int count2 = transform.TransformBlock(buffer1, 0, count, buffer2, 0);
+							var count2 = transform.TransformBlock(buffer1, 0, count, buffer2, 0);
 							memStream.Write(buffer2, 0, count2);
 						}
 						var finalData = transform.TransformFinalBlock(buffer1, 0, 0);
@@ -368,7 +368,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				sourceStream.Position = sourceStreamOffset;
 				using (var inflater = new DeflateStream(sourceStream, CompressionMode.Decompress)) {
 					while (true) {
-						int count = inflater.Read(buffer1, 0, buffer1.Length);
+						var count = inflater.Read(buffer1, 0, buffer1.Length);
 						if (count <= 0)
 							break;
 						memStream.Write(buffer1, 0, count);
@@ -383,7 +383,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 			if ((flags & bitwiseNotEncryptedFlag) != 0) {
 				var memStream = new MemoryStream((int)resourceStream.Length);
 				sourceStream.Position = sourceStreamOffset;
-				for (int i = sourceStreamOffset; i < sourceStream.Length; i++)
+				for (var i = sourceStreamOffset; i < sourceStream.Length; i++)
 					memStream.WriteByte((byte)~sourceStream.ReadByte());
 
 				sourceStream = memStream;
@@ -396,17 +396,17 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				return memStream.ToArray();
 			}
 			else {
-				int len = (int)(sourceStream.Length - sourceStream.Position);
-				byte[] data = new byte[len];
+				var len = (int)(sourceStream.Length - sourceStream.Position);
+				var data = new byte[len];
 				sourceStream.Read(data, 0, len);
 				return data;
 			}
 		}
 
 		byte[] GetKey(Stream resourceStream) {
-			byte[] key = new byte[8];
+			var key = new byte[8];
 			resourceStream.Read(key, 0, key.Length);
-			for (int i = 0; i < key.Length; i++) {
+			for (var i = 0; i < key.Length; i++) {
 				if (key[i] != 0)
 					return key;
 			}

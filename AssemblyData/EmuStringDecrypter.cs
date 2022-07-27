@@ -48,7 +48,7 @@ namespace AssemblyData {
 
 			methodsRewriter.SetCaller(decryptInfo.decryptString, caller);
 			var result = new object[args.Length];
-			for (int i = 0; i < args.Length; i++)
+			for (var i = 0; i < args.Length; i++)
 				result[i] = decryptInfo.decryptString((object[])args[i]);
 			return result;
 		}

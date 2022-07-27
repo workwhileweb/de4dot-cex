@@ -63,7 +63,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			reader.Position = info.offset;
 
 			IResourceData resourceData;
-			int type = (info.flags & 0x7F);
+			var type = (info.flags & 0x7F);
 			switch (type) {
 			case 1:		// bool
 				resourceData = dataCreator.Create(reader.ReadBoolean());

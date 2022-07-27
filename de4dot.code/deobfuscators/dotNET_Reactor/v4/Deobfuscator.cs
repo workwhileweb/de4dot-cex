@@ -245,13 +245,13 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(methodsDecrypter.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(booleanDecrypter.Detected) +
-					ToInt32(assemblyResolver.Detected) +
-					ToInt32(resourceResolver.Detected);
+			var sum = ToInt32(methodsDecrypter.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(booleanDecrypter.Detected) +
+                      ToInt32(assemblyResolver.Detected) +
+                      ToInt32(resourceResolver.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 
@@ -322,7 +322,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			*/
 
 			LocalTypes localTypes;
-			int minVer = -1;
+			var minVer = -1;
 			foreach (var info in stringDecrypter.DecrypterInfos) {
 				if (info.key == null)
 					continue;
@@ -361,10 +361,10 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				return DeobfuscatorInfo.THE_NAME + " 4.5+";
 			}
 			DeobfuscatedFile.Deobfuscate(compileMethod);
-			bool compileMethodHasConstant_0x70000000 = DeobUtils.HasInteger(compileMethod, 0x70000000);	// 4.0-4.1
+			var compileMethodHasConstant_0x70000000 = DeobUtils.HasInteger(compileMethod, 0x70000000);	// 4.0-4.1
 			DeobfuscatedFile.Deobfuscate(methodsDecrypter.Method);
-			bool hasCorEnableProfilingString = FindString(methodsDecrypter.Method, "Cor_Enable_Profiling");	// 4.1-4.4
-			bool hasCatchString = FindString(methodsDecrypter.Method, "catch: ");	// <= 4.7
+			var hasCorEnableProfilingString = FindString(methodsDecrypter.Method, "Cor_Enable_Profiling");	// 4.1-4.4
+			var hasCatchString = FindString(methodsDecrypter.Method, "catch: ");	// <= 4.7
 
 			if (compileMethodHasConstant_0x70000000) {
 				if (hasCorEnableProfilingString)
@@ -372,12 +372,12 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				return DeobfuscatorInfo.THE_NAME + " 4.0";
 			}
 			if (!hasCorEnableProfilingString) {
-				bool callsReverse = DotNetUtils.CallsMethod(methodsDecrypter.Method, "System.Void System.Array::Reverse(System.Array)");
+				var callsReverse = DotNetUtils.CallsMethod(methodsDecrypter.Method, "System.Void System.Array::Reverse(System.Array)");
 				if (!callsReverse)
 					return DeobfuscatorInfo.THE_NAME + " 4.0 - 4.4";
 
-				int numIntPtrSizeCompares = CountCompareSystemIntPtrSize(methodsDecrypter.Method);
-				bool hasSymmetricAlgorithm = new LocalTypes(methodsDecrypter.Method).Exists("System.Security.Cryptography.SymmetricAlgorithm");
+				var numIntPtrSizeCompares = CountCompareSystemIntPtrSize(methodsDecrypter.Method);
+				var hasSymmetricAlgorithm = new LocalTypes(methodsDecrypter.Method).Exists("System.Security.Cryptography.SymmetricAlgorithm");
 				if (module.IsClr40) {
 					switch (numIntPtrSizeCompares) {
 					case 7:
@@ -421,9 +421,9 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 		static int CountCompareSystemIntPtrSize(MethodDef method) {
 			if (method == null || method.Body == null)
 				return 0;
-			int count = 0;
+			var count = 0;
 			var instrs = method.Body.Instructions;
-			for (int i = 1; i < instrs.Count - 1; i++) {
+			for (var i = 1; i < instrs.Count - 1; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4() || ldci4.GetLdcI4Value() != 4)
 					continue;
@@ -522,7 +522,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			metadataTokenObfuscator = new MetadataTokenObfuscator(module);
 			antiStrongname = new AntiStrongName(GetDecrypterType());
 
-			bool removeResourceResolver = false;
+			var removeResourceResolver = false;
 			if (options.DecryptResources) {
 				resourceResolver.Initialize(DeobfuscatedFile, this);
 				DecryptResources();
@@ -634,7 +634,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instructions = block.Instructions;
-				for (int i = 0; i < instructions.Count; i++) {
+				for (var i = 0; i < instructions.Count; i++) {
 					var instr = instructions[i];
 					if (instr.OpCode.Code != Code.Ldtoken)
 						continue;

@@ -83,13 +83,13 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			if (!Initialize(allBlocks))
 				return false;
 
-			bool modified = false;
+			var modified = false;
 
 			var indexesToRemove = new List<int>();
 			foreach (var block in allBlocks) {
 				indexesToRemove.Clear();
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code == Code.Ldloca || instr.OpCode.Code == Code.Ldloca_S) {
 						var local = instr.Operand as Local;
@@ -126,9 +126,9 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			if (modified) {
 				foreach (var block in allBlocks) {
 					var instrs = block.Instructions;
-					for (int i = 0; i < instrs.Count - 1; i++) {
+					for (var i = 0; i < instrs.Count - 1; i++) {
 						var instr = instrs[i];
-						int castIndex = i + 1;
+						var castIndex = i + 1;
 						if (instr.OpCode.Code == Code.Dup) {
 							if (i == 0)
 								continue;
@@ -186,7 +186,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 			foreach (var block in allBlocks) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var ldloc = instrs[i];
 					if (!ldloc.IsLdloc())
 						continue;

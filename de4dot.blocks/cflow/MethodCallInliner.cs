@@ -30,9 +30,9 @@ namespace de4dot.blocks.cflow {
 		}
 
 		protected override bool DeobfuscateInternal() {
-			bool modified = false;
+			var modified = false;
 			var instructions = block.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i].Instruction;
 				if (instr.OpCode.Code == Code.Call)
 					modified |= InlineMethod(instr, i);
@@ -70,7 +70,7 @@ namespace de4dot.blocks.cflow {
 			if (body == null)
 				return false;
 
-			int index = 0;
+			var index = 0;
 			var instr = GetFirstInstruction(body.Instructions, ref index);
 			if (instr == null)
 				return false;

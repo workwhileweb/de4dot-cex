@@ -137,10 +137,10 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var antiDebugMethod = GetAntiDebugMethod(type, initMethod);
 			if (antiDebugMethod == null)
 				return false;
-			bool hasDebuggerStrings = DotNetUtils.HasString(antiDebugMethod, "Debugger detected (Managed)");
+			var hasDebuggerStrings = DotNetUtils.HasString(antiDebugMethod, "Debugger detected (Managed)");
 
 			if (DotNetUtils.CallsMethod(initMethod, "System.Void System.Threading.Thread::.ctor(System.Threading.ParameterizedThreadStart)")) {
-				int failFastCalls = ConfuserUtils.CountCalls(antiDebugMethod, "System.Void System.Environment::FailFast(System.String)");
+				var failFastCalls = ConfuserUtils.CountCalls(antiDebugMethod, "System.Void System.Environment::FailFast(System.String)");
 				if (failFastCalls != 6 && failFastCalls != 8)
 					return false;
 
@@ -216,8 +216,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 				var antiDebugMethod = GetAntiDebugMethod(type, initMethod);
 				if (antiDebugMethod == null)
 					return false;
-				bool hasDebuggerStrings = DotNetUtils.HasString(antiDebugMethod, "Debugger detected (Managed)") ||
-						DotNetUtils.HasString(antiDebugMethod, "Debugger is detected (Managed)");
+				var hasDebuggerStrings = DotNetUtils.HasString(antiDebugMethod, "Debugger detected (Managed)") ||
+                                         DotNetUtils.HasString(antiDebugMethod, "Debugger is detected (Managed)");
 				if (!DotNetUtils.CallsMethod(initMethod, "System.Void System.Threading.Thread::.ctor(System.Threading.ParameterizedThreadStart)"))
 					return false;
 				if (ConfuserUtils.CountCalls(antiDebugMethod, ntQueryInformationProcess) != 0)
@@ -225,7 +225,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				if (!CheckProfilerStrings1(initMethod) && !CheckProfilerStrings2(initMethod))
 					return false;
 
-				int failFastCalls = ConfuserUtils.CountCalls(antiDebugMethod, "System.Void System.Environment::FailFast(System.String)");
+				var failFastCalls = ConfuserUtils.CountCalls(antiDebugMethod, "System.Void System.Environment::FailFast(System.String)");
 				if (failFastCalls != 2)
 					return false;
 

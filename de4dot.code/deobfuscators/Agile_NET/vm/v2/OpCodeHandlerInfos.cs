@@ -45,20 +45,20 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		public static List<MethodSigInfo> Read(BinaryReader reader) {
 			if (reader.ReadInt32() != 1)
 				throw new InvalidDataException();
-			int numHandlers = reader.ReadInt32();
+			var numHandlers = reader.ReadInt32();
 			var list = new List<MethodSigInfo>(numHandlers);
-			for (int i = 0; i < numHandlers; i++) {
+			for (var i = 0; i < numHandlers; i++) {
 				var typeCode = (HandlerTypeCode)reader.ReadInt32();
-				int numBlocks = reader.ReadInt32();
+				var numBlocks = reader.ReadInt32();
 				var blocks = new List<BlockSigInfo>(numBlocks);
-				for (int j = 0; j < numBlocks; j++) {
-					int numTargets = reader.ReadInt32();
+				for (var j = 0; j < numBlocks; j++) {
+					var numTargets = reader.ReadInt32();
 					var targets = new List<int>(numTargets);
-					for (int k = 0; k < numTargets; k++)
+					for (var k = 0; k < numTargets; k++)
 						targets.Add(reader.ReadInt32());
 					var numHashes = reader.ReadInt32();
 					var hashes = new List<BlockElementHash>(numHashes);
-					for (int k = 0; k < numHashes; k++)
+					for (var k = 0; k < numHashes; k++)
 						hashes.Add((BlockElementHash)reader.ReadInt32());
 					var block = new BlockSigInfo(hashes, targets);
 					block.HasFallThrough = reader.ReadBoolean();

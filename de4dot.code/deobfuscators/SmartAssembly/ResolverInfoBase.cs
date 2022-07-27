@@ -182,9 +182,9 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		protected abstract bool CheckHandlerMethod(MethodDef handler);
 
 		IEnumerable<MethodDef> GetResolverHandlers(MethodDef method) {
-			int numHandlers = 0;
+			var numHandlers = 0;
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Call, OpCodes.Ldnull, OpCodes.Ldftn, OpCodes.Newobj, OpCodes.Callvirt);
 				if (instrs == null)
 					continue;

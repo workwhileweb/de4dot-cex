@@ -47,13 +47,13 @@ namespace de4dot.blocks {
 		}
 
 		int RemoveDeadBlocks() {
-			int numDeadBlocks = 0;
+			var numDeadBlocks = 0;
 
 			var infos = new Dictionary<ScopeBlock, ScopeBlockInfo>();
 			var deadBlocksDict = new Dictionary<BaseBlock, bool>();
 			foreach (var baseBlock in FindDeadBlocks()) {
 				deadBlocksDict[baseBlock] = true;
-				ScopeBlock parent = baseBlock.Parent;
+				var parent = baseBlock.Parent;
 				ScopeBlockInfo info;
 				if (!infos.TryGetValue(parent, out info))
 					infos[parent] = info = new ScopeBlockInfo(parent);
@@ -119,7 +119,7 @@ namespace de4dot.blocks {
 
 		// Add a block to be processed later, including all its enclosing ScopeBlocks.
 		void AddBaseBlock(BaseBlock baseBlock) {
-			for (BaseBlock bb = baseBlock; bb != null; bb = bb.Parent)
+			for (var bb = baseBlock; bb != null; bb = bb.Parent)
 				baseBlocksToCheck.Push(bb);
 		}
 

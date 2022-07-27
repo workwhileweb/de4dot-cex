@@ -135,8 +135,8 @@ namespace AssemblyData.methodsrewriter {
 			if (git == null)
 				return type;
 			var types = new Type[git.GenericArguments.Count];
-			bool isTypeDef = true;
-			for (int i = 0; i < git.GenericArguments.Count; i++) {
+			var isTypeDef = true;
+			for (var i = 0; i < git.GenericArguments.Count; i++) {
 				var arg = git.GenericArguments[i];
 				if (!(arg is GenericSig))
 					isTypeDef = false;

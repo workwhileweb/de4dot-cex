@@ -65,7 +65,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static VersionDetector() {
 			Version currentVersion = null;
-			int prevRev = -1;
+			var prevRev = -1;
 			foreach (var rev in revs) {
 				if (rev <= prevRev)
 					throw new ApplicationException();

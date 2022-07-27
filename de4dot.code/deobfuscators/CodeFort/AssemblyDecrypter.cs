@@ -120,7 +120,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 		}
 
 		MethodDef CheckCalledMethods(MethodDef method) {
-			int calls = 0;
+			var calls = 0;
 			TypeDef type = null;
 			MethodDef initMethod = null;
 			foreach (var calledMethod in DotNetUtils.GetCalledMethods(module, method)) {
@@ -198,7 +198,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 			var encryptedData = DeobUtils.Gunzip(reader.BaseStream, reader.ReadInt32());
 			reader = new BinaryReader(new MemoryStream(encryptedData));
 			var serializedData = reader.ReadBytes(reader.ReadInt32());
-			for (int i = 0; i < serializedData.Length; i++)
+			for (var i = 0; i < serializedData.Length; i++)
 				serializedData[i] ^= 0xAD;
 			var encryptedAssembly = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
 
@@ -250,8 +250,8 @@ namespace de4dot.code.deobfuscators.CodeFort {
 
 		static PasswordInfo GetEmbedPassword(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 3; i++) {
+				var index = i;
 
 				var ldstr1 = instrs[index++];
 				if (ldstr1.OpCode.Code != Code.Ldstr)

@@ -138,15 +138,15 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(resourceResolver.Detected) +
-					ToInt32(assemblyResolver.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(constantsDecrypter.Detected) +
-					ToInt32(proxyCallFixer.Detected) +
-					ToInt32(methodsDecrypter.Detected) +
-					ToInt32(HasMetadataStream("Babel"));
+			var sum = ToInt32(resourceResolver.Detected) +
+                      ToInt32(assemblyResolver.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(constantsDecrypter.Detected) +
+                      ToInt32(proxyCallFixer.Detected) +
+                      ToInt32(methodsDecrypter.Detected) +
+                      ToInt32(HasMetadataStream("Babel"));
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (foundBabelAttribute)

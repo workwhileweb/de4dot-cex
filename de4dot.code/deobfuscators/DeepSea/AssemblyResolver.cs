@@ -127,7 +127,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static bool IsV3SL(MethodDef handler) {
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				if (!instrs[i].IsLdloc())
 					continue;
 				if (instrs[i + 1].OpCode.Code != Code.Add)
@@ -143,7 +143,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static bool IsV41SL(MethodDef handler) {
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				if (!instrs[i].IsLdcI4() || instrs[i].GetLdcI4Value() != 5)
 					continue;
 				if (instrs[i + 1].OpCode.Code != Code.And)
@@ -184,7 +184,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 				return true;
 			}
 
-			Version versionTmp = CheckHandlerV404_41(handler, out fieldInfosTmp, out decryptMethodTmp);
+			var versionTmp = CheckHandlerV404_41(handler, out fieldInfosTmp, out decryptMethodTmp);
 			if (fieldInfosTmp.Count != 0) {
 				version = versionTmp;
 				fieldInfos = fieldInfosTmp;
@@ -226,8 +226,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			decryptMethod = null;
 
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 3; i++) {
+				var index = i;
 
 				var ldtoken = instrs[index++];
 				if (ldtoken.OpCode.Code != Code.Ldtoken)
@@ -245,7 +245,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 				var ldci4_magic = instrs[index++];
 				if (!ldci4_magic.IsLdcI4())
 					return false;
-				int magic = ldci4_magic.GetLdcI4Value();
+				var magic = ldci4_magic.GetLdcI4Value();
 
 				var call = instrs[index++];
 				if (call.OpCode.Code == Code.Tailcall)
@@ -265,13 +265,13 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		// 4.0.4, 4.1+
 		Version CheckHandlerV404_41(MethodDef handler, out List<FieldInfo> fieldInfos, out MethodDef decryptMethod) {
-			Version version = Version.Unknown;
+			var version = Version.Unknown;
 			fieldInfos = new List<FieldInfo>();
 			decryptMethod = null;
 
 			var instrs = handler.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 6; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 6; i++) {
+				var index = i;
 
 				var ldci4_len = instrs[index++];
 				if (!ldci4_len.IsLdcI4())
@@ -296,7 +296,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 				if (!DotNetUtils.IsMethod(call1.Operand as IMethod, "System.Void", "(System.Array,System.RuntimeFieldHandle)"))
 					continue;
 
-				int callIndex = GetCallDecryptMethodIndex(instrs, index);
+				var callIndex = GetCallDecryptMethodIndex(instrs, index);
 				if (callIndex < 0)
 					continue;
 				var args = DsUtils.GetArgValues(instrs, callIndex);
@@ -319,7 +319,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static bool GetMagic(MethodDef method, IList<object> args, out Version version, out int magic) {
 			magic = 0;
-			int magicIndex = GetMagicIndex(method, out version);
+			var magicIndex = GetMagicIndex(method, out version);
 			if (magicIndex < 0 || magicIndex >= args.Count)
 				return false;
 			var val = args[magicIndex];
@@ -331,7 +331,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		static int GetMagicIndex(MethodDef method, out Version version) {
-			int magicIndex = GetMagicIndex404(method);
+			var magicIndex = GetMagicIndex404(method);
 			if (magicIndex >= 0) {
 				version = Version.V404;
 				return magicIndex;
@@ -349,8 +349,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static int GetMagicIndex404(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 4; i++) {
+				var index = i;
 				if (!instrs[index++].IsLdloc())
 					continue;
 				var ldarg = instrs[index++];
@@ -370,8 +370,8 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 		static int GetMagicIndex41Trial(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 4; i++) {
+				var index = i;
 				if (instrs[index++].OpCode.Code != Code.Div)
 					continue;
 				var ldarg = instrs[index++];
@@ -393,7 +393,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			index = GetRetIndex(instrs, index);
 			if (index < 0)
 				return -1;
-			for (int i = index - 1; i >= 0; i--) {
+			for (var i = index - 1; i >= 0; i--) {
 				var instr = instrs[i];
 				if (!IsCallOrNext(instr))
 					break;
@@ -409,7 +409,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		static int GetRetIndex(IList<Instruction> instrs, int index) {
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode.Code == Code.Ret)
 					return i;
@@ -512,7 +512,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		static byte[] Decrypt41Trial(byte[] data, int magic) {
-			for (int i = 0; i < data.Length; i++)
+			for (var i = 0; i < data.Length; i++)
 				data[i] ^= (byte)(i / 3 + magic);
 			return data;
 		}

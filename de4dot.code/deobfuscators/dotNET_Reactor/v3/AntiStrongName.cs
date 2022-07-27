@@ -39,8 +39,8 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 			const int numInstrsToRemove = 11;
 			if (instrs.Count < numInstrsToRemove)
 				return false;
-			int startIndex = instrs.Count - numInstrsToRemove;
-			int index = startIndex;
+			var startIndex = instrs.Count - numInstrsToRemove;
+			var index = startIndex;
 
 			if (instrs[index++].OpCode.Code != Code.Ldtoken)
 				return false;

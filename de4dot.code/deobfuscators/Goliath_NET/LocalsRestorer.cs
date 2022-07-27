@@ -89,7 +89,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				instrsToRemove.Clear();
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					int indexToRemove;
 					ITypeDefOrRef type;

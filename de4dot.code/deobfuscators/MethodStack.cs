@@ -38,7 +38,7 @@ namespace de4dot.code.deobfuscators {
 		public PushedArgs(int numArgs) {
 			nextIndex = numArgs - 1;
 			args = new List<Instruction>(numArgs);
-			for (int i = 0; i < numArgs; i++)
+			for (var i = 0; i < numArgs; i++)
 				args.Add(null);
 		}
 
@@ -62,7 +62,7 @@ namespace de4dot.code.deobfuscators {
 
 		public void FixDups() {
 			Instruction prev = null, instr;
-			for (int i = 0; i < NumValidArgs; i++, prev = instr) {
+			for (var i = 0; i < NumValidArgs; i++, prev = instr) {
 				instr = args[i];
 				if (instr == null || prev == null)
 					continue;
@@ -94,7 +94,7 @@ namespace de4dot.code.deobfuscators {
 			var pushedArgs = new PushedArgs(numArgs);
 
 			Instruction instr;
-			int skipPushes = 0;
+			var skipPushes = 0;
 			while (index >= 0 && pushedArgs.CanAddMore) {
 				instr = GetPreviousInstruction(instructions, ref index);
 				if (instr == null)

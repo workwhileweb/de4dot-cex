@@ -133,7 +133,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		static int CountThrows(MethodDef method) {
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == Code.Throw)
 					count++;
@@ -142,7 +142,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v1 {
 		}
 
 		int CountPops(MethodDef method) {
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code != Code.Call && instr.OpCode.Code != Code.Callvirt)
 					continue;

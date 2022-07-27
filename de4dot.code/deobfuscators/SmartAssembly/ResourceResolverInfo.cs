@@ -45,7 +45,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 			EmbeddedAssemblyInfo info = null;
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Ldstr, OpCodes.Call);
 				if (instrs == null)
 					continue;

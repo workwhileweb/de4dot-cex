@@ -184,7 +184,7 @@ namespace de4dot.code.deobfuscators {
 
 		public virtual void DeobfuscateEnd() {
 			// Make sure the TypeDefCache isn't enabled while we modify types or remove stuff
-			bool cacheState = module.EnableTypeDefFindCache;
+			var cacheState = module.EnableTypeDefFindCache;
 			module.EnableTypeDefFindCache = false;
 
 			if (CanRemoveTypes) {
@@ -346,7 +346,7 @@ namespace de4dot.code.deobfuscators {
 				var instrsToDelete = new List<int>();
 				foreach (var block in allBlocks) {
 					instrsToDelete.Clear();
-					for (int i = 0; i < block.Instructions.Count; i++) {
+					for (var i = 0; i < block.Instructions.Count; i++) {
 						var instr = block.Instructions[i];
 						if (instr.OpCode != OpCodes.Call)
 							continue;
@@ -548,7 +548,7 @@ namespace de4dot.code.deobfuscators {
 				var typeDef = info.obj;
 				if (typeDef == null)
 					continue;
-				for (int i = 0; i < customAttrs.Count; i++) {
+				for (var i = 0; i < customAttrs.Count; i++) {
 					if (new SigComparer().Equals(typeDef, customAttrs[i].AttributeType)) {
 						customAttrs.RemoveAt(i);
 						i--;
@@ -572,7 +572,7 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		void DeleteOtherAttributes(IList<CustomAttribute> customAttributes) {
-			for (int i = customAttributes.Count - 1; i >= 0; i--) {
+			for (var i = customAttributes.Count - 1; i >= 0; i--) {
 				var attr = customAttributes[i].TypeFullName;
 				if (attr == "System.Runtime.CompilerServices.SuppressIldasmAttribute") {
 					Logger.v("Removed attribute {0}", Utils.RemoveNewlines(attr));
@@ -625,7 +625,7 @@ namespace de4dot.code.deobfuscators {
 		static int GetCodeSize(MethodDef method) {
 			if (method == null || method.Body == null)
 				return 0;
-			int size = 0;
+			var size = 0;
 			foreach (var instr in method.Body.Instructions)
 				size += instr.GetSize();
 			return size;

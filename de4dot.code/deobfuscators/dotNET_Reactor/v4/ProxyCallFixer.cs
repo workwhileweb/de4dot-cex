@@ -83,7 +83,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 
 		TypeDef GetDelegateType(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4())
 					continue;

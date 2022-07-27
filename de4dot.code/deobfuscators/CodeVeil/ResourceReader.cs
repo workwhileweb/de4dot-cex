@@ -57,19 +57,19 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			int flags = reader.ReadByte();
 			if ((flags & 0xFC) != 0)
 				throw new ApplicationException("Invalid flags");
-			bool inflateData = (flags & 1) != 0;
-			bool encrypted = (flags & 2) != 0;
+			var inflateData = (flags & 1) != 0;
+			var encrypted = (flags & 2) != 0;
 
-			int numResources = reader.ReadInt32();
+			var numResources = reader.ReadInt32();
 			if (numResources < 0)
 				throw new ApplicationException("Invalid number of resources");
 
 			var infos = new ResourceInfo[numResources];
-			for (int i = 0; i < numResources; i++) {
+			for (var i = 0; i < numResources; i++) {
 				var resourceName = ReadResourceName(reader, encrypted);
-				int offset = reader.ReadInt32();
-				byte resourceFlags = reader.ReadByte();
-				int resourceLength = (resourceFlags & 0x80) == 0 ? -1 : reader.ReadInt32();
+				var offset = reader.ReadInt32();
+				var resourceFlags = reader.ReadByte();
+				var resourceLength = (resourceFlags & 0x80) == 0 ? -1 : reader.ReadInt32();
 				infos[i] = new ResourceInfo(resourceName, resourceFlags, offset, resourceLength);
 			}
 
@@ -78,16 +78,16 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 				var key = new uint[4];
 				key[0] = dataReader.ReadUInt32();
 				key[1] = dataReader.ReadUInt32();
-				int numDwords = dataReader.ReadInt32();
+				var numDwords = dataReader.ReadInt32();
 				if (numDwords < 0 || numDwords >= 0x40000000)
 					throw new ApplicationException("Invalid number of encrypted dwords");
 				var encryptedData = new uint[numDwords];
-				for (int i = 0; i < numDwords; i++)
+				for (var i = 0; i < numDwords; i++)
 					encryptedData[i] = dataReader.ReadUInt32();
 				key[2] = dataReader.ReadUInt32();
 				key[3] = dataReader.ReadUInt32();
 				DeobUtils.XxteaDecrypt(encryptedData, key);
-				byte[] decryptedData = new byte[encryptedData.Length * 4];
+				var decryptedData = new byte[encryptedData.Length * 4];
 				Buffer.BlockCopy(encryptedData, 0, decryptedData, 0, decryptedData.Length);
 				dataReader = MemoryImageStream.Create(decryptedData);
 			}
@@ -108,17 +108,17 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			if (!encrypted)
 				return reader.ReadString();
 
-			int len = reader.ReadInt32();
+			var len = reader.ReadInt32();
 			if (len < 0)
 				throw new ApplicationException("Invalid string length");
 			var sb = new StringBuilder(len);
-			for (int i = 0; i < len; i++)
+			for (var i = 0; i < len; i++)
 				sb.Append((char)Rol3(reader.ReadChar()));
 			return sb.ToString();
 		}
 
 		static char Rol3(char c) {
-			ushort s = (ushort)c;
+			var s = (ushort)c;
 			return (char)((s << 3) | (s >> (16 - 3)));
 		}
 	}

@@ -46,7 +46,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		}
 
 		void ReadExceptionHandlers() {
-			int totalSize = reader.ReadInt32();
+			var totalSize = reader.ReadInt32();
 			if (totalSize == 0)
 				return;
 			reader.ReadInt32();
@@ -86,18 +86,18 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		void ReadExceptionHandlers(int numExceptionHandlers) {
 			exceptionHandlers = new ExceptionHandler[numExceptionHandlers];
-			for (int i = 0; i < exceptionHandlers.Count; i++)
+			for (var i = 0; i < exceptionHandlers.Count; i++)
 				exceptionHandlers[i] = ReadExceptionHandler();
 		}
 
 		ExceptionHandler ReadExceptionHandler() {
 			var eh = new ExceptionHandler((ExceptionHandlerType)reader.ReadUInt32());
 
-			uint tryOffset = reader.ReadUInt32();
+			var tryOffset = reader.ReadUInt32();
 			eh.TryStart = GetInstructionThrow(tryOffset);
 			eh.TryEnd = GetInstruction(tryOffset + reader.ReadUInt32());
 
-			uint handlerOffset = reader.ReadUInt32();
+			var handlerOffset = reader.ReadUInt32();
 			eh.HandlerStart = GetInstructionThrow(handlerOffset);
 			eh.HandlerEnd = GetInstruction(handlerOffset + reader.ReadUInt32());
 

@@ -18,7 +18,7 @@ namespace de4dot.code.deobfuscators.ConfuserEx
             var instr = _block.Instructions;
             if (instr.Count <= 4)
                 return false;
-
+            
             if (instr[0].IsLdcI4() && instr[1].OpCode == OpCodes.Call)
             {
                 IsKeyHardCoded = true;

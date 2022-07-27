@@ -65,7 +65,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			}
 
 			static void Copy(byte[] src, int srcIndex, byte[] dst, int dstIndex, int size) {
-				for (int i = 0; i < size; i++)
+				for (var i = 0; i < size; i++)
 					dst[dstIndex++] = src[srcIndex++];
 			}
 
@@ -74,24 +74,24 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			}
 
 			protected static byte[] Decompress(byte[] decrypted, IBinaryReader reader, byte[] key, int keyMod) {
-				int destIndex = 0;
+				var destIndex = 0;
 				while (reader.Position < reader.Length) {
 					if (destIndex >= decrypted.Length)
 						break;
-					byte flags = reader.ReadByte();
-					for (int mask = 1; mask != 0x100; mask <<= 1) {
+					var flags = reader.ReadByte();
+					for (var mask = 1; mask != 0x100; mask <<= 1) {
 						if (reader.Position >= reader.Length)
 							break;
 						if (destIndex >= decrypted.Length)
 							break;
 						if ((flags & mask) != 0) {
-							int displ = (int)reader.Read7BitEncodedUInt32();
-							int size = (int)reader.Read7BitEncodedUInt32();
+							var displ = (int)reader.Read7BitEncodedUInt32();
+							var size = (int)reader.Read7BitEncodedUInt32();
 							Copy(decrypted, destIndex - displ, decrypted, destIndex, size);
 							destIndex += size;
 						}
 						else {
-							byte b = reader.ReadByte();
+							var b = reader.ReadByte();
 							if (key != null)
 								b ^= key[destIndex % keyMod];
 							decrypted[destIndex++] = b;
@@ -162,17 +162,17 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			public static DecrypterV106 Create(IBinaryReader reader) {
 				try {
-					int keyXorOffs7 = (ReadByteAt(reader, 0) ^ ReadByteAt(reader, 2)) + 2;
+					var keyXorOffs7 = (ReadByteAt(reader, 0) ^ ReadByteAt(reader, 2)) + 2;
 					reader.Position = keyXorOffs7 + (ReadByteAt(reader, 1) ^ ReadByteAt(reader, keyXorOffs7));
 
-					int sha1DataLen = reader.Read7BitEncodedInt32() + 0x80;
-					int keyXorOffs6 = (int)reader.Position;
-					int encryptedOffs = (int)reader.Position + sha1DataLen;
+					var sha1DataLen = reader.Read7BitEncodedInt32() + 0x80;
+					var keyXorOffs6 = (int)reader.Position;
+					var encryptedOffs = (int)reader.Position + sha1DataLen;
 					var sha1Data = reader.ReadBytes(sha1DataLen);
-					uint crc32 = CRC32.CheckSum(sha1Data);
+					var crc32 = CRC32.CheckSum(sha1Data);
 
 					reader.Position = reader.Length - 0x18;
-					uint origCrc32 = reader.ReadUInt32();
+					var origCrc32 = reader.ReadUInt32();
 					if (crc32 != origCrc32)
 						return null;
 
@@ -189,7 +189,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 			static byte[] GetKey(IBinaryReader reader, byte[] sha1Sum, int offs) {
 				var key = (byte[])sha1Sum.Clone();
 				reader.Position = offs;
-				for (int i = 0; i < key.Length; i++)
+				for (var i = 0; i < key.Length; i++)
 					key[i] ^= reader.ReadByte();
 				return key;
 			}
@@ -203,15 +203,15 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				var reader = resource.Data;
 				reader.Position = startOffset;
 				var decrypted = new byte[reader.Read7BitEncodedUInt32()];
-				uint origCrc32 = reader.ReadUInt32();
-				long pos = reader.Position;
+				var origCrc32 = reader.ReadUInt32();
+				var pos = reader.Position;
 
 				var keys = new byte[][] { decryptionKey, decryptionKey6, decryptionKey7 };
 				foreach (var key in keys) {
 					try {
 						reader.Position = pos;
 						Decompress(decrypted, reader, key, decryptionKeyMod);
-						uint crc32 = CRC32.CheckSum(decrypted);
+						var crc32 = CRC32.CheckSum(decrypted);
 						if (crc32 == origCrc32)
 							return decrypted;
 					}
@@ -280,19 +280,19 @@ namespace de4dot.code.deobfuscators.ILProtector {
 		static DecryptedMethodInfo[] ReadMethodInfos(byte[] data) {
 			var toOffset = new Dictionary<DecryptedMethodInfo, int>();
 			var reader = MemoryImageStream.Create(data);
-			int numMethods = (int)reader.Read7BitEncodedUInt32();
+			var numMethods = (int)reader.Read7BitEncodedUInt32();
 			/*int totalCodeSize = (int)*/reader.Read7BitEncodedUInt32();
 			var methodInfos = new DecryptedMethodInfo[numMethods];
-			int offset = 0;
-			for (int i = 0; i < numMethods; i++) {
-				int id = (int)reader.Read7BitEncodedUInt32();
-				int size = (int)reader.Read7BitEncodedUInt32();
+			var offset = 0;
+			for (var i = 0; i < numMethods; i++) {
+				var id = (int)reader.Read7BitEncodedUInt32();
+				var size = (int)reader.Read7BitEncodedUInt32();
 				var info = new DecryptedMethodInfo(id, size);
 				methodInfos[i] = info;
 				toOffset[info] = offset;
 				offset += size;
 			}
-			long dataOffset = reader.Position;
+			var dataOffset = reader.Position;
 			foreach (var info in methodInfos) {
 				reader.Position = dataOffset + toOffset[info];
 				reader.Read(info.data, 0, info.data.Length);

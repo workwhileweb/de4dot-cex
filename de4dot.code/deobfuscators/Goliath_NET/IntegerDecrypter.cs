@@ -42,7 +42,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		public int Decrypt(MethodDef method) {
 			var info = GetInfo(method);
 			decryptedReader.BaseStream.Position = info.offset;
-			int len = decryptedReader.ReadInt32();
+			var len = decryptedReader.ReadInt32();
 			return BitConverter.ToInt32(decryptedReader.ReadBytes(len), 0);
 		}
 	}

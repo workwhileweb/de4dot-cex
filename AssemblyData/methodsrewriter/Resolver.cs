@@ -198,8 +198,8 @@ namespace AssemblyData.methodsrewriter {
 				case ElementType.GenericInst:
 					var git = (GenericInstSig)sig;
 					var args = new Type[git.GenericArguments.Count];
-					bool isGenericTypeDef = true;
-					for (int i = 0; i < args.Length; i++) {
+					var isGenericTypeDef = true;
+					for (var i = 0; i < args.Length; i++) {
 						var arg = git.GenericArguments[i];
 						if (!(arg is GenericSig))
 							isGenericTypeDef = false;

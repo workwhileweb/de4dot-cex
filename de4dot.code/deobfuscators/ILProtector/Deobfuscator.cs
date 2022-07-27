@@ -119,7 +119,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 				else if (dynamicMethodsRestorer != null) {
 					Logger.v("Runtime file versions:");
 					Logger.Instance.Indent();
-					bool emailMe = false;
+					var emailMe = false;
 					foreach (var info in mainType.RuntimeFileInfos) {
 						var version = info.GetVersion();
 						emailMe |= version != null && version == new Version(1, 0, 7, 0);

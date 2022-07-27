@@ -25,12 +25,12 @@ using de4dot.blocks.cflow;
 namespace de4dot.code.deobfuscators.Confuser {
 	class ConstantsFolder : BlockDeobfuscator {
 		protected override bool Deobfuscate(Block block) {
-			bool modified = false;
+			var modified = false;
 
 			var instrs = block.Instructions;
 			var constantsReader = CreateConstantsReader(instrs);
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = 0;
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = 0;
 				Instruction newInstr = null;
 				var instr = instrs[i];
 				if (constantsReader.IsLoadConstantInt32(instr.Instruction)) {

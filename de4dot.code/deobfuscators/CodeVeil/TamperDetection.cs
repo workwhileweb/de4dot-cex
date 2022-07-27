@@ -122,7 +122,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			}
 
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Ldtoken, OpCodes.Call, OpCodes.Call, OpCodes.Ldc_I8, OpCodes.Call);
 				if (instrs == null)
 					continue;

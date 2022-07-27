@@ -105,7 +105,7 @@ namespace de4dot.cui {
 
 		void DeobfuscateOneAtATime() {
 			foreach (var file in LoadAllFiles()) {
-				int oldIndentLevel = Logger.Instance.IndentLevel;
+				var oldIndentLevel = Logger.Instance.IndentLevel;
 				try {
 					file.DeobfuscateBegin();
 					file.Deobfuscate();
@@ -213,7 +213,7 @@ namespace de4dot.cui {
 				}
 				allFiles[key] = true;
 
-				int oldIndentLevel = Logger.Instance.IndentLevel;
+				var oldIndentLevel = Logger.Instance.IndentLevel;
 				//try {
 					file.DeobfuscatorContext = options.DeobfuscatorContext;
 					file.Load(options.CreateDeobfuscators());
@@ -259,7 +259,7 @@ namespace de4dot.cui {
 
 			IEnumerable<IObfuscatedFile> LoadFiles(SearchDir searchDir) {
 				DirectoryInfo di = null;
-				bool ok = false;
+				var ok = false;
 				try {
 					di = new DirectoryInfo(searchDir.InputDirectory);
 					if (di.Exists)

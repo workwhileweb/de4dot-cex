@@ -117,7 +117,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if (!new FieldTypes(type).All(requiredFields))
 				return;
 
-			bool use7zip = type.NestedTypes.Count == 6;
+			var use7zip = type.NestedTypes.Count == 6;
 			MethodDef decyptMethod;
 			if (use7zip)
 				decyptMethod = FindDecryptMethod_7zip(type);
@@ -126,7 +126,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if (decyptMethod == null)
 				return;
 
-			ConfuserVersion theVersion = ConfuserVersion.Unknown;
+			var theVersion = ConfuserVersion.Unknown;
 			var decryptLocals = new LocalTypes(decyptMethod);
 			if (decryptLocals.Exists("System.IO.MemoryStream")) {
 				if (DotNetUtils.CallsMethod(entryPoint, "System.Void", "(System.String,System.Byte[])"))
@@ -248,7 +248,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindMod(MethodDef method, out ulong mod) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci8 = instrs[i];
 				if (ldci8.OpCode.Code != Code.Ldc_I8)
 					continue;
@@ -271,7 +271,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindBase(MethodDef method, out ulong @base) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldci8 = instrs[i];
 				if (ldci8.OpCode.Code != Code.Ldc_I8)
 					continue;
@@ -327,7 +327,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0_v14_r58564(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				if (instrs[i].OpCode.Code != Code.Xor)
 					continue;
 				var ldci4 = instrs[i + 1];
@@ -345,7 +345,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0_v14_r58852(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4())
 					continue;
@@ -366,7 +366,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey1(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				if (instrs[i].OpCode.Code != Code.Ldelem_U1)
 					continue;
 				var ldci4 = instrs[i + 1];
@@ -493,7 +493,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		byte[] Decrypt_v10_r42915(byte[] data) {
-			for (int i = 0; i < data.Length; i++)
+			for (var i = 0; i < data.Length; i++)
 				data[i] ^= (byte)(i ^ key0);
 			return DeobUtils.Inflate(data, true);
 		}
@@ -506,7 +506,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		byte[] Decrypt_v14_r58852(byte[] data) {
 			var reader = new BinaryReader(new MemoryStream(DeobUtils.Inflate(data, true)));
 			data = reader.ReadBytes(reader.ReadInt32());
-			for (int i = 0; i < data.Length; i++) {
+			for (var i = 0; i < data.Length; i++) {
 				if ((i & 1) == 0)
 					data[i] ^= (byte)((key0 & 0xF) - i);
 				else
@@ -528,7 +528,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var encrypted = reader.ReadBytes(reader.ReadInt32());
 			iv = reader.ReadBytes(reader.ReadInt32());
 			key = reader.ReadBytes(reader.ReadInt32());
-			for (int i = 0; i < key.Length; i += 4) {
+			for (var i = 0; i < key.Length; i += 4) {
 				key[i] ^= (byte)key0;
 				key[i + 1] ^= (byte)(key0 >> 8);
 				key[i + 2] ^= (byte)(key0 >> 16);
@@ -554,7 +554,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static byte[] SevenZipDecompress(byte[] data) {
 			var reader = new BinaryReader(new MemoryStream(data));
-			int totalSize = reader.ReadInt32();
+			var totalSize = reader.ReadInt32();
 			var props = reader.ReadBytes(5);
 			var decoder = new Decoder();
 			decoder.SetDecoderProperties(props);

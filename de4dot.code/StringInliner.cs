@@ -29,13 +29,13 @@ namespace de4dot.code {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				var decryptedString = callResult.returnValue as string;
 				if (decryptedString == null)
 					continue;
 
-				int ldstrIndex = callResult.callStartIndex;
+				var ldstrIndex = callResult.callStartIndex;
 				block.Replace(ldstrIndex, num, OpCodes.Ldstr.ToInstruction(decryptedString));
 
 				// If it's followed by castclass string, remove it
@@ -113,7 +113,7 @@ namespace de4dot.code {
 			foreach (var methodId in sortedCalls.Keys) {
 				var list = sortedCalls[methodId];
 				var args = new object[list.Count];
-				for (int i = 0; i < list.Count; i++) {
+				for (var i = 0; i < list.Count; i++) {
 					AssemblyData.SimpleData.Pack(list[i].args);
 					args[i] = list[i].args;
 				}
@@ -121,7 +121,7 @@ namespace de4dot.code {
 				if (decryptedStrings.Length != args.Length)
 					throw new ApplicationException("Invalid decrypted strings array length");
 				AssemblyData.SimpleData.Unpack(decryptedStrings);
-				for (int i = 0; i < list.Count; i++)
+				for (var i = 0; i < list.Count; i++)
 					list[i].returnValue = (string)decryptedStrings[i];
 			}
 		}

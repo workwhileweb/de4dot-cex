@@ -128,7 +128,7 @@ namespace de4dot.code.renamer.asmmodules {
 				return;
 
 			if (a.Count < b.Count) {
-				MethodNameGroup tmp = a;
+				var tmp = a;
 				a = b;
 				b = tmp;
 			}

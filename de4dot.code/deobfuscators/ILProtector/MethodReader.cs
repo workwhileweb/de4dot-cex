@@ -104,7 +104,7 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 		void ReadLocals(int numLocals) {
 			var localsTypes = new List<TypeSig>();
-			for (int i = 0; i < numLocals; i++)
+			for (var i = 0; i < numLocals; i++)
 				localsTypes.Add(ReadType());
 			SetLocals(localsTypes);
 		}
@@ -149,15 +149,15 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 			case ElementType.Array:
 				var arrayType = ReadType();
-				uint rank = reader.Read7BitEncodedUInt32();
+				var rank = reader.Read7BitEncodedUInt32();
 				return new ArraySig(arrayType, rank);
 
 			case ElementType.GenericInst:
 				reader.ReadByte();
 				var genericType = Resolve<ITypeDefOrRef>(ReadTypeToken());
-				int numGenericArgs = (int)reader.Read7BitEncodedUInt32();
+				var numGenericArgs = (int)reader.Read7BitEncodedUInt32();
 				var git = new GenericInstSig(genericType.ToTypeSig() as ClassOrValueTypeSig);
-				for (int i = 0; i < numGenericArgs; i++)
+				for (var i = 0; i < numGenericArgs; i++)
 					git.GenericArguments.Add(ReadType());
 				return git;
 
@@ -202,18 +202,18 @@ namespace de4dot.code.deobfuscators.ILProtector {
 
 		void ReadExceptionHandlers(int numExceptionHandlers) {
 			exceptionHandlers = new List<ExceptionHandler>(numExceptionHandlers);
-			for (int i = 0; i < numExceptionHandlers; i++)
+			for (var i = 0; i < numExceptionHandlers; i++)
 				Add(ReadExceptionHandler());
 		}
 
 		ExceptionHandler ReadExceptionHandler() {
 			var eh = new ExceptionHandler((ExceptionHandlerType)(reader.Read7BitEncodedUInt32() & 7));
 
-			uint tryOffset = reader.Read7BitEncodedUInt32();
+			var tryOffset = reader.Read7BitEncodedUInt32();
 			eh.TryStart = GetInstructionThrow(tryOffset);
 			eh.TryEnd = GetInstruction(tryOffset + reader.Read7BitEncodedUInt32());
 
-			uint handlerOffset = reader.Read7BitEncodedUInt32();
+			var handlerOffset = reader.Read7BitEncodedUInt32();
 			eh.HandlerStart = GetInstructionThrow(handlerOffset);
 			eh.HandlerEnd = GetInstruction(handlerOffset + reader.Read7BitEncodedUInt32());
 

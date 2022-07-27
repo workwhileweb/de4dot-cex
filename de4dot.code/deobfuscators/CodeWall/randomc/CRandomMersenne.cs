@@ -61,7 +61,7 @@ namespace de4dot.code.deobfuscators.CodeWall.randomc {
 			Init0(seed);
 
 			// Randomize some more
-			for (int i = 0; i < 37; i++) BRandom();
+			for (var i = 0; i < 37; i++) BRandom();
 		}
 
 		static uint[] mag01 = new uint[2] { 0, MERS_A };

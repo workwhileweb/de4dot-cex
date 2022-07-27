@@ -50,7 +50,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			}
 
 			if (rsrcName.Length > 0 && rsrcName[0] == '[') {
-				int i = rsrcName.IndexOf(']');
+				var i = rsrcName.IndexOf(']');
 				if (i < 0)
 					return null;
 				info.flags = rsrcName.Substring(1, i - 1);
@@ -87,7 +87,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		}
 
 		public bool ResolveResources() {
-			bool ok = true;
+			var ok = true;
 
 			foreach (var info in embeddedAssemblyInfos) {
 				if (info.resource != null)
@@ -139,7 +139,7 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (strings.Length % 2 == 1)
 				return false;
 
-			for (int i = 0; i < strings.Length; i += 2) {
+			for (var i = 0; i < strings.Length; i += 2) {
 				var info = EmbeddedAssemblyInfo.Create(module, strings[i], strings[i + 1]);
 				if (info == null)
 					return false;
@@ -181,8 +181,8 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 		}
 
 		public bool RemoveEmbeddedAssemblyInfo(EmbeddedAssemblyInfo info) {
-			bool removed = false;
-			for (int i = 0; i < EmbeddedAssemblyInfos.Count; i++) {
+			var removed = false;
+			for (var i = 0; i < EmbeddedAssemblyInfos.Count; i++) {
 				var other = EmbeddedAssemblyInfos[i];
 				if (info.simpleName == other.simpleName) {
 					EmbeddedAssemblyInfos.RemoveAt(i--);

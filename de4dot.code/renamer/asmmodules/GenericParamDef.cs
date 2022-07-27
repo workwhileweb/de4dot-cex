@@ -34,7 +34,7 @@ namespace de4dot.code.renamer.asmmodules {
 			var list = new List<MGenericParamDef>();
 			if (parameters == null)
 				return list;
-			int i = 0;
+			var i = 0;
 			foreach (var param in parameters)
 				list.Add(new MGenericParamDef(param, i++));
 			return list;

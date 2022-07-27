@@ -29,7 +29,7 @@ using de4dot.blocks;
 namespace de4dot.code.deobfuscators.Confuser {
 	static class ConfuserUtils {
 		public static int FindCallMethod(IList<Instruction> instrs, int index, Code callCode, string methodFullName) {
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				if (!IsCallMethod(instrs[i], callCode, methodFullName))
 					continue;
 
@@ -39,7 +39,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		public static int FindCallMethod(IList<Instr> instrs, int index, Code callCode, string methodFullName) {
-			for (int i = index; i < instrs.Count; i++) {
+			for (var i = index; i < instrs.Count; i++) {
 				if (!IsCallMethod(instrs[i].Instruction, callCode, methodFullName))
 					continue;
 
@@ -64,10 +64,10 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static bool RemoveResolveHandlerCode(Blocks blocks, MethodDef handler, string installHandlerMethod) {
-			bool modified = false;
+			var modified = false;
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 4; i++) {
+				for (var i = 0; i < instrs.Count - 4; i++) {
 					var call = instrs[i];
 					if (call.OpCode.Code != Code.Call)
 						continue;
@@ -106,9 +106,9 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		public static byte[] DecryptCompressedInt32Data(Arg64ConstantsReader constReader, int exprStart, int exprEnd, IBinaryReader reader, byte[] decrypted) {
-			for (int i = 0; i < decrypted.Length; i++) {
+			for (var i = 0; i < decrypted.Length; i++) {
 				constReader.Arg = reader.Read7BitEncodedInt32();
-				int index = exprStart;
+				var index = exprStart;
 				long result;
 				if (!constReader.GetInt64(ref index, out result) || index != exprEnd)
 					throw new ApplicationException("Could not decrypt integer");
@@ -124,10 +124,10 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		public static byte[] Decrypt(uint seed, byte[] encrypted, byte[] key) {
 			var decrypted = new byte[encrypted.Length];
-			ushort _m = (ushort)(seed >> 16);
-			ushort _c = (ushort)seed;
-			ushort m = _c; ushort c = _m;
-			for (int i = 0; i < decrypted.Length; i++) {
+			var _m = (ushort)(seed >> 16);
+			var _c = (ushort)seed;
+			var m = _c; var c = _m;
+			for (var i = 0; i < decrypted.Length; i++) {
 				decrypted[i] = (byte)(encrypted[i] ^ (seed * m + c) ^ key[i % key.Length]);
 				m = (ushort)(seed * m + _m);
 				c = (ushort)(seed * c + _c);
@@ -138,7 +138,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		public static int CountCalls(MethodDef method, string methodFullName) {
 			if (method == null || method.Body == null)
 				return 0;
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code != Code.Call && instr.OpCode.Code != Code.Callvirt && instr.OpCode.Code != Code.Newobj)
 					continue;
@@ -152,7 +152,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		public static int CountCalls(MethodDef method, MethodDef calledMethod) {
 			if (method == null || method.Body == null)
 				return 0;
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code != Code.Call && instr.OpCode.Code != Code.Callvirt && instr.OpCode.Code != Code.Newobj)
 					continue;
@@ -166,7 +166,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if (method == null || method.Body == null)
 				return 0;
 
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == code)
 					count++;
@@ -179,7 +179,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var props = reader.ReadBytes(5);
 			var decoder = new Decoder();
 			decoder.SetDecoderProperties(props);
-			long totalSize = reader.ReadInt64();
+			var totalSize = reader.ReadInt64();
 			long compressedSize = data.Length - props.Length - 8;
 			var decompressed = new byte[totalSize];
 			decoder.Code(reader.BaseStream, new MemoryStream(decompressed, true), compressedSize, totalSize, null);
@@ -224,7 +224,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		static bool CheckLzmaMethods(TypeDef type) {
-			int methods = 0;
+			var methods = 0;
 			foreach (var m in type.Methods) {
 				if (m.IsStaticConstructor)
 					continue;

@@ -77,7 +77,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		static bool GetXorKey2(MethodDef method, out int xorKey) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldelem = instrs[i];
 				if (ldelem.OpCode.Code != Code.Ldelem_U2)
 					continue;

@@ -137,7 +137,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 7; i++) {
+				for (var i = 0; i < instrs.Count - 7; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -184,7 +184,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -262,11 +262,11 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				int end = instrs.Count - 6;
+				var end = instrs.Count - 6;
 				if (invert)
 					end -= 2;
-				for (int i = 0; i < end; i++) {
-					int index = i;
+				for (var i = 0; i < end; i++) {
+					var index = i;
 					var ldarg0 = instrs[index++];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -322,7 +322,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -361,7 +361,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 4; i++) {
+				for (var i = 0; i < instrs.Count - 4; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -444,7 +444,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 8; i++) {
+				for (var i = 0; i < instrs.Count - 8; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -497,7 +497,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 7; i++) {
+				for (var i = 0; i < instrs.Count - 7; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -561,7 +561,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				if (method.Body == null)
 					continue;
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count - 6; i++) {
+				for (var i = 0; i < instrs.Count - 6; i++) {
 					var ldarg0 = instrs[i];
 					if (!ldarg0.IsLdarg() || ldarg0.GetParameterIndex() != 0)
 						continue;
@@ -648,7 +648,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			if (CountThrows(method) != 1)
 				return false;
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
+			for (var i = 0; i < instrs.Count - 4; i++) {
 				var ldarg = instrs[i];
 				if (!ldarg.IsLdarg() || ldarg.GetParameterIndex() != 0)
 					continue;
@@ -670,7 +670,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		static int CountThrows(MethodDef method) {
 			if (method == null || method.Body == null)
 				return 0;
-			int count = 0;
+			var count = 0;
 			foreach (var instr in method.Body.Instructions) {
 				if (instr.OpCode.Code == Code.Throw)
 					count++;
@@ -728,7 +728,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 				return null;
 
 			var instrs = ctor.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldarg = instrs[i];
 				if (!ldarg.IsLdarg() || ldarg.GetParameterIndex() != arg)
 					continue;
@@ -802,7 +802,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		}
 
 		static int CountVirtual(TypeDef type) {
-			int count = 0;
+			var count = 0;
 			foreach (var method in type.Methods) {
 				if (method.IsVirtual)
 					count++;

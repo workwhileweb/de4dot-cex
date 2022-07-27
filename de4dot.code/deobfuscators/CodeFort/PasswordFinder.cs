@@ -152,7 +152,7 @@ namespace de4dot.code.deobfuscators.CodeFort {
 		}
 
 		static string FindStringStoreValue(List<Obj> instrs, string fieldName) {
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldstr = instrs[i];
 				if (ldstr.OpCode != "ldstr")
 					continue;
@@ -177,8 +177,8 @@ namespace de4dot.code.deobfuscators.CodeFort {
 				return null;
 			var method = type.FindMethod("CurrentDomain_AssemblyResolve");
 			var instrs = method.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 3; i++) {
+				var index = i;
 
 				var ldstr1 = instrs[index++];
 				if (ldstr1.OpCode != "ldstr")

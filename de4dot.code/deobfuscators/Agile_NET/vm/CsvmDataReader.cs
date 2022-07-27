@@ -34,12 +34,12 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm {
 		}
 
 		public List<CsvmMethodData> Read() {
-			int numMethods = reader.ReadInt32();
+			var numMethods = reader.ReadInt32();
 			if (numMethods < 0)
 				throw new ApplicationException("Invalid number of methods");
 			var methods = new List<CsvmMethodData>(numMethods);
 
-			for (int i = 0; i < numMethods; i++) {
+			for (var i = 0; i < numMethods; i++) {
 				var csvmMethod = new CsvmMethodData();
 				csvmMethod.Guid = new Guid(reader.ReadBytes(16));
 				csvmMethod.Token = reader.ReadInt32();

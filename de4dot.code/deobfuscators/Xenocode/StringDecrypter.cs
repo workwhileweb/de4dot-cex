@@ -67,7 +67,7 @@ namespace de4dot.code.deobfuscators.Xenocode {
 				if (method == null || method.Body == null)
 					continue;
 
-				bool foundConstant = false;
+				var foundConstant = false;
 				foreach (var instr in method.Body.Instructions) {
 					if (instr.IsLdcI4() && instr.GetLdcI4Value() == STRING_DECRYPTER_KEY_CONST) {
 						foundConstant = true;
@@ -84,10 +84,10 @@ namespace de4dot.code.deobfuscators.Xenocode {
 		}
 
 		public string Decrypt(string es, int magic) {
-			int newLen = es.Length / 4;
+			var newLen = es.Length / 4;
 			var sb = new StringBuilder(newLen);
-			for (int i = 0; i < newLen * 4; i += 4) {
-				char c = (char)((es[i] - 'a') +
+			for (var i = 0; i < newLen * 4; i += 4) {
+				var c = (char)((es[i] - 'a') +
 							((es[i + 1] - 'a') << 4) +
 							((es[i + 2] - 'a') << 8) +
 							((es[i + 3] - 'a') << 12) - magic);

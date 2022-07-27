@@ -82,7 +82,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 			if (instrs.Count < 7)
 				return false;
 
-			int index = 0;
+			var index = 0;
 
 			if (instrs[index].OpCode.Code != Code.Ldsfld)
 				return false;
@@ -115,7 +115,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 			var sig = method.MethodSig;
 			if (sig == null)
 				return false;
-			for (int i = 0; i < sig.Params.Count; i++) {
+			for (var i = 0; i < sig.Params.Count; i++) {
 				if (index >= instrs.Count)
 					return false;
 				if (instrs[index++].GetParameterIndex() != i)

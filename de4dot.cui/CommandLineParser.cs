@@ -189,7 +189,7 @@ namespace de4dot.cui {
 					var s = t.Trim();
 					if (s.Length == 0)
 						continue;
-					bool clear = s[0] == '-';
+					var clear = s[0] == '-';
 					if (clear)
 						s = s.Substring(1);
 					MetaDataFlags flag;
@@ -315,7 +315,7 @@ namespace de4dot.cui {
 				Exit(1);
 			}
 
-			for (int i = 0; i < args.Length; i++) {
+			for (var i = 0; i < args.Length; i++) {
 				var arg = args[i];
 
 				string val = null;
@@ -376,7 +376,7 @@ namespace de4dot.cui {
 		}
 
 		void Usage() {
-			string progName = GetProgramBaseName();
+			var progName = GetProgramBaseName();
 			Logger.n("Some of the advanced options may be incompatible, causing a nice exception.");
 			Logger.n("With great power comes great responsibility.");
 			Logger.n("");
@@ -432,7 +432,7 @@ namespace de4dot.cui {
 		void PrintOptionAndExplanation(string option, string explanation) {
 			const int maxCols = 16;
 			const string prefix = "  ";
-			string left = string.Format(string.Format("{{0,-{0}}}", maxCols), option);
+			var left = string.Format(string.Format("{{0,-{0}}}", maxCols), option);
 			if (option.Length > maxCols) {
 				Logger.n("{0}{1}", prefix, left);
 				Logger.n("{0}{1} {2}", prefix, new string(' ', maxCols), explanation);

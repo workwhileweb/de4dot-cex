@@ -63,7 +63,7 @@ namespace de4dot.blocks {
 
 		void AddBlocks<T>(IList<T> list, ScopeBlock scopeBlock) where T : BaseBlock {
 			foreach (var bb in scopeBlock.GetBaseBlocks()) {
-				T t = bb as T;
+				var t = bb as T;
 				if (t != null)
 					list.Add(t);
 				if (bb is ScopeBlock)
@@ -78,7 +78,7 @@ namespace de4dot.blocks {
 		List<Block> FindBlocks(Func<Block, bool> blockChecker) {
 			var blocks = new List<Block>();
 			foreach (var bb in GetBaseBlocks()) {
-				Block block = bb as Block;
+				var block = bb as Block;
 				if (block != null && (blockChecker == null || blockChecker(block)))
 					blocks.Add(block);
 			}
@@ -144,9 +144,9 @@ namespace de4dot.blocks {
 		// For each block, if it has only one target, and the target has only one source, then
 		// merge them into one block.
 		public int MergeBlocks() {
-			int mergedBlocks = 0;
+			var mergedBlocks = 0;
 			var blocks = FindBlocks();
-			for (int i = 0; i < blocks.Count; i++) {
+			for (var i = 0; i < blocks.Count; i++) {
 				var block = blocks[i];
 				var target = block.GetOnlyTarget();
 				if (!IsOurBaseBlock(target))
@@ -207,7 +207,7 @@ namespace de4dot.blocks {
 		// Removes the TryBlock and all its TryHandlerBlocks. The code inside the try block
 		// is not removed.
 		public void RemoveTryBlock(TryBlock tryBlock) {
-			int tryBlockIndex = baseBlocks.IndexOf(tryBlock);
+			var tryBlockIndex = baseBlocks.IndexOf(tryBlock);
 			if (tryBlockIndex < 0)
 				throw new ApplicationException("Can't remove the TryBlock since it's not this ScopeBlock's TryBlock");
 

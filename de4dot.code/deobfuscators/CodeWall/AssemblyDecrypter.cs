@@ -125,7 +125,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 					continue;
 
 				DeobfuscateAll(calledMethod);
-				string keyInfo = GetMainResourceKeyInfo(calledMethod, out decryptAssemblyMethod);
+				var keyInfo = GetMainResourceKeyInfo(calledMethod, out decryptAssemblyMethod);
 				if (keyInfo == null)
 					continue;
 				return BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(new ASCIIEncoding().GetBytes(keyInfo))).Replace("-", "");
@@ -137,7 +137,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		string GetMainResourceKeyInfo(MethodDef method, out MethodDef decryptAssemblyMethod) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldstr = instrs[i];
 				if (ldstr.OpCode.Code != Code.Ldstr)
 					continue;
@@ -194,7 +194,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 
 		bool GetPassword(MethodDef method, out string password, out string salt) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldstr1 = instrs[i];
 				if (ldstr1.OpCode.Code != Code.Ldstr)
 					continue;
@@ -225,7 +225,7 @@ namespace de4dot.code.deobfuscators.CodeWall {
 				var resourceData = (BuiltInResourceData)resourceElement.ResourceData;
 				var assemblyData = Decrypt((byte[])resourceData.Data);
 				var theModule = ModuleDefMD.Load(assemblyData);
-				bool isMain = resourceElement.Name == entryPointAssemblyKey;
+				var isMain = resourceElement.Name == entryPointAssemblyKey;
 				assemblyInfos.Add(new AssemblyInfo(assemblyData, DeobUtils.GetExtension(theModule.Kind), theModule.Assembly.FullName, theModule.Assembly.Name.String, isMain));
 			}
 		}

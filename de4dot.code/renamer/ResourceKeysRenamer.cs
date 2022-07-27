@@ -46,7 +46,7 @@ namespace de4dot.code.renamer {
 			Logger.v("Renaming resource keys ({0})", module);
 			Logger.Instance.Indent();
 			foreach (var type in module.GetTypes()) {
-				string resourceName = GetResourceName(type);
+				var resourceName = GetResourceName(type);
 				if (resourceName == null)
 					continue;
 				var resource = GetResource(resourceName);
@@ -67,7 +67,7 @@ namespace de4dot.code.renamer {
 			if (resource != null)
 				return resource;
 
-			string name = "";
+			var name = "";
 			var pieces = resourceName.Split('.');
 			Array.Reverse(pieces);
 			foreach (var piece in pieces) {
@@ -85,7 +85,7 @@ namespace de4dot.code.renamer {
 					continue;
 				var instrs = method.Body.Instructions;
 				string resourceName = null;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code == Code.Ldstr) {
 						resourceName = instr.Operand as string;
@@ -144,7 +144,7 @@ namespace de4dot.code.renamer {
 			var outStream = new MemoryStream();
 			ResourceWriter.Write(module, outStream, resourceSet);
 			var newResource = new EmbeddedResource(resource.Name, outStream.ToArray(), resource.Attributes);
-			int resourceIndex = module.Resources.IndexOf(resource);
+			var resourceIndex = module.Resources.IndexOf(resource);
 			if (resourceIndex < 0)
 				throw new ApplicationException("Could not find index of resource");
 			module.Resources[resourceIndex] = newResource;
@@ -160,7 +160,7 @@ namespace de4dot.code.renamer {
 					continue;
 
 				var instrs = method.Body.Instructions;
-				for (int i = 0; i < instrs.Count; i++) {
+				for (var i = 0; i < instrs.Count; i++) {
 					var call = instrs[i];
 					if (call.OpCode.Code != Code.Call && call.OpCode.Code != Code.Callvirt)
 						continue;
@@ -229,7 +229,7 @@ namespace de4dot.code.renamer {
 				if (piece.Length == 0)
 					continue;
 				var piece2 = piece.Substring(0, 1).ToUpperInvariant() + piece.Substring(1).ToLowerInvariant();
-				int maxLen = RESOURCE_KEY_MAX_LEN - sb.Length;
+				var maxLen = RESOURCE_KEY_MAX_LEN - sb.Length;
 				if (maxLen <= 0)
 					break;
 				if (piece2.Length > maxLen)
@@ -246,8 +246,8 @@ namespace de4dot.code.renamer {
 		}
 
 		string CreateName(Func<int, string> create) {
-			for (int counter = 0; ; counter++) {
-				string newName = create(counter);
+			for (var counter = 0; ; counter++) {
+				var newName = create(counter);
 				if (!newNames.ContainsKey(newName)) {
 					newNames[newName] = true;
 					return newName;

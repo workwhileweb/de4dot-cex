@@ -43,7 +43,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var ldsfld = instrs[i];
 					if (ldsfld.OpCode.Code != Code.Ldsfld)
 						continue;
@@ -64,12 +64,12 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		protected override bool Deobfuscate(Block block) {
-			bool modified = false;
+			var modified = false;
 
 			constantsReader = null;
 			var instrs = block.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				bool ch = Deobfuscate1(block, i);
+			for (var i = 0; i < instrs.Count; i++) {
+				var ch = Deobfuscate1(block, i);
 				if (ch) {
 					modified = true;
 					continue;
@@ -191,7 +191,7 @@ namespace de4dot.code.deobfuscators.DeepSea {
 			if (i + 1 >= instrs.Count)
 				return false;
 
-			int start = i;
+			var start = i;
 			var ldsfld = instrs[i];
 			if (ldsfld.OpCode.Code != Code.Ldsfld)
 				return false;

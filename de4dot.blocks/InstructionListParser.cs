@@ -41,7 +41,7 @@ namespace de4dot.blocks {
 		void CreateInstrToIndex() {
 			instrToIndex = new Dictionary<Instruction, int>();
 
-			for (int i = 0; i < instructions.Count; i++)
+			for (var i = 0; i < instructions.Count; i++)
 				instrToIndex[instructions[i]] = i;
 		}
 
@@ -56,7 +56,7 @@ namespace de4dot.blocks {
 			if (instr == null)
 				return;
 
-			int index = instrToIndex[instr];
+			var index = instrToIndex[instr];
 			GetBranchTargetList(index);	// Just create the list
 		}
 
@@ -71,7 +71,7 @@ namespace de4dot.blocks {
 		}
 
 		void CreateBranches() {
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i];
 
 				List<int> targets = null;
@@ -86,7 +86,7 @@ namespace de4dot.blocks {
 				case OperandType.InlineSwitch:
 					var switchTargets = (Instruction[])instr.Operand;
 					targets = new List<int>(switchTargets.Length);
-					for (int j = 0; j < switchTargets.Length; j++) {
+					for (var j = 0; j < switchTargets.Length; j++) {
 						var target = switchTargets[j];
 						if (target == null)
 							continue;
@@ -111,8 +111,8 @@ namespace de4dot.blocks {
 				if (targets != null) {
 					if (i + 1 < instructions.Count)
 						targets.Add(i + 1);
-					for (int j = 0; j < targets.Count; j++) {
-						int targetIndex = targets[j];
+					for (var j = 0; j < targets.Count; j++) {
+						var targetIndex = targets[j];
 						GetBranchTargetList(targetIndex).Add(i);
 					}
 				}
@@ -180,7 +180,7 @@ namespace de4dot.blocks {
 			}
 
 			public override int GetHashCode() {
-				int res = eh.TryStart.GetHashCode();
+				var res = eh.TryStart.GetHashCode();
 				if (eh.TryEnd != null)
 					res += eh.TryEnd.GetHashCode();
 				return res;
@@ -257,7 +257,7 @@ namespace de4dot.blocks {
 			}
 
 			int FindStart(int instrIndex) {
-				for (int i = 0; i < blocksLeft.Count; i++) {
+				for (var i = 0; i < blocksLeft.Count; i++) {
 					if (blocksLeft[i].startInstr == instrIndex)
 						return i;
 				}
@@ -265,7 +265,7 @@ namespace de4dot.blocks {
 			}
 
 			int FindEnd(int instrIndex) {
-				for (int i = 0; i < blocksLeft.Count; i++) {
+				for (var i = 0; i < blocksLeft.Count; i++) {
 					if (blocksLeft[i].endInstr == instrIndex)
 						return i;
 				}
@@ -281,7 +281,7 @@ namespace de4dot.blocks {
 				startIndex = FindStart(startInstr);
 				endIndex = FindEnd(endInstr);
 
-				for (int i = startIndex; i <= endIndex; i++)
+				for (var i = startIndex; i <= endIndex; i++)
 					rv.Add(blocksLeft[i].baseBlock);
 
 				return rv;
@@ -321,8 +321,8 @@ namespace de4dot.blocks {
 		BaseBlocksList CreateBaseBlockList(List<Block> allBlocks, List<List<ExceptionHandler>> exSorted) {
 			var bbl = new BaseBlocksList();
 			foreach (var block in allBlocks) {
-				int start = instrToIndex[block.FirstInstr.Instruction];
-				int end = instrToIndex[block.LastInstr.Instruction];
+				var start = instrToIndex[block.FirstInstr.Instruction];
+				var end = instrToIndex[block.LastInstr.Instruction];
 				bbl.Add(block, start, end);
 			}
 

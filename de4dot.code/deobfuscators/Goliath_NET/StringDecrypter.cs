@@ -87,7 +87,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		public string Decrypt(MethodDef method) {
 			var info = GetInfo(method);
 			decryptedReader.BaseStream.Position = info.offset;
-			int len = decryptedReader.ReadInt32();
+			var len = decryptedReader.ReadInt32();
 			return Encoding.UTF8.GetString(decryptedReader.ReadBytes(len));
 		}
 
@@ -99,7 +99,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var ldstr = instrs[i];
 					if (ldstr.OpCode.Code != Code.Ldstr)
 						continue;

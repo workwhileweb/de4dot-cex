@@ -30,9 +30,9 @@ namespace de4dot.blocks.cflow {
 		protected override bool Deobfuscate(Block block) {
 			allDeadInstructions.Clear();
 
-			bool modified = false;
+			var modified = false;
 			var instructions = block.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instr = instructions[i];
 				switch (instr.OpCode.Code) {
 				case Code.Nop:
@@ -355,7 +355,7 @@ namespace de4dot.blocks.cflow {
 					index--;
 
 					if (pops > 0) {	// if instr uses any args
-						bool otherExpr = pops > 0 && pushes == 0;
+						var otherExpr = pops > 0 && pushes == 0;
 						if (!Find(ref index, addIt && !otherExpr))
 							break;
 					}

@@ -53,14 +53,14 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		protected override object CheckCctor(TypeDef type, MethodDef cctor) {
 			var instructions = cctor.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var instrs = DotNetUtils.GetInstructions(instructions, i, OpCodes.Ldc_I4, OpCodes.Ldc_I4, OpCodes.Ldc_I4, OpCodes.Call);
 				if (instrs == null)
 					continue;
 
-				uint typeToken = (uint)(int)instrs[0].Operand;
-				uint methodToken = (uint)(int)instrs[1].Operand;
-				uint declaringTypeToken = (uint)(int)instrs[2].Operand;
+				var typeToken = (uint)(int)instrs[0].Operand;
+				var methodToken = (uint)(int)instrs[1].Operand;
+				var declaringTypeToken = (uint)(int)instrs[2].Operand;
 				var createMethod = instrs[3].Operand as MethodDef;
 
 				ProxyCreatorType proxyCreatorType;

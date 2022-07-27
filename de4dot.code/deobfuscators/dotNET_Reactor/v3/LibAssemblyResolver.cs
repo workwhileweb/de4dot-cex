@@ -80,7 +80,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v3 {
 				if (resourcePrefix == null)
 					continue;
 
-				for (int i = 0; ; i++) {
+				for (var i = 0; ; i++) {
 					var resource = DotNetUtils.GetResource(module, resourcePrefix + i.ToString("D5")) as EmbeddedResource;
 					if (resource == null)
 						break;

@@ -22,7 +22,7 @@ namespace SevenZip.Compression.RangeCoder
 
 		public uint Decode(RangeCoder.Decoder rangeDecoder)
 		{
-			uint newBound = (uint)(rangeDecoder.Range >> kNumBitModelTotalBits) * (uint)Prob;
+			var newBound = (uint)(rangeDecoder.Range >> kNumBitModelTotalBits) * (uint)Prob;
 			if (rangeDecoder.Code < newBound)
 			{
 				rangeDecoder.Range = newBound;

@@ -86,7 +86,7 @@ namespace de4dot.code {
 
 		public override string ToString() {
 			var s = "";
-			for (int i = 0; i < regexes.Count; i++) {
+			for (var i = 0; i < regexes.Count; i++) {
 				if (i > 0)
 					s += regexSeparatorChar;
 				s += regexes[i].ToString();

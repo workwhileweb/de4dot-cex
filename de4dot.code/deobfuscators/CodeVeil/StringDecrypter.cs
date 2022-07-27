@@ -85,7 +85,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 				return false;
 
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var call = instrs[i];
 				if (call.OpCode.Code != Code.Call)
 					continue;
@@ -197,7 +197,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 
 		static uint[] GetKey(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 1; i++) {
+			for (var i = 0; i < instrs.Count - 1; i++) {
 				var ldci4 = instrs[i];
 				if (!ldci4.IsLdcI4())
 					continue;
@@ -229,13 +229,13 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 			var inflated = DeobUtils.Inflate(decryptedData, 0, decryptedData.Length, true);
 			var reader = MemoryImageStream.Create(inflated);
 			/*int deflatedLength = (int)*/reader.ReadCompressedUInt32();
-			int numStrings = (int)reader.ReadCompressedUInt32();
+			var numStrings = (int)reader.ReadCompressedUInt32();
 			decryptedStrings = new string[numStrings];
 			var offsets = new int[numStrings];
-			for (int i = 0; i < numStrings; i++)
+			for (var i = 0; i < numStrings; i++)
 				offsets[i] = (int)reader.ReadCompressedUInt32();
-			int startOffset = (int)reader.Position;
-			for (int i = 0; i < numStrings; i++) {
+			var startOffset = (int)reader.Position;
+			for (var i = 0; i < numStrings; i++) {
 				reader.Position = startOffset + offsets[i];
 				decryptedStrings[i] = reader.ReadString();
 			}

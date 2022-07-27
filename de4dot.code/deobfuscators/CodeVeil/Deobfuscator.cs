@@ -86,12 +86,12 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(mainType.Detected) +
-					ToInt32(methodsDecrypter.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(proxyCallFixer.Detected);
+			var sum = ToInt32(mainType.Detected) +
+                      ToInt32(methodsDecrypter.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(proxyCallFixer.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 
@@ -242,7 +242,7 @@ namespace de4dot.code.deobfuscators.CodeVeil {
 		}
 
 		public override void DeobfuscateEnd() {
-			bool canRemoveProxyTypes = proxyCallFixer.CanRemoveTypes;
+			var canRemoveProxyTypes = proxyCallFixer.CanRemoveTypes;
 
 			if (CanRemoveStringDecrypterType)
 				AddTypeToBeRemoved(stringDecrypter.Type, "String decrypter type");

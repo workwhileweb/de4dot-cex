@@ -89,7 +89,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 				return false;
 
 			simpleDeobfuscator.Deobfuscate(tmpHandler, SimpleDeobfuscatorFlags.Force | SimpleDeobfuscatorFlags.DisableConstantsFolderExtraInstrs);
-			ConfuserVersion tmpVersion = ConfuserVersion.Unknown;
+			var tmpVersion = ConfuserVersion.Unknown;
 			if (DotNetUtils.CallsMethod(tmpHandler, "System.Object System.AppDomain::GetData(System.String)")) {
 				if (!DotNetUtils.CallsMethod(tmpHandler, "System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)")) {
 					if (!FindKey0Key1_v14_r55802(tmpHandler, out key0, out key1))
@@ -129,7 +129,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static MethodDef GetHandler(MethodDef method) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 2; i++) {
+			for (var i = 0; i < instrs.Count - 2; i++) {
 				var ldftn = instrs[i];
 				if (ldftn.OpCode.Code != Code.Ldftn)
 					continue;
@@ -156,7 +156,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		int AddFields(IEnumerable<FieldDef> moreFields) {
-			int count = 0;
+			var count = 0;
 			foreach (var field in moreFields) {
 				if (AddField(field))
 					count++;
@@ -189,7 +189,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0_v18_r75367(MethodDef method, out byte key0) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)");
 				if (i < 0)
 					break;
@@ -214,7 +214,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0_v18_r75369(MethodDef method, out byte key0) {
 			var instrs = method.Body.Instructions;
-			for (int index = 0; index < instrs.Count; index++) {
+			for (var index = 0; index < instrs.Count; index++) {
 				index = ConfuserUtils.FindCallMethod(instrs, index, Code.Callvirt, "System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)");
 				if (index < 0)
 					break;
@@ -243,8 +243,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey1_v18_r75369(MethodDef method, out byte key1) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 4; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count - 4; i++) {
+				var index = i;
 				if (!instrs[index++].IsLdloc())
 					continue;
 				var ldci4_1 = instrs[index++];
@@ -268,7 +268,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0Key1_v14_r55802(MethodDef method, out byte key0, out byte key1) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 5; i++) {
+			for (var i = 0; i < instrs.Count - 5; i++) {
 				if (!instrs[i].IsLdcI4())
 					continue;
 				if (instrs[i + 1].OpCode.Code != Code.Add)
@@ -295,8 +295,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey0_v17_r73404(MethodDef method, out byte key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
-				int index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte[] System.IO.BinaryReader::ReadBytes(System.Int32)");
+			for (var i = 0; i < instrs.Count - 3; i++) {
+				var index = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Byte[] System.IO.BinaryReader::ReadBytes(System.Int32)");
 				if (index < 0)
 					break;
 				if (index + 3 >= instrs.Count)
@@ -319,7 +319,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		static bool FindKey1_v17_r73404(MethodDef method, out byte key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count - 3; i++) {
+			for (var i = 0; i < instrs.Count - 3; i++) {
 				var ldci4_1 = instrs[i];
 				if (!ldci4_1.IsLdcI4())
 					continue;
@@ -354,8 +354,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		byte[] DecryptXor(byte[] data) {
-			byte k = key0;
-			for (int i = 0; i < data.Length; i++) {
+			var k = key0;
+			for (var i = 0; i < data.Length; i++) {
 				data[i] ^= k;
 				k *= key1;
 			}
@@ -380,7 +380,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			if ((encypted.Length & 1) != 0)
 				throw new ApplicationException("Invalid resource data length");
 			var decrypted = new byte[encypted.Length / 2];
-			for (int i = 0; i < decrypted.Length; i++)
+			for (var i = 0; i < decrypted.Length; i++)
 				decrypted[i] = (byte)((encypted[i * 2 + 1] ^ key0) * key1 + (encypted[i * 2] ^ key0));
 			reader = new BinaryReader(new MemoryStream(Decompress(decrypted)));
 			return reader.ReadBytes(reader.ReadInt32());

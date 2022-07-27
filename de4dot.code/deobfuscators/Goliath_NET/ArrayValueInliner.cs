@@ -36,7 +36,7 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		protected override void InlineReturnValues(IList<CallResult> callResults) {
 			foreach (var callResult in callResults) {
 				var block = callResult.block;
-				int num = callResult.callEndIndex - callResult.callStartIndex + 1;
+				var num = callResult.callEndIndex - callResult.callStartIndex + 1;
 
 				var arrayData = (byte[])callResult.returnValue;
 				initializedDataCreator.AddInitializeArrayCode(block, callResult.callStartIndex, num, module.CorLibTypes.Byte.TypeDefOrRef, arrayData);

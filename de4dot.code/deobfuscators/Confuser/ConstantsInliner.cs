@@ -43,7 +43,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		public bool Deobfuscate(List<Block> allBlocks) {
-			bool modified = false;
+			var modified = false;
 			foreach (var block in allBlocks) {
 				modified |= int32ValueInliner.Decrypt(blocks.Method, allBlocks) != 0;
 				modified |= int64ValueInliner.Decrypt(blocks.Method, allBlocks) != 0;

@@ -49,7 +49,7 @@ namespace de4dot.blocks {
 	static class Utils {
 		public static IDictionary<T, int> CreateObjectToIndexDictionary<T>(IList<T> objs) {
 			var dict = new Dictionary<T, int>();
-			for (int i = 0; i < objs.Count; i++)
+			for (var i = 0; i < objs.Count; i++)
 				dict[objs[i]] = i;
 			return dict;
 		}

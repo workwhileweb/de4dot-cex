@@ -259,7 +259,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 
 				if (decrypterType.Detected) {
 					var data = new byte[8];
-					ulong magic = decrypterType.GetMagic();
+					var magic = decrypterType.GetMagic();
 					data[0] = (byte)magic;
 					data[7] = (byte)(magic >> 8);
 					data[6] = (byte)(magic >> 16);
@@ -269,7 +269,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 					data[3] = (byte)(magic >> 48);
 					data[2] = (byte)(magic >> 56);
 
-					for (int i = 0; i < decryptKey.Length; i++)
+					for (var i = 0; i < decryptKey.Length; i++)
 						decryptKey[i] ^= (byte)(i + data[i % data.Length]);
 				}
 
@@ -290,7 +290,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		}
 
 		bool CreateAssemblyInfos() {
-			int numElements = DeobUtils.HasInteger(handlerMethod, 3) ? 3 : 2;
+			var numElements = DeobUtils.HasInteger(handlerMethod, 3) ? 3 : 2;
 			foreach (var s in DotNetUtils.GetCodeStrings(handlerMethod)) {
 				var infos = CreateAssemblyInfos(s, numElements);
 				if (infos == null)
@@ -318,7 +318,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 				return null;
 
 			var infos = new List<AssemblyInfo>();
-			for (int i = 0; i < ary.Length; i += numElements) {
+			for (var i = 0; i < ary.Length; i += numElements) {
 				var info = new AssemblyInfo();
 
 				info.AssemblyFullName = Encoding.UTF8.GetString(Convert.FromBase64String(ary[i]));
@@ -327,7 +327,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 					info.Filename = Encoding.UTF8.GetString(Convert.FromBase64String(ary[i + 2]));
 				else
 					info.Filename = Utils.GetAssemblySimpleName(info.AssemblyFullName) + ".dll";
-				int index = info.ResourceName.IndexOf('|');
+				var index = info.ResourceName.IndexOf('|');
 				if (index >= 0) {
 					var flags = info.ResourceName.Substring(0, index);
 					info.ResourceName = info.ResourceName.Substring(index + 1);
@@ -368,7 +368,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 			catch {
 			}
 			Logger.w("Could not load assembly from decrypted resource {0}", Utils.ToCsharpString(info.ResourceName));
-			int index = info.Filename.LastIndexOf('.');
+			var index = info.Filename.LastIndexOf('.');
 			if (index < 0) {
 				info.SimpleName = info.Filename;
 				info.Extension = "";
@@ -382,16 +382,16 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		static readonly byte[] key2 = new byte[] { 148, 68, 208, 52 };
 		void Decrypt(byte[] encryptedData) {
 			var indexes = new byte[256];
-			for (int i = 0; i < indexes.Length; i++)
+			for (var i = 0; i < indexes.Length; i++)
 				indexes[i] = (byte)i;
 			byte i1 = 0, i2 = 0;
-			for (int i = 0; i < indexes.Length; i++) {
+			for (var i = 0; i < indexes.Length; i++) {
 				i2 += (byte)(decryptKey[i % decryptKey.Length] + indexes[i]);
 				Swap(indexes, i, i2);
 			}
 
 			byte val = 0;
-			for (int i = 0; i < encryptedData.Length; i++) {
+			for (var i = 0; i < encryptedData.Length; i++) {
 				if ((i & 0x1F) == 0) {
 					i2 += indexes[++i1];
 					Swap(indexes, i1, i2);
@@ -402,7 +402,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 		}
 
 		static void Swap(byte[] data, int i, int j) {
-			byte tmp = data[i];
+			var tmp = data[i];
 			data[i] = data[j];
 			data[j] = tmp;
 		}
@@ -415,7 +415,7 @@ namespace de4dot.code.deobfuscators.Eazfuscator_NET {
 
 		public AssemblyInfo Get(string asmFullName) {
 			var simpleName = Utils.GetAssemblySimpleName(asmFullName);
-			for (int i = 0; i < assemblyInfos.Count; i++) {
+			for (var i = 0; i < assemblyInfos.Count; i++) {
 				var info = assemblyInfos[i];
 				if (info.SimpleName != simpleName)
 					continue;

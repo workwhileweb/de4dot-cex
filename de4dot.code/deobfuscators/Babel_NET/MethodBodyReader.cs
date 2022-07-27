@@ -75,18 +75,18 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 
 		void ReadExceptionHandlers(int numExceptionHandlers) {
 			exceptionHandlers = new List<ExceptionHandler>(numExceptionHandlers);
-			for (int i = 0; i < numExceptionHandlers; i++)
+			for (var i = 0; i < numExceptionHandlers; i++)
 				Add(ReadExceptionHandler());
 		}
 
 		ExceptionHandler ReadExceptionHandler() {
 			var ehType = (ExceptionHandlerType)reader.ReadByte();
-			uint tryOffset = imageReader.ReadVariableLengthUInt32();
-			uint tryLength = imageReader.ReadVariableLengthUInt32();
-			uint handlerOffset = imageReader.ReadVariableLengthUInt32();
-			uint handlerLength = imageReader.ReadVariableLengthUInt32();
+			var tryOffset = imageReader.ReadVariableLengthUInt32();
+			var tryLength = imageReader.ReadVariableLengthUInt32();
+			var handlerOffset = imageReader.ReadVariableLengthUInt32();
+			var handlerLength = imageReader.ReadVariableLengthUInt32();
 			var catchType = imageReader.ReadTypeSig().ToTypeDefOrRef();
-			uint filterOffset = imageReader.ReadVariableLengthUInt32();
+			var filterOffset = imageReader.ReadVariableLengthUInt32();
 
 			var eh = new ExceptionHandler(ehType);
 			eh.TryStart = GetInstructionThrow(tryOffset);

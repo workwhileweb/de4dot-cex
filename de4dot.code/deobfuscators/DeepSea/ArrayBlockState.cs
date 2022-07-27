@@ -108,10 +108,10 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		bool InitializeArrays2(ISimpleDeobfuscator simpleDeobfuscator, MethodDef method) {
-			bool foundField = false;
+			var foundField = false;
 			simpleDeobfuscator.Deobfuscate(method, SimpleDeobfuscatorFlags.Force);
 			var instructions = method.Body.Instructions;
-			for (int i = 0; i < instructions.Count; i++) {
+			for (var i = 0; i < instructions.Count; i++) {
 				var ldci4 = instructions[i];
 				if (!ldci4.IsLdcI4())
 					continue;
@@ -177,10 +177,10 @@ namespace de4dot.code.deobfuscators.DeepSea {
 		}
 
 		bool RemoveInitCode(Blocks blocks, FieldInfo info) {
-			bool removedSomething = false;
+			var removedSomething = false;
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 5; i++) {
+				for (var i = 0; i < instrs.Count - 5; i++) {
 					var ldci4 = instrs[i];
 					if (!ldci4.IsLdcI4())
 						continue;

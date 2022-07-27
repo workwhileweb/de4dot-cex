@@ -112,7 +112,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindLKey0(MethodDef method, out ulong key) {
 			var instrs = method.Body.Instructions;
-			for (int index = 0; index < instrs.Count; index++) {
+			for (var index = 0; index < instrs.Count; index++) {
 				index = FindCallvirtReadUInt64(instrs, index);
 				if (index < 0)
 					break;
@@ -132,12 +132,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindKey0_v16_r71742(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i + 5 < instrs.Count; i++) {
+			for (var i = 0; i + 5 < instrs.Count; i++) {
 				i = FindCallvirtReadUInt32(instrs, i);
 				if (i < 0)
 					break;
 
-				int index = i + 1;
+				var index = i + 1;
 				var ldci4_1 = instrs[index++];
 				if (!ldci4_1.IsLdcI4())
 					continue;
@@ -163,12 +163,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindKey0_v14_r58564(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i + 5 < instrs.Count; i++) {
+			for (var i = 0; i + 5 < instrs.Count; i++) {
 				i = ConfuserUtils.FindCallMethod(instrs, i, Code.Callvirt, "System.Int32 System.IO.BinaryReader::ReadInt32()");
 				if (i < 0)
 					break;
 
-				int index = i + 1;
+				var index = i + 1;
 				var ldci4_1 = instrs[index++];
 				if (!ldci4_1.IsLdcI4())
 					continue;
@@ -194,13 +194,13 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindKey1(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int index = 0; index < instrs.Count; index++) {
+			for (var index = 0; index < instrs.Count; index++) {
 				index = FindCallvirtReadUInt32(instrs, index);
 				if (index < 0)
 					break;
 				if (index == 0)
 					continue;
-				int i = index - 1;
+				var i = index - 1;
 				if (!CheckCallvirtReadUInt32(instrs, ref i))
 					continue;
 				if (!CheckCallvirtReadUInt32(instrs, ref i))
@@ -243,8 +243,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindKey2Key3(MethodDef method, out uint key2, out uint key3) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
-				int index = i;
+			for (var i = 0; i < instrs.Count; i++) {
+				var index = i;
 				if (!FindKey2OrKey3(instrs, ref index, out key2))
 					continue;
 				if (!FindKey2OrKey3(instrs, ref index, out key3))
@@ -262,7 +262,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			key = 0;
 			if (index + 6 >= instrs.Count)
 				return false;
-			int i = index;
+			var i = index;
 			if (!instrs[i++].IsLdloc())
 				return false;
 			if (!instrs[i++].IsLdloc())
@@ -286,8 +286,8 @@ namespace de4dot.code.deobfuscators.Confuser {
 
 		protected static bool FindKey6(MethodDef method, out uint key) {
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i + 4 < instrs.Count; i++) {
-				int index = i;
+			for (var i = 0; i + 4 < instrs.Count; i++) {
+				var index = i;
 				if (!instrs[index++].IsLdloc())
 					continue;
 				if (instrs[index++].OpCode.Code != Code.Sub)
@@ -323,12 +323,12 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		protected byte[] DecryptMethodsData_v16_r71742(MyPEImage peImage, uint encryptedHeaderOffset) {
-			uint mdRva = peImage.OptionalHeader.CheckSum ^ (uint)key0;
+			var mdRva = peImage.OptionalHeader.CheckSum ^ (uint)key0;
 			if ((RVA)mdRva != peImage.Cor20Header.MetaData.VirtualAddress)
 				throw new ApplicationException("Invalid metadata rva");
 			var reader = peImage.Reader;
 			reader.Position = encryptedHeaderOffset;
-			ulong checkSum = reader.ReadUInt64() ^ lkey0;
+			var checkSum = reader.ReadUInt64() ^ lkey0;
 			reader.ReadInt32();	// strong name RVA
 			reader.ReadInt32();	// strong name len
 			var iv = reader.ReadBytes(reader.ReadInt32() ^ (int)key2);
@@ -343,7 +343,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		protected uint GetEncryptedHeaderOffset_v16_r71742(IList<ImageSectionHeader> sections) {
-			for (int i = sections.Count - 1; i >= 0; i--) {
+			for (var i = sections.Count - 1; i >= 0; i--) {
 				var section = sections[i];
 				if (section.DisplayName == ".confuse")
 					return section.PointerToRawData;
@@ -352,7 +352,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 		}
 
 		uint GetEncryptedHeaderOffset_vXX(IList<ImageSectionHeader> sections) {
-			for (int i = sections.Count - 1; i >= 0; i--) {
+			for (var i = sections.Count - 1; i >= 0; i--) {
 				var section = sections[i];
 				if (GetSectionNameHash(section) == (uint)key1)
 					return section.PointerToRawData;
@@ -387,7 +387,7 @@ namespace de4dot.code.deobfuscators.Confuser {
 			var decrypted = DeobUtils.AesDecrypt(encrypted, DeobUtils.Sha256Sum(streamsBuffer), iv);
 			var sha = SHA512.Create();
 			var hash = sha.ComputeHash(streamsBuffer);
-			for (int i = 0; i < decrypted.Length; i += 64) {
+			for (var i = 0; i < decrypted.Length; i += 64) {
 				int j;
 				for (j = 0; j < 64 && i + j < decrypted.Length; j++)
 					decrypted[i + j] ^= (byte)(hash[j] ^ key6);

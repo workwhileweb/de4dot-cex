@@ -187,7 +187,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 
 				var instructions = calledMethod.Body.Instructions;
 				byte[] newKey = null, newIv = null;
-				for (int i = 0; i < instructions.Count && (newKey == null || newIv == null); i++) {
+				for (var i = 0; i < instructions.Count && (newKey == null || newIv == null); i++) {
 					var instr = instructions[i];
 					if (instr.OpCode.Code != Code.Ldtoken)
 						continue;
@@ -231,20 +231,20 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			var info = GetDecrypterInfo(method);
 
 			if (info.key == null) {
-				int length = BitConverter.ToInt32(decryptedData, offset);
+				var length = BitConverter.ToInt32(decryptedData, offset);
 				return Encoding.Unicode.GetString(decryptedData, offset + 4, length);
 			}
 			else {
 				byte[] encryptedStringData;
 				if (stringDecrypterVersion == StringDecrypterVersion.VER_37) {
-					int fileOffset = BitConverter.ToInt32(decryptedData, offset);
-					int length = BitConverter.ToInt32(fileData, fileOffset);
+					var fileOffset = BitConverter.ToInt32(decryptedData, offset);
+					var length = BitConverter.ToInt32(fileData, fileOffset);
 					encryptedStringData = new byte[length];
 					Array.Copy(fileData, fileOffset + 4, encryptedStringData, 0, length);
 				}
 				else if (stringDecrypterVersion == StringDecrypterVersion.VER_38) {
-					uint rva = BitConverter.ToUInt32(decryptedData, offset);
-					int length = peImage.ReadInt32(rva);
+					var rva = BitConverter.ToUInt32(decryptedData, offset);
+					var length = peImage.ReadInt32(rva);
 					encryptedStringData = peImage.ReadBytes(rva + 4, length);
 				}
 				else

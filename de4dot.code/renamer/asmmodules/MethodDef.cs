@@ -67,7 +67,7 @@ namespace de4dot.code.renamer.asmmodules {
 			: base(methodDef, owner, index) {
 			genericParams = MGenericParamDef.CreateGenericParamDefList(MethodDef.GenericParameters);
 			visibleBaseIndex = methodDef.MethodSig != null && methodDef.MethodSig.HasThis ? 1 : 0;
-			for (int i = 0; i < methodDef.Parameters.Count; i++) {
+			for (var i = 0; i < methodDef.Parameters.Count; i++) {
 				var param = methodDef.Parameters[i];
 				if (param.IsNormalMethodParameter)
 					visibleParamCount++;

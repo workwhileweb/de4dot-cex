@@ -193,7 +193,7 @@ namespace de4dot.mdecrypt {
 			if (moduleCctor == null)
 				moduleCctorCodeRva = 0;
 			else {
-				byte* p = (byte*)hInstModule + (uint)moduleCctor.RVA;
+				var p = (byte*)hInstModule + (uint)moduleCctor.RVA;
 				if ((*p & 3) == 2)
 					moduleCctorCodeRva = (uint)moduleCctor.RVA + 1;
 				else
@@ -243,7 +243,7 @@ namespace de4dot.mdecrypt {
 		}
 
 		unsafe static IntPtr GetEndOfText(IntPtr hDll) {
-			byte* p = (byte*)hDll;
+			var p = (byte*)hDll;
 			p += *(uint*)(p + 0x3C);	// add DOSHDR.e_lfanew
 			p += 4;
 			int numSections = *(ushort*)(p + 2);
@@ -255,14 +255,14 @@ namespace de4dot.mdecrypt {
 			var textName = new byte[8] { (byte)'.', (byte)'t', (byte)'e', (byte)'x', (byte)'t', 0, 0, 0 };
 			var name = new byte[8];
 			var pSection = (IMAGE_SECTION_HEADER*)p;
-			for (int i = 0; i < numSections; i++, pSection++) {
+			for (var i = 0; i < numSections; i++, pSection++) {
 				Marshal.Copy(new IntPtr(pSection), name, 0, name.Length);
 				if (!CompareName(textName, name, name.Length))
 					continue;
 
-				uint size = pSection->VirtualSize;
-				uint rva = pSection->VirtualAddress;
-				int displ = -8;
+				var size = pSection->VirtualSize;
+				var rva = pSection->VirtualAddress;
+				var displ = -8;
 				return new IntPtr((byte*)hDll + rva + size + displ);
 			}
 
@@ -270,7 +270,7 @@ namespace de4dot.mdecrypt {
 		}
 
 		static bool CompareName(byte[] b1, byte[] b2, int len) {
-			for (int i = 0; i < len; i++) {
+			for (var i = 0; i < len; i++) {
 				if (b1[i] != b2[i])
 					return false;
 			}
@@ -287,14 +287,14 @@ namespace de4dot.mdecrypt {
 			var code = new NativeCodeGenerator();
 
 			// our compileMethod() func
-			int compileMethodOffset = code.Size;
+			var compileMethodOffset = code.Size;
 
-			int numPushedArgs = compileMethodIsThisCall ? 5 : 6;
+			var numPushedArgs = compileMethodIsThisCall ? 5 : 6;
 
 			code.WriteByte(0x51);			// push ecx
 			code.WriteByte(0x50);			// push eax
 			code.WriteByte(0x54);			// push esp
-			for (int i = 0; i < 5; i++)
+			for (var i = 0; i < 5; i++)
 				WritePushDwordPtrEspDispl(code, (sbyte)(0xC + numPushedArgs * 4));	// push dword ptr [esp+XXh]
 			if (!compileMethodIsThisCall)
 				WritePushDwordPtrEspDispl(code, (sbyte)(0xC + numPushedArgs * 4));	// push dword ptr [esp+XXh]
@@ -306,13 +306,13 @@ namespace de4dot.mdecrypt {
 			code.WriteBytes(0x84, 0xD2);	// test dl, dl
 			code.WriteBytes(0x74, 0x03);	// jz $+5
 			code.WriteBytes(0xC2, (ushort)(numPushedArgs * 4)); // retn 14h/18h
-			for (int i = 0; i < numPushedArgs; i++)
+			for (var i = 0; i < numPushedArgs; i++)
 				WritePushDwordPtrEspDispl(code, (sbyte)(numPushedArgs * 4));	// push dword ptr [esp+XXh]
 			code.WriteCall(origCompileMethod);
 			code.WriteBytes(0xC2, (ushort)(numPushedArgs * 4)); // retn 14h/18h
 
 			// Our callMethod() code. 1st arg is the method to call. stdcall calling convention.
-			int callMethodOffset = code.Size;
+			var callMethodOffset = code.Size;
 			code.WriteByte(0x58);			// pop eax (ret addr)
 			code.WriteByte(0x5A);			// pop edx (method to call)
 			if (compileMethodIsThisCall)
@@ -321,22 +321,22 @@ namespace de4dot.mdecrypt {
 			code.WriteBytes(0xFF, 0xE2);	// jmp edx
 
 			// Returns token of method
-			int getMethodTokenOffset = code.Size;
+			var getMethodTokenOffset = code.Size;
 			code.WriteCall(returnMethodTokenInfo.ptr);
 			code.WriteBytes(0xC2, (ushort)(IntPtr.Size * 2));
 
 			// Returns name of method
-			int getMethodNameOffset = code.Size;
+			var getMethodNameOffset = code.Size;
 			code.WriteCall(returnNameOfMethodInfo.ptr);
 			code.WriteBytes(0xC2, (ushort)(IntPtr.Size * 3));
 
 			ourCodeAddr = VirtualAlloc(IntPtr.Zero, new UIntPtr((ulong)code.Size), 0x00001000, PAGE_EXECUTE_READWRITE);
-			IntPtr baseAddr = ourCodeAddr;
+			var baseAddr = ourCodeAddr;
 			ourCompileMethodInfo.ptrInDll = new IntPtr((byte*)baseAddr + compileMethodOffset);
 			callMethod = new IntPtr((byte*)baseAddr + callMethodOffset);
 			returnMethodTokenInfo.ptrInDll = new IntPtr((byte*)baseAddr + getMethodTokenOffset);
 			returnNameOfMethodInfo.ptrInDll = new IntPtr((byte*)baseAddr + getMethodNameOffset);
-			byte[] theCode = code.GetCode(baseAddr);
+			var theCode = code.GetCode(baseAddr);
 			Marshal.Copy(theCode, 0, baseAddr, theCode.Length);
 		}
 
@@ -383,7 +383,7 @@ namespace de4dot.mdecrypt {
 					return 0;
 				}
 
-				uint codeRva = (uint)((byte*)info2->ILCode - (byte*)hInstModule);
+				var codeRva = (uint)((byte*)info2->ILCode - (byte*)hInstModule);
 				if (moduleCctorCodeRva == codeRva) {
 					fixed (byte* newIlCodeBytes = &decryptMethodsInfo.moduleCctorBytes[0]) {
 						WriteCompileMethod(origCompileMethod);
@@ -405,9 +405,9 @@ namespace de4dot.mdecrypt {
 
 		unsafe static byte[] ReadExtraSections(byte* p) {
 			p = Align(p, 4);
-			byte* startPos = p;
+			var startPos = p;
 			p = ParseSection(p);
-			int size = (int)(p - startPos);
+			var size = (int)(p - startPos);
 			var sections = new byte[size];
 			Marshal.Copy(new IntPtr(startPos), sections, 0, sections.Length);
 			return sections;
@@ -426,11 +426,11 @@ namespace de4dot.mdecrypt {
 
 				if ((flags & 0x40) != 0) {
 					p--;
-					int num = (int)(*(uint*)p >> 8) / 24;
+					var num = (int)(*(uint*)p >> 8) / 24;
 					p += 4 + num * 24;
 				}
 				else {
-					int num = *p++ / 12;
+					var num = *p++ / 12;
 					p += 2 + num * 12;
 				}
 			} while ((flags & 0x80) != 0);
@@ -438,8 +438,8 @@ namespace de4dot.mdecrypt {
 		}
 
 		unsafe void UpdateFromMethodDefTableRow() {
-			uint methodIndex = ctx.dm.token - 0x06000001;
-			byte* row = (byte*)methodDefTablePtr + methodIndex * methodDefTable.RowSize;
+			var methodIndex = ctx.dm.token - 0x06000001;
+			var row = (byte*)methodDefTablePtr + methodIndex * methodDefTable.RowSize;
 			ctx.dm.mdRVA = Read(row, methodDefTable.Columns[0]);
 			ctx.dm.mdImplFlags = (ushort)Read(row, methodDefTable.Columns[1]);
 			ctx.dm.mdFlags = (ushort)Read(row, methodDefTable.Columns[2]);
@@ -496,7 +496,7 @@ namespace de4dot.mdecrypt {
 			if (ctx.method == null)
 				throw new ApplicationException(string.Format("Could not find method {0:X8}", token));
 
-			byte* mh = (byte*)hInstModule + (uint)ctx.method.RVA;
+			var mh = (byte*)hInstModule + (uint)ctx.method.RVA;
 			byte* code;
 			if (mh == (byte*)hInstModule) {
 				ctx.dm.mhMaxStack = 0;
@@ -514,7 +514,7 @@ namespace de4dot.mdecrypt {
 				code = mh + headerSize;
 			}
 			else {
-				uint headerSize = (uint)((mh[1] >> 4) * 4);
+				var headerSize = (uint)((mh[1] >> 4) * 4);
 				ctx.dm.mhMaxStack = *(ushort*)(mh + 2);
 				ctx.dm.mhCodeSize = *(uint*)(mh + 4);
 				ctx.dm.mhFlags = *(ushort*)mh;
@@ -522,7 +522,7 @@ namespace de4dot.mdecrypt {
 				code = mh + headerSize;
 			}
 
-			CORINFO_METHOD_INFO info = default(CORINFO_METHOD_INFO);
+			var info = default(CORINFO_METHOD_INFO);
 			info.ILCode = new IntPtr(code);
 			info.ILCodeSize = ctx.dm.mhCodeSize;
 			info.maxStack = ctx.dm.mhMaxStack;
@@ -548,8 +548,8 @@ namespace de4dot.mdecrypt {
 			if (ourCompMem == IntPtr.Zero)
 				throw new ApplicationException("Could not allocate memory");
 
-			IntPtr* mem = (IntPtr*)ourCompMem;
-			for (int i = 0; i < numIndexes; i++)
+			var mem = (IntPtr*)ourCompMem;
+			for (var i = 0; i < numIndexes; i++)
 				mem[i] = IntPtr.Zero;
 
 			mem[1] = new IntPtr(mem + 2);
@@ -645,7 +645,7 @@ namespace de4dot.mdecrypt {
 				return false;
 			if (a.Length != b.Length)
 				return false;
-			for (int i = 0; i < a.Length; i++) {
+			for (var i = 0; i < a.Length; i++) {
 				if (a[i] != b[i])
 					return false;
 			}
@@ -654,17 +654,17 @@ namespace de4dot.mdecrypt {
 
 		[HandleProcessCorruptedStateExceptions, SecurityCritical]	// Req'd on .NET 4.0
 		static unsafe IntPtr FindCMAddress(PEImage peImage, IntPtr baseAddr, IntPtr origValue) {
-			int offset = Environment.Version.Major == 2 ? 0x10 : 0x28;
+			var offset = Environment.Version.Major == 2 ? 0x10 : 0x28;
 
 			foreach (var section in peImage.ImageSectionHeaders) {
 				const uint RW = 0x80000000 | 0x40000000;
 				if ((section.Characteristics & RW) != RW)
 					continue;
 
-				byte* p = (byte*)baseAddr + (uint)section.VirtualAddress + ((section.VirtualSize + IntPtr.Size - 1) & ~(IntPtr.Size - 1)) - IntPtr.Size;
+				var p = (byte*)baseAddr + (uint)section.VirtualAddress + ((section.VirtualSize + IntPtr.Size - 1) & ~(IntPtr.Size - 1)) - IntPtr.Size;
 				for (; p >= (byte*)baseAddr; p -= IntPtr.Size) {
 					try {
-						byte* p2 = (byte*)*(IntPtr**)p;
+						var p2 = (byte*)*(IntPtr**)p;
 						if ((ulong)p2 >= 0x10000) {
 							if (*(IntPtr*)(p2 + 0x74) == origValue)
 								return new IntPtr(p2 + 0x74);
@@ -675,7 +675,7 @@ namespace de4dot.mdecrypt {
 					catch {
 					}
 					try {
-						byte* p2 = (byte*)*(IntPtr**)p;
+						var p2 = (byte*)*(IntPtr**)p;
 						if ((ulong)p2 >= 0x10000) {
 							p2 += offset;
 							if (*(IntPtr*)p2 == origValue)

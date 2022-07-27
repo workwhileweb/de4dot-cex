@@ -127,7 +127,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 				var instructions = block.Instructions;
 				if (instructions.Count < NUM_INSTRS)
 					continue;
-				int i = instructions.Count - NUM_INSTRS;
+				var i = instructions.Count - NUM_INSTRS;
 				if (instructions[i].OpCode.Code != Code.Ldtoken)
 					continue;
 				if (!(instructions[i].Operand is ITypeDefOrRef))

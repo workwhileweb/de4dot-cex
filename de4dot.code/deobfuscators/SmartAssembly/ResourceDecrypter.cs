@@ -44,30 +44,30 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 
 		byte[] Decrypt(byte[] encryptedData) {
 			var reader = new BinaryReader(new MemoryStream(encryptedData));
-			int headerMagic = reader.ReadInt32();
+			var headerMagic = reader.ReadInt32();
 			if (headerMagic == 0x04034B50)
 				throw new NotImplementedException("Not implemented yet since I haven't seen anyone use it.");
 
-			byte encryption = (byte)(headerMagic >> 24);
+			var encryption = (byte)(headerMagic >> 24);
 			if ((headerMagic & 0x00FFFFFF) != 0x007D7A7B)	// Check if "{z}"
 				throw new ApplicationException(string.Format("Invalid SA header magic 0x{0:X8}", headerMagic));
 
 			switch (encryption) {
 			case 1:
-				int totalInflatedLength = reader.ReadInt32();
+				var totalInflatedLength = reader.ReadInt32();
 				if (totalInflatedLength < 0)
 					throw new ApplicationException("Invalid length");
 				var inflatedBytes = new byte[totalInflatedLength];
 				int partInflatedLength;
-				for (int inflateOffset = 0; inflateOffset < totalInflatedLength; inflateOffset += partInflatedLength) {
-					int partLength = reader.ReadInt32();
+				for (var inflateOffset = 0; inflateOffset < totalInflatedLength; inflateOffset += partInflatedLength) {
+					var partLength = reader.ReadInt32();
 					partInflatedLength = reader.ReadInt32();
 					if (partLength < 0 || partInflatedLength < 0)
 						throw new ApplicationException("Invalid length");
 					var inflater = new Inflater(true);
 					inflater.SetInput(encryptedData, checked((int)reader.BaseStream.Position), partLength);
 					reader.BaseStream.Seek(partLength, SeekOrigin.Current);
-					int realInflatedLen = inflater.Inflate(inflatedBytes, inflateOffset, inflatedBytes.Length - inflateOffset);
+					var realInflatedLen = inflater.Inflate(inflatedBytes, inflateOffset, inflatedBytes.Length - inflateOffset);
 					if (realInflatedLen != partInflatedLength)
 						throw new ApplicationException("Could not inflate");
 				}

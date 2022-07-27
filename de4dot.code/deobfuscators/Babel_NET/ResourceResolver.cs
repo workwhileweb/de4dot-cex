@@ -101,7 +101,7 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			simpleDeobfuscator.Deobfuscate(method);
 			var ints = new List<int>();
 			var instrs = method.Body.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var callvirt = instrs[i];
 				if (callvirt.OpCode.Code != Code.Callvirt)
 					continue;
@@ -141,8 +141,8 @@ namespace de4dot.code.deobfuscators.Babel_NET {
 			var decrypted = resourceDecrypter.Decrypt(encryptedResource.Data.ReadAllBytes());
 			var reader = new BinaryReader(new MemoryStream(decrypted));
 
-			int numResources = reader.ReadInt32() ^ xorKey1;
-			for (int i = 0; i < numResources; i++)
+			var numResources = reader.ReadInt32() ^ xorKey1;
+			for (var i = 0; i < numResources; i++)
 				reader.ReadString();
 
 			int len;

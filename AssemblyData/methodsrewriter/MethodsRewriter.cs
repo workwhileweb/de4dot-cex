@@ -139,7 +139,7 @@ namespace AssemblyData.methodsrewriter {
 			ilg.Emit(ROpCodes.Castclass, newMethodInfo.delegateType);
 
 			var args = newMethodInfo.oldMethod.GetParameters();
-			for (int i = 0; i < args.Length; i++) {
+			for (var i = 0; i < args.Length; i++) {
 				var arg = args[i].ParameterType;
 
 				ilg.Emit(ROpCodes.Ldarg_1);
@@ -227,7 +227,7 @@ namespace AssemblyData.methodsrewriter {
 
 		void Update(Block block, NewMethodInfo currentMethodInfo) {
 			var instrs = block.Instructions;
-			for (int i = 0; i < instrs.Count; i++) {
+			for (var i = 0; i < instrs.Count; i++) {
 				var instr = instrs[i];
 				if (instr.OpCode == OpCodes.Newobj) {
 					var ctor = (IMethod)instr.Operand;
@@ -275,7 +275,7 @@ namespace AssemblyData.methodsrewriter {
 						var newMethodInfo = realMethodToNewMethod[method.methodBase];
 
 						block.Replace(i, 1, OpCodes.Nop.ToInstruction());
-						int n = i + 1;
+						var n = i + 1;
 
 						// Pop all pushed args to a temp array
 						var mparams = GetParameters(method.methodDef);
@@ -285,7 +285,7 @@ namespace AssemblyData.methodsrewriter {
 							block.Insert(n++, OpCodes.Newarr.ToInstruction(objectType));
 							block.Insert(n++, Create(OpCodes.Stloc, new Operand(Operand.Type.TempObjArray)));
 
-							for (int j = mparams.Count - 1; j >= 0; j--) {
+							for (var j = mparams.Count - 1; j >= 0; j--) {
 								var argType = mparams[j];
 								if (argType.RemovePinnedAndModifiers().IsValueType)
 									block.Insert(n++, OpCodes.Box.ToInstruction(((TypeDefOrRefSig)argType).TypeDefOrRef));
@@ -305,7 +305,7 @@ namespace AssemblyData.methodsrewriter {
 
 						// Push all popped args
 						if (mparams.Count > 0) {
-							for (int j = 0; j < mparams.Count; j++) {
+							for (var j = 0; j < mparams.Count; j++) {
 								block.Insert(n++, Create(OpCodes.Ldloc, new Operand(Operand.Type.TempObjArray)));
 								block.Insert(n++, OpCodes.Ldc_I4.ToInstruction(j));
 								block.Insert(n++, OpCodes.Ldelem_Ref.ToInstruction());
@@ -333,7 +333,7 @@ namespace AssemblyData.methodsrewriter {
 
 		static IList<TypeSig> GetParameters(MethodDef method) {
 			var list = new List<TypeSig>(method.Parameters.Count);
-			for (int i = 0; i < method.Parameters.Count; i++)
+			for (var i = 0; i < method.Parameters.Count; i++)
 				list.Add(method.Parameters[i].Type);
 			return list;
 		}

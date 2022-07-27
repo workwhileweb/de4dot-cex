@@ -133,9 +133,9 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 				return null;
 
 			var fileData = peImage.GetImageAsByteArray();
-			long dataDirBaseOffset = (long)optHeader.DataDirectories[0].StartOffset;
-			int dataDir = (int)dataDirBaseOffset + dataDirNum * 8;
-			int dotNetDir = (int)dataDirBaseOffset + dotNetDirNum * 8;
+			var dataDirBaseOffset = (long)optHeader.DataDirectories[0].StartOffset;
+			var dataDir = (int)dataDirBaseOffset + dataDirNum * 8;
+			var dotNetDir = (int)dataDirBaseOffset + dotNetDirNum * 8;
 			WriteUInt32(fileData, dotNetDir, BitConverter.ToUInt32(fileData, dataDir));
 			WriteUInt32(fileData, dotNetDir + 4, BitConverter.ToUInt32(fileData, dataDir + 4));
 			WriteUInt32(fileData, dataDir, 0);
@@ -161,13 +161,13 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(cliSecureRtType.Detected) +
-					ToInt32(stringDecrypter.Detected) +
-					ToInt32(proxyCallFixer.Detected) +
-					ToInt32(resourceDecrypter.Detected) +
-					ToInt32(csvmV1.Detected || csvmV2.Detected);
+			var sum = ToInt32(cliSecureRtType.Detected) +
+                      ToInt32(stringDecrypter.Detected) +
+                      ToInt32(proxyCallFixer.Detected) +
+                      ToInt32(resourceDecrypter.Detected) +
+                      ToInt32(csvmV1.Detected || csvmV2.Detected);
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (cliSecureAttributes.Count != 0)
@@ -210,7 +210,7 @@ namespace de4dot.code.deobfuscators.Agile_NET {
 			if (count != 0 || !options.DecryptMethods)
 				return false;
 
-			byte[] fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
+			var fileData = ModuleBytes ?? DeobUtils.ReadModule(module);
 			using (var peImage = new MyPEImage(fileData)) {
 				if (!new MethodsDecrypter().Decrypt(peImage, module, cliSecureRtType, ref dumpedMethods)) {
 					Logger.v("Methods aren't encrypted or invalid signature");

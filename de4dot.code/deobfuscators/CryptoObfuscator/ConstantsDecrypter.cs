@@ -112,7 +112,7 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 			if (decrypterType == null)
 				return;
 
-			MethodDef cctor = decrypterType.FindStaticConstructor();
+			var cctor = decrypterType.FindStaticConstructor();
 			encryptedResource = CoUtils.GetResource(module, DotNetUtils.GetCodeStrings(cctor));
 
 			//if the return value is null, it is possible that resource name is encrypted
@@ -161,8 +161,8 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 				var instrs = block.Instructions;
 				infos.Clear();
 
-				for (int i = 0; i < instrs.Count - 5; i++) {
-					int index = i;
+				for (var i = 0; i < instrs.Count - 5; i++) {
+					var index = i;
 
 					var ldci4_arySize = instrs[index++];
 					if (!ldci4_arySize.IsLdcI4())
@@ -209,8 +209,8 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 
 		byte[] DecryptArray(ArrayInfo aryInfo) {
 			var ary = new byte[aryInfo.arySize * aryInfo.arrayType.ElementType.GetPrimitiveSize()];
-			int dataIndex = aryInfo.index;
-			int len = DeobUtils.ReadVariableLengthInt32(constantsData, ref dataIndex);
+			var dataIndex = aryInfo.index;
+			var len = DeobUtils.ReadVariableLengthInt32(constantsData, ref dataIndex);
 			Buffer.BlockCopy(constantsData, dataIndex, ary, 0, len);
 			return ary;
 		}

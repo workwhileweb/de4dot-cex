@@ -214,7 +214,7 @@ namespace de4dot.code.deobfuscators {
 		public static uint CheckSum(byte[] data) {
 			if (data == null)
 				return 0;
-			uint cs = uint.MaxValue;
+			var cs = uint.MaxValue;
 			foreach (var b in data) {
 				int i = (byte)(cs ^ b);
 				cs = (cs >> 8) ^ table[i];

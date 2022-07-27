@@ -70,7 +70,7 @@ namespace de4dot.blocks.cflow {
 
 		public void Deobfuscate() {
 			bool modified;
-			int iterations = -1;
+			var iterations = -1;
 
 			DeobfuscateBegin(userBlocksDeobfuscators);
 			DeobfuscateBegin(ourBlocksDeobfuscators);
@@ -99,7 +99,7 @@ namespace de4dot.blocks.cflow {
 		}
 
 		bool Deobfuscate(IEnumerable<IBlocksDeobfuscator> bds, List<Block> allBlocks) {
-			bool modified = false;
+			var modified = false;
 			foreach (var bd in bds) {
 				if (bd.ExecuteIfNotModified)
 					continue;
@@ -135,7 +135,7 @@ namespace de4dot.blocks.cflow {
 				pop
 				...
 			*/
-			bool modified = false;
+			var modified = false;
 			foreach (var block in allBlocks) {
 				if (block.Instructions.Count != 5)
 					continue;
@@ -172,7 +172,7 @@ namespace de4dot.blocks.cflow {
 		}
 
 		bool MergeBlocks() {
-			bool modified = false;
+			var modified = false;
 			foreach (var scopeBlock in GetAllScopeBlocks(blocks.MethodBlocks))
 				modified |= scopeBlock.MergeBlocks() > 0;
 			return modified;

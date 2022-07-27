@@ -74,7 +74,7 @@ namespace de4dot.code.deobfuscators.Dotfuscator {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
 			if (stringDecrypter.Detected)
 				val += 100;

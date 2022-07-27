@@ -56,7 +56,7 @@ namespace de4dot.code.deobfuscators.Skater_NET {
 		public void Deobfuscate(Blocks blocks) {
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 2; i++) {
+				for (var i = 0; i < instrs.Count - 2; i++) {
 					var ldsfld = instrs[i];
 					if (ldsfld.OpCode.Code != Code.Ldsfld)
 						continue;

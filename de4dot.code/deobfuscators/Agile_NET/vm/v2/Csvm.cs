@@ -82,7 +82,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			if (!Detected)
 				return true;
 
-			int oldIndent = Logger.Instance.IndentLevel;
+			var oldIndent = Logger.Instance.IndentLevel;
 			try {
 				Restore2();
 				return true;
@@ -125,7 +125,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 
 			Logger.v("Locals:");
 			Logger.Instance.Indent();
-			for (int i = 0; i < method.Body.Variables.Count; i++)
+			for (var i = 0; i < method.Body.Variables.Count; i++)
 				Logger.v("#{0}: {1}", i, method.Body.Variables[i].Type);
 			Logger.Instance.DeIndent();
 
@@ -154,7 +154,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			detector.FindHandlers();
 			Logger.v("CSVM opcodes: {0}", detector.Handlers.Count);
 			Logger.Instance.Indent();
-			for (int i = 0; i < detector.Handlers.Count; i++)
+			for (var i = 0; i < detector.Handlers.Count; i++)
 				Logger.v("{0:X4}: {1}", i, detector.Handlers[i]);
 			Logger.Instance.DeIndent();
 

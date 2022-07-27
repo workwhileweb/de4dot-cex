@@ -104,7 +104,7 @@ namespace de4dot.blocks {
 				return method;
 			var newMethod = Create(method.Method, git);
 			var newInst = Create(method.GenericInstMethodSig, git);
-			bool updated = newMethod != method.Method || newInst != method.GenericInstMethodSig;
+			var updated = newMethod != method.Method || newInst != method.GenericInstMethodSig;
 			return updated ? new MethodSpecUser(newMethod, newInst) : method;
 		}
 
@@ -246,7 +246,7 @@ namespace de4dot.blocks {
 			case ElementType.GenericInst:
 				var gis = (GenericInstSig)type;
 				var newGis = new GenericInstSig(Create2(gis.GenericType) as ClassOrValueTypeSig, gis.GenericArguments.Count);
-				for (int i = 0; i < gis.GenericArguments.Count; i++)
+				for (var i = 0; i < gis.GenericArguments.Count; i++)
 					newGis.GenericArguments.Add(Create2(gis.GenericArguments[i]));
 				result = newGis;
 				break;
@@ -288,12 +288,12 @@ namespace de4dot.blocks {
 				return sig;
 			var newSig = new MethodSig(sig.GetCallingConvention());
 			newSig.RetType = Create2(sig.RetType);
-			for (int i = 0; i < sig.Params.Count; i++)
+			for (var i = 0; i < sig.Params.Count; i++)
 				newSig.Params.Add(Create2(sig.Params[i]));
 			newSig.GenParamCount = sig.GenParamCount;
 			if (sig.ParamsAfterSentinel != null) {
 				newSig.ParamsAfterSentinel = ThreadSafeListCreator.Create<TypeSig>();
-				for (int i = 0; i < sig.ParamsAfterSentinel.Count; i++)
+				for (var i = 0; i < sig.ParamsAfterSentinel.Count; i++)
 					newSig.ParamsAfterSentinel.Add(Create2(sig.ParamsAfterSentinel[i]));
 			}
 			return updated ? newSig : sig;
@@ -301,7 +301,7 @@ namespace de4dot.blocks {
 
 		GenericInstMethodSig Create(GenericInstMethodSig sig) {
 			var newSig = new GenericInstMethodSig();
-			for (int i = 0; i < sig.GenericArguments.Count; i++)
+			for (var i = 0; i < sig.GenericArguments.Count; i++)
 				newSig.GenericArguments.Add(Create2(sig.GenericArguments[i]));
 			return updated ? newSig : sig;
 		}

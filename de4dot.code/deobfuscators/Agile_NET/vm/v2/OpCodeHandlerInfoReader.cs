@@ -279,9 +279,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 			new ConvInfo(12, true, true, OpCodes.Conv_R_Un),
 		};
 		Instruction Handler_Conv(BinaryReader reader) {
-			byte type = reader.ReadByte();
-			bool second = reader.ReadBoolean();
-			bool third = reader.ReadBoolean();
+			var type = reader.ReadByte();
+			var second = reader.ReadBoolean();
+			var third = reader.ReadBoolean();
 
 			Instruction instr = null;
 			foreach (var info in instructionInfos1) {
@@ -485,7 +485,7 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		}
 
 		Instruction Handler_Stloc(BinaryReader reader) {
-			ushort loc = reader.ReadUInt16();
+			var loc = reader.ReadUInt16();
 			/*var etype = (ElementType)*/reader.ReadInt32();
 			return new Instruction(OpCodes.Stloc, new LocalOperand(loc));
 		}
@@ -507,9 +507,9 @@ namespace de4dot.code.deobfuscators.Agile_NET.vm.v2 {
 		}
 
 		Instruction Handler_Switch(BinaryReader reader) {
-			int size = reader.ReadInt32();
+			var size = reader.ReadInt32();
 			var offsets = new int[size];
-			for (int i = 0; i < size; i++)
+			for (var i = 0; i < size; i++)
 				offsets[i] = reader.ReadInt32();
 			return new Instruction(OpCodes.Switch, new SwitchTargetDisplOperand(offsets));
 		}

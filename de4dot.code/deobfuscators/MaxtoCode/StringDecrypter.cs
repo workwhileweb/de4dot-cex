@@ -81,19 +81,19 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 			var stringsRva = peHeader.GetRva(0x0AF0, mcKey.ReadUInt32(0x46));
 			if (stringsRva == 0)
 				return;
-			int stringsOffset = (int)peImage.RvaToOffset(stringsRva);
+			var stringsOffset = (int)peImage.RvaToOffset(stringsRva);
 
-			int numStrings = peImage.ReadInt32(stringsRva) ^ (int)mcKey.ReadUInt32(0);
+			var numStrings = peImage.ReadInt32(stringsRva) ^ (int)mcKey.ReadUInt32(0);
 			decryptedStrings = new string[numStrings];
 			for (int i = 0, ki = 2, soffs = stringsOffset + 4; i < numStrings; i++) {
-				int stringLen = BitConverter.ToInt32(fileData, soffs) ^ (int)mcKey.ReadUInt32(ki);
+				var stringLen = BitConverter.ToInt32(fileData, soffs) ^ (int)mcKey.ReadUInt32(ki);
 				ki += 2;
 				if (ki >= 0x1FF0)
 					ki = 0;
 				soffs += 4;
 				var bytes = new byte[stringLen];
-				for (int j = 0; j < stringLen; j++, soffs++) {
-					byte b = (byte)(fileData[soffs] ^ mcKey.ReadByte(ki));
+				for (var j = 0; j < stringLen; j++, soffs++) {
+					var b = (byte)(fileData[soffs] ^ mcKey.ReadByte(ki));
 					ki = Add(ki, 1);
 					bytes[j] = b;
 				}
@@ -103,8 +103,8 @@ namespace de4dot.code.deobfuscators.MaxtoCode {
 		}
 
 		string Decode(byte[] bytes) {
-			string s = encoding.GetString(bytes);
-			int len = s.Length;
+			var s = encoding.GetString(bytes);
+			var len = s.Length;
 			if (len == 0 || s[len - 1] != 0)
 				return s;
 			for (; len > 0; len--) {

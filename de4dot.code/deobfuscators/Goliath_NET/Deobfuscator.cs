@@ -124,13 +124,13 @@ namespace de4dot.code.deobfuscators.Goliath_NET {
 		}
 
 		protected override int DetectInternal() {
-			int val = 0;
+			var val = 0;
 
-			int sum = ToInt32(stringDecrypter.Detected) +
-					ToInt32(integerDecrypter.Detected) +
-					ToInt32(arrayDecrypter.Detected) +
-					ToInt32(strongNameChecker.Detected) +
-					ToInt32(HasMetadataStream("#GOLIATH"));
+			var sum = ToInt32(stringDecrypter.Detected) +
+                      ToInt32(integerDecrypter.Detected) +
+                      ToInt32(arrayDecrypter.Detected) +
+                      ToInt32(strongNameChecker.Detected) +
+                      ToInt32(HasMetadataStream("#GOLIATH"));
 			if (sum > 0)
 				val += 100 + 10 * (sum - 1);
 			if (foundGoliathAttribute)

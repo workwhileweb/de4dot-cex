@@ -109,7 +109,7 @@ namespace de4dot.code.renamer {
 		}
 
 		public string GetNewEventName(EventDef eventDef) {
-			string newName = eventNameCreator.Create();
+			var newName = eventNameCreator.Create();
 			AddEventName(newName);
 			return newName;
 		}

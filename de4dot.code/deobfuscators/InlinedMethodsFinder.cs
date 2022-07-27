@@ -98,10 +98,10 @@ namespace de4dot.code.deobfuscators {
 		}
 
 		static bool IsCallMethod(MethodDef method) {
-			int loadIndex = 0;
-			int methodArgsCount = DotNetUtils.GetArgsCount(method);
+			var loadIndex = 0;
+			var methodArgsCount = DotNetUtils.GetArgsCount(method);
 			var instrs = method.Body.Instructions;
-			int i = 0;
+			var i = 0;
 			for (; i < instrs.Count && i < methodArgsCount; i++) {
 				var instr = instrs[i];
 				switch (instr.OpCode.Code) {

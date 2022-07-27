@@ -42,13 +42,13 @@ namespace de4dot.blocks {
 			}
 
 			public void CalculateStackUsage() {
-				Block block = baseBlock as Block;
+				var block = baseBlock as Block;
 				if (block == null) {
 					stackEnd = stackStart;
 					return;
 				}
 
-				int stack = stackStart;
+				var stack = stackStart;
 				foreach (var instr in block.Instructions)
 					instr.Instruction.UpdateStack(ref stack, false);
 				stackEnd = stack;
@@ -67,9 +67,9 @@ namespace de4dot.blocks {
 		}
 
 		void CreateBlockInfos() {
-			int firstBlockStackStart = scopeBlock is TryHandlerBlock ? 1 : 0;
+			var firstBlockStackStart = scopeBlock is TryHandlerBlock ? 1 : 0;
 			foreach (var bb in GetStartBlocks()) {
-				int stackStart = ReferenceEquals(bb, sorted[0]) ? firstBlockStackStart : 0;
+				var stackStart = ReferenceEquals(bb, sorted[0]) ? firstBlockStackStart : 0;
 				ScanBaseBlock(bb, stackStart);
 			}
 
@@ -158,7 +158,7 @@ namespace de4dot.blocks {
 				foreach (var source in block.Sources) {
 					if (!scopeBlock.IsOurBaseBlock(source))
 						continue;
-					int oldCount = newList.Count;
+					var oldCount = newList.Count;
 					AddToNewList(source);	// Make sure it's before this block
 					if (oldCount != newList.Count)
 						break;

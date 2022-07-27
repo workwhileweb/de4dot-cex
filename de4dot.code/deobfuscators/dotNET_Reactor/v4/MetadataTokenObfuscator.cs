@@ -79,7 +79,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 			var gpContext = GenericParamContext.Create(blocks.Method);
 			foreach (var block in blocks.MethodBlocks.GetAllBlocks()) {
 				var instrs = block.Instructions;
-				for (int i = 0; i < instrs.Count - 1; i++) {
+				for (var i = 0; i < instrs.Count - 1; i++) {
 					var instr = instrs[i];
 					if (instr.OpCode.Code != Code.Ldc_I4)
 						continue;
@@ -97,7 +97,7 @@ namespace de4dot.code.deobfuscators.dotNET_Reactor.v4 {
 					if (methodDef != typeMethod && methodDef != fieldMethod)
 						continue;
 
-					uint token = (uint)(int)instrs[i].Operand;
+					var token = (uint)(int)instrs[i].Operand;
 					instrs[i] = new Instr(OpCodes.Nop.ToInstruction());
 					instrs[i + 1] = new Instr(new Instruction(OpCodes.Ldtoken, module.ResolveToken(token, gpContext) as ITokenOperand));
 				}

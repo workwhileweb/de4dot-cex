@@ -113,13 +113,13 @@ namespace de4dot.code.renamer.asmmodules {
 
 			var allTypesCopy = new List<MTypeDef>(allTypesList);
 			var typeToIndex = new Dictionary<TypeDef, int>();
-			for (int i = 0; i < allTypesList.Count; i++)
+			for (var i = 0; i < allTypesList.Count; i++)
 				typeToIndex[allTypesList[i].TypeDef] = i;
 			foreach (var typeDef in allTypesList) {
 				if (typeDef.TypeDef.NestedTypes == null)
 					continue;
 				foreach (var nestedTypeDef2 in typeDef.TypeDef.NestedTypes) {
-					int index = typeToIndex[nestedTypeDef2];
+					var index = typeToIndex[nestedTypeDef2];
 					var nestedTypeDef = allTypesCopy[index];
 					allTypesCopy[index] = null;
 					if (nestedTypeDef == null)	// Impossible
@@ -157,7 +157,7 @@ namespace de4dot.code.renamer.asmmodules {
 				if (cattr.NamedArguments == null)
 					continue;
 
-				for (int i = 0; i < cattr.NamedArguments.Count; i++) {
+				for (var i = 0; i < cattr.NamedArguments.Count; i++) {
 					var namedArg = cattr.NamedArguments[i];
 					if (namedArg.IsField) {
 						var fieldDef = FindField(typeDef, namedArg.Name, namedArg.Type);

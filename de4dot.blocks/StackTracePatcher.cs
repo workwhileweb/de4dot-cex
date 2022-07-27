@@ -80,7 +80,7 @@ namespace de4dot.blocks {
 
 		public static StackTrace WriteStackFrame(StackTrace stackTrace, int frameNo, MethodBase newMethod) {
 			var frames = (StackFrame[])framesField.GetValue(stackTrace);
-			int numFramesToSkip = (int)methodsToSkipField.GetValue(stackTrace);
+			var numFramesToSkip = (int)methodsToSkipField.GetValue(stackTrace);
 			WriteMethodBase(frames[numFramesToSkip + frameNo], newMethod);
 			return stackTrace;
 		}
